@@ -44,7 +44,7 @@ def get_remote_url(repo: git.Repo = None) -> str:
         print("ERROR: No remotes found in the repository.", file=sys.stderr)
         sys.exit(1)
     
-    remote_url = repo.remotes.origin.url.strip()
+    remote_url = repo.config_reader().get_value('remote "origin"', 'url').strip()
     token = load_github_token()
     
     # Inject the token into the URL for HTTPS authentication
@@ -91,7 +91,6 @@ def push_to_remote(repo: git.Repo = None, retries=3, delay=5):
     for attempt in range(retries):
         try:
             print(f"[GIT] Pushing to {current_branch} (Attempt {attempt + 1}/{retries})...")
-            print(f"[DEBUG] Using remote URL: {remote_url}")
             repo.git.push(remote_url, current_branch, '--tags', '--force')
             print("[GIT] Push successful.")
             return

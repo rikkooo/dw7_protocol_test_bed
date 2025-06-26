@@ -580,11 +580,12 @@ This document is the single source of truth for all project requirements. It is 
 - **Title:** Diagnose and Fix Persistent `GitCommandError` During Push
 - **Status:** `Pending`
 - **Priority:** `Critical`
-- **Details:** All attempts to fix the `GitCommandError: URL rejected` have failed. The root cause of the malformed URL must be diagnosed before another fix is attempted.
+- **Details:** The `GitCommandError` is caused by a double-authentication bug. The `get_remote_url` function repeatedly adds the auth token to an already-authenticated URL. The fix is to read the pristine remote URL directly from the git config every time.
 - **SMRs:**
-  - [ ] In `git_handler.py`, modify the `push_to_remote` function to print the exact, full `remote_url` it is using for the `git push` command *before* the command is executed. This will make the malformed URL visible in the logs.
-  - [ ] Analyze the logged URL to identify the source of the parsing error.
-  - [ ] Implement a definitive fix for the URL construction in `get_remote_url`.
+    - [x] In `git_handler.py`, modify the `push_to_remote` function to print the exact, full `remote_url` it is using for the `git push` command *before* the command is executed. This will make the malformed URL visible in the logs.
+  - [x] Analyze the logged URL to identify the source of the parsing error.
+  - [ ] In `get_remote_url`, replace `repo.remotes.origin.url` with `repo.config_reader().get_value('remote "origin"', 'url')` to always get the pristine URL.
+  - [ ] Remove the debug print statement from `push_to_remote`.
 
 ---
 
