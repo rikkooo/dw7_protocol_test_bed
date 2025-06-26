@@ -1,0 +1,386 @@
+import re
+import sys
+import os
+import subprocess
+import shutil
+import git
+from pathlib import Path
+from datetime import datetime, timezone
+
+MASTER_FILE = "docs/WORKFLOW_MASTER.md"
+REQUIREMENTS_FILE = "docs/PROJECT_REQUIREMENTS.md"
+APPROVAL_FILE = "logs/approvals.log"
+FAILURE_THRESHOLD = 3
+STAGES = ["Engineer", "Coder", "Validator", "Deployer"]
+DELIVERABLE_PATHS = {
+    "Engineer": "deliverables/engineering",
+    "Coder": "deliverables/coding",
+    "Validator": "deliverables/testing",
+    "Deployer": "deliverables/deployment",
+    "Rehearsal": "deliverables/rehearsal",
+}
+
+class Governor:
+    RULES = {
+        "Engineer": [
+            "uv run python -m dw6.main new",
+            "uv run python -m dw6.main meta-req",
+            "ls",
+            "cat",
+            "view_file_outline",
+            "uv run python -m dw6.main approve"
+        ],
+        "Coder": [
+            "replace_file_content",
+            "write_to_file",
+            "view_file_outline",
+            "ls",
+            "mkdir",
+            "uv run python -m dw6.main approve"
+        ],
+        "Validator": [
+            "uv run python -m pytest",
+            "uv run python -m dw6.main approve"
+        ],
+        "Deployer": [
+            "git add",
+            "git commit",
+            "git tag",
+            "uv run python -m dw6.main approve"
+        ],
+        "Rehearsal": [
+            "search_web",
+            "read_url_content",
+            "write_to_file",
+            "replace_file_content",
+            "view_file_outline",
+            "cat",
+            "ls",
+            "uv run python -m dw6.main approve"
+        ]
+    }
+
+    def __init__(self, state):
+        self.state = state
+        self.current_stage = self.state.get("CurrentStage")
+
+    def authorize(self, command: str):
+        """Checks if a command is allowed in the current stage."""
+        allowed_commands = self.RULES.get(self.current_stage, [])
+        if not any(command.startswith(prefix) for prefix in allowed_commands):
+            error_msg = f"[GOVERNOR] Action denied. The command '{command}' is not allowed in the '{self.current_stage}' stage."
+            print(error_msg, file=sys.stderr)
+            raise PermissionError(error_msg)
+        print(f"[GOVERNOR] Action authorized: '{command}'")
+
+class WorkflowManager:
+    def __init__(self):
+        self.state = WorkflowState()
+        self.current_stage = self.state.get("CurrentStage", "Engineer")
+        self.previous_stage = None
+        self.governor = Governor(self.state)
+
+    def approve(self, allow_failures=False):
+        print(f"--- Governor: Received Approval Request for Stage: {self.current_stage} ---")
+        self.governor.authorize(f"uv run python -m dw6.main approve")
+        print(f"--- Governor: Enforcing Rules for Stage: {self.current_stage} ---")
+        self._print_rules()
+
+        print(f"Governor: Validating exit criteria for stage: {self.current_stage}")
+        if self._validate_stage(allow_failures):
+            print("Stage validation successful.")
+            self._advance_stage()
+        else:
+            self._handle_failure()
+
+    def _print_rules(self):
+        rules = self.governor.RULES.get(self.current_stage, [])
+        print("[RULE] Allowed command prefixes:")
+        for prefix in rules:
+            print(f"  - {prefix}")
+
+    def _validate_stage(self, allow_failures=False):
+        if self.current_stage == "Validator":
+            return self._validate_tests(allow_failures)
+        elif self.current_stage == "Deployer":
+            return self._validate_deployment()
+        else:
+            print(f"Governor: '{self.current_stage}' exit criteria met.")
+            return True
+
+    def _advance_stage(self):
+        if self.current_stage == "Rehearsal":
+            new_stage = self.state.get("ReturnStage")
+            if not new_stage:
+                print("ERROR: Cannot exit Rehearsal stage. No 'ReturnStage' found in state.", file=sys.stderr)
+                sys.exit(1)
+            print(f"--- Exiting Rehearsal. Returning to {new_stage} stage. ---")
+            self.current_stage = new_stage
+            self.state.set("CurrentStage", new_stage)
+            self.state.delete("ReturnStage") # Clean up the return stage
+            self.state.save()
+            return
+
+        current_stage_index = STAGES.index(self.current_stage)
+        self.previous_stage = self.current_stage
+        self._reset_failure_counters(self.previous_stage)
+
+        if self.current_stage == "Deployer":
+            self._log_approval()
+            print("--- Governor: Final stage approved. Workflow complete. Cycling back to Engineer. ---")
+            self.state.increment("CycleCounter")
+
+        next_stage_index = (current_stage_index + 1) % len(STAGES)
+        self.current_stage = STAGES[next_stage_index]
+        self.state.set("CurrentStage", self.current_stage)
+        self.state.save()
+        self._run_post_transition_actions()
+        print(f"--- Governor: Stage {self.previous_stage} Approved. New Stage: {self.current_stage} ---")
+
+    def _log_approval(self):
+        """Logs the approval of the current requirement."""
+        requirement = self.state.get("Requirement")
+        timestamp = datetime.now(timezone.utc).isoformat()
+        with open(APPROVAL_FILE, "a") as f:
+            f.write(f"{timestamp} - Requirement '{requirement}' approved.\n")
+
+    def _run_post_transition_actions(self):
+        if self.previous_stage == "Coder":
+            self.save_current_commit_sha()
+            self._generate_coder_deliverable()
+        elif self.previous_stage == "Engineer":
+            self.state.set("CycleCounter", int(self.state.get("CycleCounter", 0)) + 1)
+
+    def _generate_coder_deliverable(self):
+        from dw6 import git_handler
+        cycle = self.state.get("CycleCounter")
+        req_pointer = self.state.get("RequirementPointer")
+        commit_sha = self.state.get(f"CommitSHA.{self.previous_stage}")
+        if not commit_sha:
+            print(f"No commit SHA found for stage {self.previous_stage}. Skipping deliverable generation.")
+            return
+
+        changed_files, diff = git_handler.get_changes_since_last_commit(commit_sha)
+        deliverable_path = Path(DELIVERABLE_PATHS["Coder"]) / f"cycle_{cycle}_coder_deliverable.md"
+        deliverable_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(deliverable_path, "w") as f:
+            f.write(f"# Coder Stage Deliverable for Requirement {req_pointer}\n\n")
+            f.write("## Changed Files\n\n")
+            f.write('\n'.join(f"- `{file}`" for file in changed_files))
+            f.write("\n\n## Diff\n\n")
+            f.write("```diff\n")
+            f.write(diff)
+            f.write("\n```")
+        print(f"Generated Coder deliverable at {deliverable_path}")
+
+    def _handle_failure(self):
+        failure_key = f"FailureCounters.{self.current_stage}.{self._get_failure_context()}"
+        new_count = self.state.increment(failure_key)
+        print(f"[FAILURE_COUNTER] Incremented '{failure_key}' to {new_count}.")
+
+        if new_count >= FAILURE_THRESHOLD:
+            print(f"--- Failure threshold reached. Transitioning to Rehearsal stage. ---")
+            self.state.set("ReturnStage", self.current_stage)
+            self.current_stage = "Rehearsal"
+            self.state.set("CurrentStage", self.current_stage)
+            self.state.save()
+        else:
+            print(f"--- Governor: Stage {self.current_stage} Approval Failed ---")
+
+    def _get_failure_context(self):
+        if self.current_stage == "Validator":
+            return self._validate_tests.__name__
+        elif self.current_stage == "Deployer":
+            return self._validate_deployment.__name__
+        return "default"
+
+    def _reset_failure_counters(self, stage):
+        prefix = f"FailureCounters.{stage}."
+        keys_to_reset = [k for k in self.state.data.keys() if k.startswith(prefix)]
+        for key in keys_to_reset:
+            self.state.set(key, 0)
+            print(f"[FAILURE_COUNTER] Reset '{key}' to 0.")
+
+    def save_current_commit_sha(self):
+        from dw6 import git_handler
+        commit_sha = git_handler.get_latest_commit_hash()
+        self.state.set(f"CommitSHA.{self.current_stage}", commit_sha)
+        self.state.save()
+        print(f"Saved current commit SHA for {self.current_stage} stage: {commit_sha[:7]}")
+
+    def _validate_tests(self, allow_failures=False):
+        print("Running tests...")
+        python_executable = self.state.get("PythonExecutablePath")
+        if not python_executable:
+            print("Python executable not found in state. Aborting test validation.", file=sys.stderr)
+            return False
+        try:
+            subprocess.run([python_executable, "-m", "pytest"], check=True, cwd=os.getcwd())
+            print("Tests passed.")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Tests failed with exit code {e.returncode}.", file=sys.stderr)
+            if allow_failures:
+                print("Continuing despite test failures as per user request.")
+                return False
+            return False
+
+    def _validate_deployment(self):
+        from dw6 import git_handler
+        print("Validating deployment readiness...")
+
+        is_protocol_update = self.state.get("is_protocol_update") == 'true'
+
+        if is_protocol_update:
+            print("Protocol update detected. Executing evolution sub-workflow...")
+            return self._execute_protocol_evolution()
+        else:
+            print("Standard deployment process...")
+            try:
+                commit_sha = git_handler.mcp_push_files("feat: Coder stage submission", ["src", "tests"])
+                if not commit_sha:
+                    print("Deployment validation failed: No commit SHA returned from push.", file=sys.stderr)
+                    return False
+                cycle = self.state.get("CycleCounter")
+                tag_name = f"v1.{cycle}"
+                git_handler.mcp_create_and_push_tag(tag_name, commit_sha, f"Release for cycle {cycle}")
+                print("Deployment validation successful.")
+                return True
+            except Exception as e:
+                print(f"Deployment validation failed: {e}", file=sys.stderr)
+                return False
+
+    def _execute_protocol_evolution(self):
+        from dw6 import git_handler
+        print("Executing protocol evolution...")
+
+        try:
+            # 1. Determine new protocol version
+            project_root = git_handler.get_project_root()
+            current_project_name = project_root.name
+            match = re.search(r'dw(\d+)', current_project_name)
+            if not match:
+                print(f"ERROR: Could not determine protocol version from project name '{current_project_name}'", file=sys.stderr)
+                return False
+            
+            current_version = int(match.group(1))
+            new_version = current_version + 1
+            new_protocol_dir_name = f"dw{new_version}"
+            # Create paths inside the current repo
+            new_protocol_path = project_root / new_protocol_dir_name
+
+            # 2. Create new protocol directory and copy files
+            if new_protocol_path.exists():
+                shutil.rmtree(new_protocol_path)
+            # Copy the 'src' and 'docs' directories to the new protocol folder
+            shutil.copytree(project_root / 'src', new_protocol_path / 'src')
+            shutil.copytree(project_root / 'docs', new_protocol_path / 'docs')
+            print(f"Successfully copied project source to {new_protocol_path}")
+
+            # 3. Create new start script inside the new protocol directory
+            new_start_script_name = f"start-project-{new_protocol_dir_name}.md"
+            new_start_script_path = new_protocol_path / new_start_script_name
+            script_template = f'---\ndescription: A guided workflow for initializing new projects using the {new_protocol_dir_name.upper()} protocol.\n---\n# {new_protocol_dir_name.upper()} Project Initialization\nThis workflow sets up a new project based on the {new_protocol_dir_name.upper()} protocol. NOTE: This start script is part of the release artifact. To use it, copy it to your `.windsurf/workflows/` directory.'
+            with open(new_start_script_path, "w") as f:
+                f.write(script_template)
+            print(f"Successfully created new start script at {new_start_script_path}")
+
+            # 4. Generate README.md
+            new_readme_path = new_protocol_path / "README.md"
+            readme_template = f'# DW{new_version} Protocol\n\n## Overview\nThe DW{new_version} protocol represents an evolution in the development workflow, focusing on robustness, self-reflection, and automated release management.\n\n## Workflow Diagram\n`Engineer` -> `Coder` -> `Validator` -> `Deployer`\n   ^            |\n   |         (failure)\n   +------- `Rehearsal`\n\n## Version Changelog (vs DW{current_version})\n- **Implemented `Rehearsal` State:** A mandatory \'time-out\' state triggered by consecutive failures.\n- **Formalized Protocol Evolution:** The `Deployer` stage now includes a sub-workflow to automatically version, document, and release new protocol updates.'
+            with open(new_readme_path, "w") as f:
+                f.write(readme_template)
+            print(f"Successfully created README.md at {new_readme_path}")
+
+            # 5. Commit and push new protocol to the current repo
+            master_repo = git.Repo(project_root)
+            # Add the newly created protocol directory
+            files_to_add = [str(new_protocol_path)]
+            master_repo.git.add(files_to_add)
+            commit_message = f"feat(DW): Release new protocol DW{new_version}"
+            master_repo.git.commit('-m', commit_message)
+            print(f"Committed changes with message: '{commit_message}'")
+            git_handler.push_to_remote(repo=master_repo)
+
+            print("Protocol evolution successful.")
+            return True
+
+        except Exception as e:
+            import traceback
+            print(f"ERROR: Failed during protocol evolution. Exception type: {type(e).__name__}", file=sys.stderr)
+            print(f"ERROR: Exception details: {e}", file=sys.stderr)
+            print("--- Traceback ---", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
+            print("-----------------", file=sys.stderr)
+            return False
+
+class WorkflowState:
+    def __init__(self, state_file=".workflow_state"):
+        self.state_file = Path(state_file)
+        self.data = {}
+        self._load_state()
+        self._ensure_python_executable()
+
+    def _load_state(self):
+        if self.state_file.exists():
+            with open(self.state_file, "r") as f:
+                for line in f:
+                    if "=" in line:
+                        key, value = line.strip().split("=", 1)
+                        self.data[key] = value
+
+    def _ensure_python_executable(self):
+        if not self.get("PythonExecutablePath") or not Path(self.get("PythonExecutablePath")).exists():
+            self.initialize_state()
+
+    def initialize_state(self):
+        project_name = os.path.basename(os.getcwd())
+        venv_path = Path(os.path.expanduser(f"~/venvs/{project_name}"))
+        python_executable_path = venv_path / "bin" / "python"
+
+        if not self.data:
+            self.data = {
+                "CurrentStage": "Engineer",
+                "RequirementPointer": "1",
+                "CycleCounter": "1"
+            }
+
+        if not python_executable_path.exists():
+            print(f"Virtual environment not found at {venv_path}. Creating it now...")
+            try:
+                venv_path.parent.mkdir(parents=True, exist_ok=True)
+                subprocess.run(["python3", "-m", "venv", str(venv_path)], check=True)
+                print("Virtual environment created.")
+                print("Installing project in editable mode...")
+                subprocess.run([str(python_executable_path), "-m", "pip", "install", "-e", ".[test]"], check=True, cwd=os.getcwd())
+                print("Dependencies installed.")
+            except subprocess.CalledProcessError as e:
+                print(f"Error during environment setup: {e}", file=sys.stderr)
+                sys.exit(1)
+
+        self.data["PythonExecutablePath"] = str(python_executable_path)
+        self.save()
+        print(f"Environment path set to: {python_executable_path}")
+
+    def get(self, key, default=None):
+        return self.data.get(key, default)
+
+    def set(self, key, value):
+        self.data[key] = str(value)
+
+    def delete(self, key):
+        if key in self.data:
+            del self.data[key]
+
+    def increment(self, key):
+        current_value = int(self.get(key, 0))
+        new_value = current_value + 1
+        self.set(key, new_value)
+        self.save()
+        return new_value
+
+    def save(self):
+        self.state_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.state_file, "w") as f:
+            for key, value in sorted(self.data.items()):
+                f.write(f"{key}={value}\n")
