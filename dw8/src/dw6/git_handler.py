@@ -82,28 +82,31 @@ def add_commit_files(files, message):
         else:
             sys.exit(1)
 
-def push_to_remote(repo: git.Repo = None, retries=3, delay=5):
-    """Pushes changes to the remote repository with retry logic."""
-    if repo is None:
-        repo = get_repo()
-    
-    remote_url = get_remote_url(repo)
-    current_branch = repo.active_branch.name
+def push_to_remote(branch='main', force=False, tags=False, retries=3, delay=5):
+    """Pushes changes to the remote repository with retries."""
+    repo = get_repo()
+    authenticated_url = get_remote_url(repo)
 
-    for attempt in range(retries):
+    push_args = []
+    if force:
+        push_args.append('--force')
+    if tags:
+        push_args.append('--tags')
+
+    for attempt in range(1, retries + 1):
         try:
-            print(f"[GIT] Pushing to {current_branch} (Attempt {attempt + 1}/{retries})...")
-            repo.git.push(remote_url, current_branch, '--tags', '--force')
+            print(f"[GIT] Pushing to {branch} (Attempt {attempt}/{retries})...")
+            repo.git.push(authenticated_url, branch, *push_args)
             print("[GIT] Push successful.")
             return
-        except git.exc.GitCommandError as e:
+        except git.GitCommandError as e:
             print(f"ERROR: Failed to push to remote. {e}", file=sys.stderr)
-            if attempt < retries - 1:
-                print(f"Retrying in {delay} seconds...")
+            if attempt < retries:
+                print(f"Retrying in {delay} seconds...", file=sys.stderr)
                 time.sleep(delay)
             else:
                 print("FATAL: All push attempts failed.", file=sys.stderr)
-                raise e
+                raise
 
 def get_latest_commit_hash(repo: git.Repo = None):
     """Gets the hash of the latest commit."""

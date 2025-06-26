@@ -73,7 +73,7 @@ def revert_to_previous_stage(manager, target_stage=None):
 
 def handle_status(manager):
     """Handles the status command."""
-    state = manager.get_state()
+    state = manager.state
     current_stage = state.get("CurrentStage", "Unknown")
     requirement_pointer = state.get("RequirementPointer", "Unknown")
     cycle_counter = state.get("CycleCounter", "Unknown")
@@ -107,6 +107,7 @@ def main():
     # Approve command
     approve_parser = subparsers.add_parser("approve", help="Approve the current stage and advance to the next.")
     approve_parser.add_argument("--allow-failures", action="store_true", help="Approve even if validation checks fail.")
+    approve_parser.add_argument("--needs-research", action="store_true", help="Transition to the Researcher stage instead of Coder.")
 
     # New command
     new_parser = subparsers.add_parser("new", help="Create a new deliverable based on a prompt.")
@@ -153,7 +154,7 @@ def main():
         except PermissionError:
             sys.exit(1)
     elif args.command == "approve":
-        manager.approve(allow_failures=args.allow_failures)
+        manager.approve(allow_failures=args.allow_failures, needs_research=args.needs_research)
     elif args.command == "new":
         cycle_counter = manager.state.get("CycleCounter")
         augmenter = PromptAugmenter()

@@ -11,8 +11,11 @@ This document is the single source of truth for all project requirements. It is 
 - **Priority:** `Critical`
 - **Details:** The AI must break down every large requirement into the smallest possible, independently solvable, and verifiable sub-requirements. This "laser focus" on atomic tasks will prevent the agent from getting lost in complexity and will make its work easier to validate.
 - **SMRs:**
-  - [ ] Before starting work on any new requirement, the AI must first analyze it for complexity.
-  - [ ] If the requirement is not sufficiently granular, the AI must break it down into smaller sub-requirements and add them to this master list.
+  - [ ] **SMR-DW8-012.1:** Modify `WorkflowManager` to include a new internal method, `_ensure_atomic_requirement()`, called at the beginning of the `Engineer` stage.
+  - [ ] **SMR-DW8-012.2:** Implement logic within `_ensure_atomic_requirement()` to read the current requirement from `PROJECT_REQUIREMENTS.md`.
+  - [ ] **SMR-DW8-012.3:** In `_ensure_atomic_requirement()`, add logic to analyze the requirement's SMR checklist. If the checklist is empty or items are too complex, halt and prompt the user for breakdown.
+  - [ ] **SMR-DW8-012.4:** Create a new CLI command, `dw6 breakdown <REQ_ID>`, to guide the user through defining granular SMRs.
+  - [ ] **SMR-DW8-012.5:** Update `Governor` rules to allow the `breakdown` command only in the `Engineer` stage.
 
 ---
 
@@ -829,5 +832,57 @@ This document is the single source of truth for all project requirements. It is 
           subprocess.run([python_executable, "-m", "pytest"], check=True, capture_output=True, text=True)
         File "/usr/lib/python3.12/subprocess.py", line 571, in run
           raise CalledProcessError(retcode, process.args,
+      
+    ```
+
+---
+
+### ID: REQ-DW8-063
+
+- **Title:** Red Flag: Unhandled Critical Failure in Deployer Stage
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** The workflow encountered a critical failure after multiple retries. The system has been reset to the Engineer stage to re-evaluate the approach.
+- **SMRs:**
+  - [ ] Analyze the failure context below to understand the root cause.
+  - [ ] Formulate a new plan to address the failure.
+  - [ ] Implement the new plan.
+- **Failure Context:**
+  - **Exception Type:** `GitCommandError`
+  - **Exception Message:**
+    ```
+    Cmd('git') failed due to: exit code(128)
+      cmdline: git push https://*****:*****@github.com/rikkooo/dw7_protocol_test_bed.git main --tags --force
+      stderr: 'remote: Support for password authentication was removed on August 13, 2021.
+    remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+    fatal: Authentication failed for 'https://github.com/rikkooo/dw7_protocol_test_bed.git/''
+    ```
+  - **Traceback:**
+    ```
+      File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 81, in approve
+          if self._validate_stage(allow_failures):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 99, in _validate_stage
+          return self._validate_deployment()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 220, in _validate_deployment
+          return self._execute_protocol_evolution()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 294, in _execute_protocol_evolution
+          raise e
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 287, in _execute_protocol_evolution
+          git_handler.push_to_remote(repo=master_repo)
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/git_handler.py", line 106, in push_to_remote
+          raise e
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/git_handler.py", line 96, in push_to_remote
+          repo.git.push(remote_url, current_branch, '--tags', '--force')
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/lib/python3.12/site-packages/git/cmd.py", line 986, in <lambda>
+          return lambda *args, **kwargs: self._call_process(name, *args, **kwargs)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/lib/python3.12/site-packages/git/cmd.py", line 1599, in _call_process
+          return self.execute(call, **exec_kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/lib/python3.12/site-packages/git/cmd.py", line 1389, in execute
+          raise GitCommandError(redacted_command, status, stderr_value, stdout_value)
       
     ```

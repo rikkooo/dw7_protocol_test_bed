@@ -12,9 +12,10 @@ MASTER_FILE = "docs/WORKFLOW_MASTER.md"
 REQUIREMENTS_FILE = "docs/PROJECT_REQUIREMENTS.md"
 APPROVAL_FILE = "logs/approvals.log"
 FAILURE_THRESHOLD = 3
-STAGES = ["Engineer", "Coder", "Validator", "Deployer"]
+STAGES = ["Engineer", "Researcher", "Coder", "Validator", "Deployer"]
 DELIVERABLE_PATHS = {
     "Engineer": "deliverables/engineering",
+    "Researcher": "deliverables/research",
     "Coder": "deliverables/coding",
     "Validator": "deliverables/testing",
     "Deployer": "deliverables/deployment",
@@ -28,6 +29,17 @@ class Governor:
             "ls",
             "cat",
             "view_file_outline",
+            "uv run python -m dw6.main approve"
+        ],
+        "Researcher": [
+            "searxng_web_search",
+            "web_url_read",
+            "mcp0_get-library-docs",
+            "codebase_search",
+            "view_file_outline",
+            "view_line_range",
+            "mcp3_read_file",
+            "ls",
             "uv run python -m dw6.main approve"
         ],
         "Coder": [
@@ -70,19 +82,16 @@ class WorkflowManager:
         self.previous_stage = None
         self.governor = Governor(self.state)
 
-    def approve(self, allow_failures=False):
+    def approve(self, allow_failures=False, needs_research=False):
         print(f"--- Governor: Received Approval Request for Stage: {self.current_stage} ---")
-        self.governor.authorize(f"uv run python -m dw6.main approve")
-        print(f"--- Governor: Enforcing Rules for Stage: {self.current_stage} ---")
-        self._print_rules()
-
-        print(f"Governor: Validating exit criteria for stage: {self.current_stage}")
+        self.governor.authorize(f'uv run python -m dw6.main approve')
+        
         try:
-            if self._validate_stage(allow_failures):
+            if self._validate_stage_exit_criteria(allow_failures=allow_failures):
                 print("Stage validation successful.")
-                self._advance_stage()
+                self._advance_stage(needs_research=needs_research)
             else:
-                self._handle_failure(Exception("Stage validation failed without an exception."))
+                raise Exception("Stage validation failed without an exception.")
         except Exception as e:
             self._handle_failure(e)
 
@@ -92,28 +101,42 @@ class WorkflowManager:
         for prefix in rules:
             print(f"  - {prefix}")
 
-    def _validate_stage(self, allow_failures=False):
+    def _validate_stage_exit_criteria(self, allow_failures=False):
+        """Checks if the current stage's exit criteria are met."""
+        print(f"Governor: Validating exit criteria for stage: {self.current_stage}")
         if self.current_stage == "Validator":
             return self._validate_tests(allow_failures)
         elif self.current_stage == "Deployer":
             return self._validate_deployment()
-        else:
-            print(f"Governor: '{self.current_stage}' exit criteria met.")
-            return True
+        
+        print(f"Governor: No specific exit criteria for '{self.current_stage}'. Approved by default.")
+        return True
 
-    def _advance_stage(self):
-        current_stage_index = STAGES.index(self.current_stage)
+    def _complete_cycle(self):
+        """Handles the completion of a full workflow cycle."""
+        print("--- Governor: Final stage approved. Workflow complete. Cycling back to Engineer. ---")
+        self._log_approval()
+        self.state.increment("CycleCounter")
+
+    def _advance_stage(self, needs_research=False):
         self.previous_stage = self.current_stage
-        self._reset_failure_counters(self.previous_stage)
+        
+        if self.previous_stage == "Deployer":
+            self._complete_cycle()
+            new_stage = "Engineer"
+        else:
+            current_index = STAGES.index(self.previous_stage)
+            if self.previous_stage == "Engineer":
+                new_stage = "Researcher" if needs_research else "Coder"
+            elif current_index < len(STAGES) - 1:
+                new_stage = STAGES[current_index + 1]
+            else: # Should not be reached if Deployer is last
+                self._complete_cycle()
+                new_stage = "Engineer"
 
-        if self.current_stage == "Deployer":
-            self._log_approval()
-            print("--- Governor: Final stage approved. Workflow complete. Cycling back to Engineer. ---")
-            self.state.increment("CycleCounter")
-
-        next_stage_index = (current_stage_index + 1) % len(STAGES)
-        self.current_stage = STAGES[next_stage_index]
+        self.current_stage = new_stage
         self.state.set("CurrentStage", self.current_stage)
+        self._reset_failure_counters(self.previous_stage)
         self.state.save()
         self._run_post_transition_actions()
         print(f"--- Governor: Stage {self.previous_stage} Approved. New Stage: {self.current_stage} ---")
@@ -126,11 +149,59 @@ class WorkflowManager:
             f.write(f"{timestamp} - Requirement '{requirement}' approved.\n")
 
     def _run_post_transition_actions(self):
-        if self.previous_stage == "Coder":
+        if self.current_stage == "Engineer":
+            self._ensure_atomic_requirement()
+        elif self.previous_stage == "Coder":
             self.save_current_commit_sha()
             self._generate_coder_deliverable()
-        elif self.previous_stage == "Engineer":
-            self.state.set("CycleCounter", int(self.state.get("CycleCounter", 0)) + 1)
+
+    def _ensure_atomic_requirement(self):
+        """Ensures the current requirement is broken down into atomic sub-tasks."""
+        print("--- Governor: Checking for atomic requirement... ---")
+        try:
+            req_pointer = self.state.get("RequirementPointer")
+            if not req_pointer:
+                print("RequirementPointer not found in state. Skipping check.")
+                return
+
+            req_id = f"REQ-DW8-{int(req_pointer):03d}"
+            print(f"Current requirement ID: {req_id}")
+
+            with open(REQUIREMENTS_FILE, "r") as f:
+                content = f.read()
+
+            # Regex to find the requirement block from its ID to the next separator
+            # (?s) flag makes . match newlines
+            match = re.search(rf"(?s)### ID: {re.escape(req_id)}\n(.*?)(?=\n---\n|\Z)", content)
+
+            if match:
+                requirement_text = match.group(1).strip()
+                # Analyze the SMR checklist for granularity
+                smr_section_match = re.search(r"- \*\*SMRs:\*\*\n((?:  - .+\n?)+)", requirement_text, re.MULTILINE)
+
+                if smr_section_match:
+                    smr_block = smr_section_match.group(1)
+                    # Count non-empty lines starting with '  - [ ]'
+                    smr_count = len(re.findall(r"^  - \[", smr_block, re.MULTILINE))
+                    print(f"Found {smr_count} SMRs.")
+
+                    if smr_count < 2:
+                        print("\n[GOVERNOR] HALT: Requirement is not sufficiently granular.", file=sys.stderr)
+                        print(f"The current requirement '{req_id}' has fewer than 2 sub-tasks.", file=sys.stderr)
+                        print("Please break it down further using a future 'dw6 breakdown' command.", file=sys.stderr)
+                        sys.exit(1)
+                    else:
+                        print("Requirement passes granularity check.")
+                else:
+                    print(f"\n[GOVERNOR] HALT: No SMRs found for requirement '{req_id}'.", file=sys.stderr)
+                    print("Please define sub-requirements using a future 'dw6 breakdown' command.", file=sys.stderr)
+                    sys.exit(1)
+            else:
+                print(f"Could not find requirement block for ID: {req_id}")
+
+        except Exception as e:
+            print(f"Error during atomic requirement check: {e}", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
 
     def _generate_coder_deliverable(self):
         from dw6 import git_handler
