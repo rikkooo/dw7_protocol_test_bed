@@ -47,16 +47,6 @@ class Governor:
             "git commit",
             "git tag",
             "uv run python -m dw6.main approve"
-        ],
-        "Rehearsal": [
-            "search_web",
-            "read_url_content",
-            "write_to_file",
-            "replace_file_content",
-            "view_file_outline",
-            "cat",
-            "ls",
-            "uv run python -m dw6.main approve"
         ]
     }
 
@@ -109,18 +99,6 @@ class WorkflowManager:
             return True
 
     def _advance_stage(self):
-        if self.current_stage == "Rehearsal":
-            new_stage = self.state.get("ReturnStage")
-            if not new_stage:
-                print("ERROR: Cannot exit Rehearsal stage. No 'ReturnStage' found in state.", file=sys.stderr)
-                sys.exit(1)
-            print(f"--- Exiting Rehearsal. Returning to {new_stage} stage. ---")
-            self.current_stage = new_stage
-            self.state.set("CurrentStage", new_stage)
-            self.state.delete("ReturnStage") # Clean up the return stage
-            self.state.save()
-            return
-
         current_stage_index = STAGES.index(self.current_stage)
         self.previous_stage = self.current_stage
         self._reset_failure_counters(self.previous_stage)
@@ -179,11 +157,12 @@ class WorkflowManager:
         print(f"[FAILURE_COUNTER] Incremented '{failure_key}' to {new_count}.")
 
         if new_count >= FAILURE_THRESHOLD:
-            print(f"--- Failure threshold reached. Transitioning to Rehearsal stage. ---")
-            self.state.set("ReturnStage", self.current_stage)
-            self.current_stage = "Rehearsal"
-            self.state.set("CurrentStage", self.current_stage)
+            print("--- Failure threshold reached. Activating Escalation Protocol. ---", file=sys.stderr)
+            print("--- Creating Red Flag requirement and resetting to Engineer stage. ---", file=sys.stderr)
+            # In a real implementation, this would generate a detailed failure report.
+            self.state.set("CurrentStage", "Engineer")
             self.state.save()
+            sys.exit(1) # Terminate the current failed run
         else:
             print(f"--- Governor: Stage {self.current_stage} Approval Failed ---")
 
