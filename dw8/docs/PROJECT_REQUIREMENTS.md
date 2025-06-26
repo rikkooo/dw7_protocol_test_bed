@@ -561,6 +561,17 @@ This document is the single source of truth for all project requirements. It is 
 
 ---
 
+### ID: REQ-DW8-057
+
+- **Title:** Fix Persistent `GitCommandError` with Simplified URL Construction
+- **Status:** `In Progress`
+- **Priority:** `Critical`
+- **Details:** The deployment push continues to fail with a URL rejection error, indicating the `urlparse` fix was ineffective. The `get_remote_url` method in `git_handler.py` must be rewritten using a simpler, direct string replacement to construct the authenticated URL.
+- **SMRs:**
+  - [ ] Replace the `urlparse`-based logic in `get_remote_url` with a direct string replacement.
+
+---
+
 ### ID: REQ-DW8-001
 
 - **Title:** Implement a persistent failure counter within the `WorkflowState`.
