@@ -561,6 +561,33 @@ This document is the single source of truth for all project requirements. It is 
 
 ---
 
+### ID: REQ-DW8-058
+
+- **Title:** Implement New Escalation Protocol to Replace Rehearsal Stage
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** The `Rehearsal` stage has proven ineffective and causes deadlocks. It will be replaced by an 'Escalation Protocol' where repeated failures trigger a reset to the `Engineer` stage with a new, high-priority 'Red Flag' requirement that captures the full context of the failure.
+- **SMRs:**
+  - [ ] In `state_manager.py`, modify `_handle_failure` to trigger the new escalation logic instead of transitioning to `Rehearsal`.
+  - [ ] Implement a function to generate a 'Red Flag' requirement, including the original requirement ID, error logs, and failure history.
+  - [ ] Modify `_handle_failure` to reset the `CurrentStage` to `Engineer` after generating the Red Flag requirement.
+  - [ ] Remove the `Rehearsal` stage from all logic, including the `Governor.RULES` and any `_advance_stage` handling.
+
+---
+
+### ID: REQ-DW8-059
+
+- **Title:** Diagnose and Fix Persistent `GitCommandError` During Push
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** All attempts to fix the `GitCommandError: URL rejected` have failed. The root cause of the malformed URL must be diagnosed before another fix is attempted.
+- **SMRs:**
+  - [ ] In `git_handler.py`, modify the `push_to_remote` function to print the exact, full `remote_url` it is using for the `git push` command *before* the command is executed. This will make the malformed URL visible in the logs.
+  - [ ] Analyze the logged URL to identify the source of the parsing error.
+  - [ ] Implement a definitive fix for the URL construction in `get_remote_url`.
+
+---
+
 ### ID: REQ-DW8-057
 
 - **Title:** Fix Persistent `GitCommandError` with Simplified URL Construction

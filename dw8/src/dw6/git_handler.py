@@ -91,6 +91,7 @@ def push_to_remote(repo: git.Repo = None, retries=3, delay=5):
     for attempt in range(retries):
         try:
             print(f"[GIT] Pushing to {current_branch} (Attempt {attempt + 1}/{retries})...")
+            print(f"[DEBUG] Using remote URL: {remote_url}")
             repo.git.push(remote_url, current_branch, '--tags', '--force')
             print("[GIT] Push successful.")
             return
