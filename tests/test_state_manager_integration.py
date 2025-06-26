@@ -1,66 +1,97 @@
-import unittest
-from unittest.mock import patch, MagicMock
-import sys
+import pytest
+from unittest.mock import patch, MagicMock, mock_open
 import os
-import tempfile
-import shutil
+import sys
 from pathlib import Path
-import git
 
+# Add the src directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 from dw6.state_manager import WorkflowManager
 
-class TestWorkflowManagerIntegration(unittest.TestCase):
-
-    def setUp(self):
-        """Set up a temporary directory and initialize a Git repository."""
-        self.test_dir = tempfile.mkdtemp()
-        self.original_cwd = os.getcwd()
-        os.chdir(self.test_dir)
-
-        # Initialize a Git repository
-        self.repo = git.Repo.init(self.test_dir)
-
-        # Create dummy files and directories
-        os.makedirs("docs", exist_ok=True)
-        os.makedirs("logs", exist_ok=True)
-        os.makedirs("deliverables/coding", exist_ok=True)
-        Path("docs/WORKFLOW_MASTER.md").touch()
-        Path("docs/PROJECT_REQUIREMENTS.md").touch()
-
-        # Create an initial commit
-        self.repo.index.add(["docs/WORKFLOW_MASTER.md", "docs/PROJECT_REQUIREMENTS.md"])
-        self.repo.index.commit("Initial commit")
-
-    def tearDown(self):
-        """Clean up the temporary directory."""
-        os.chdir(self.original_cwd)
-        shutil.rmtree(self.test_dir)
-
-    @patch('dw6.state_manager.WorkflowState')
-    @patch('dw6.git_handler.get_changes_since_last_commit')
-    def test_approve_coder_stage_creates_deliverable(self, mock_get_changes, mock_WorkflowState):
-        """Ensure approving Coder stage generates a deliverable without altering the real state."""
-        # Arrange
-        mock_state_instance = mock_WorkflowState.return_value
-        mock_state_instance.get.side_effect = lambda key, default=None: {
-            'CurrentStage': 'Coder',
-            'RequirementPointer': '10',
-            'CycleCounter': '10'
-        }.get(key, default)
-        mock_get_changes.return_value = (['src/main.py'], 'diff --git a/src/main.py b/src/main.py')
-        
+@pytest.fixture
+def manager_fixture():
+    """Provides a WorkflowManager instance with a clean state for each test."""
+    # Use mock_open to simulate the state file
+    m = mock_open()
+    with patch('builtins.open', m):
+        # Ensure the logs directory exists for the state file
+        Path("logs").mkdir(exist_ok=True)
+        # Create a manager, which will initialize a fresh state
         manager = WorkflowManager()
-        manager.current_stage = 'Coder'
+        # Reset to a known stage for testing
+        manager.set_stage("Deployer")
+        yield manager
 
-        # Act
-        manager.approve()
+def test_failure_counter_increments_on_failure(manager_fixture):
+    """Integration test to ensure failure counter is incremented on deployment failure."""
+    manager = manager_fixture
+    
+    # Check initial state (should be no failure counter)
+    assert manager.state.get("FailureCounters.Deployer.mcp_push_files") is None
 
-        # Assert
-        deliverable_path = Path("deliverables/coding/cycle_10_coder_deliverable.md")
-        self.assertTrue(deliverable_path.exists())
-        mock_state_instance.save.assert_called_once()
+    # Simulate a failed deployment push
+    with patch('dw6.git_handler.mcp_push_files', return_value=None),
+         patch('sys.exit'): # Patch sys.exit to prevent test termination
+        manager._validate_deployment(allow_failures=False)
 
-if __name__ == '__main__':
-    unittest.main()
+    # Check that the counter was incremented
+    assert manager.state.get("FailureCounters.Deployer.mcp_push_files") == "1"
+
+    # Simulate another failure
+    with patch('dw6.git_handler.mcp_push_files', return_value=None),
+         patch('sys.exit'): 
+        manager._validate_deployment(allow_failures=False)
+
+    # Check that the counter is now 2
+    assert manager.state.get("FailureCounters.Deployer.mcp_push_files") == "2"
+
+def test_failure_counter_resets_on_stage_advancement(manager_fixture):
+    """Integration test to ensure failure counters are reset when a stage is advanced."""
+    manager = manager_fixture
+
+    # First, create a failure counter in the 'Deployer' stage
+    with patch('dw6.git_handler.mcp_push_files', return_value=None),
+         patch('sys.exit'):
+        manager._validate_deployment(allow_failures=False)
+    
+    assert manager.state.get("FailureCounters.Deployer.mcp_push_files") == "1"
+
+    # Now, successfully validate and advance the stage
+    # This will move from 'Deployer' to 'Finished'
+    with patch('dw6.git_handler.mcp_push_files', return_value="sha123"),\
+         patch('dw6.git_handler.mcp_create_and_push_tag'):
+        manager.approve() # This calls _validate_deployment -> _advance_stage
+
+    # The stage should now be 'Finished'
+    assert manager.current_stage == "Finished"
+
+    # Now, let's imagine we start a new cycle and go back to 'Deployer'
+    # The _reset_failure_counters should have been called for 'Deployer' upon leaving it.
+    # To test this, we can manually check the state data because advancing to 'Finished'
+    # doesn't automatically loop back. The logic in _advance_stage calls reset on the *next* stage.
+    # Let's manually set the stage back to Deployer and check.
+    
+    # The core check: was the key deleted from the state data?
+    # We need to inspect the state data directly before it gets re-saved.
+    # The reset happens upon advancing TO the next stage, so we check the state for the OLD stage.
+    # Let's re-run the logic slightly differently to make the test clearer.
+
+    # 1. Set stage to Validator
+    manager.set_stage("Validator")
+    # 2. Create a failure counter for Validator
+    manager.state.set("FailureCounters.Validator.some_check", "3")
+    manager.state.save()
+    assert manager.state.get("FailureCounters.Validator.some_check") == "3"
+
+    # 3. Advance from Validator to Deployer
+    with patch.object(manager, '_validate_validator', return_value=True):
+         manager.approve()
+
+    # 4. Check that the counter for the *new* stage (Deployer) was reset.
+    # In this case, we are checking that if any counters *had* existed for Deployer, they'd be gone.
+    # A better test is to check that the counter for the *previous* stage is still there,
+    # and the one for the *new* stage is not.
+    # The current implementation resets the counters for the STAGE YOU ARE ENTERING.
+    assert "FailureCounters.Deployer.mcp_push_files" not in manager.state.data
+    assert manager.state.get("FailureCounters.Validator.some_check") == "3" # The old one should persist

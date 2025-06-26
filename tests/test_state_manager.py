@@ -1,75 +1,65 @@
-import sys
+import pytest
+from unittest.mock import patch, MagicMock, mock_open
 import os
-import unittest
-from unittest.mock import patch, mock_open
+import sys
 from pathlib import Path
 
-# Add src to path to allow importing state_manager
+# Add the src directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from dw6.state_manager import WorkflowManager
+from dw6.state_manager import WorkflowManager, WorkflowState
 
-class TestStateManager(unittest.TestCase):
-
-    @patch('dw6.state_manager.WorkflowState')
-    @patch('dw6.state_manager.git_handler.get_changes_since_last_commit')
-    @patch('builtins.open', new_callable=mock_open)
-    @patch('pathlib.Path.mkdir')
-    def test_generate_coder_deliverable(self, mock_mkdir, mock_file, mock_get_changes, mock_WorkflowState):
-        """Test that the coder deliverable is generated correctly."""
-        # Arrange: Set up mock return values
-        mock_changed_files = ['src/dw6/state_manager.py', 'src/dw6/git_handler.py']
-        mock_diff = '--- a/src/dw6/git_handler.py\n+++ b/src/dw6/git_handler.py\n@@ -1,1 +1,1 @@...'
-        mock_get_changes.return_value = (mock_changed_files, mock_diff)
-
-        mock_state_instance = mock_WorkflowState.return_value
-        mock_state_instance.get.side_effect = lambda key, default=None: {
-            'RequirementPointer': '10',
+@pytest.fixture
+def mock_state():
+    """Fixture to create a mocked WorkflowState."""
+    with patch('dw6.state_manager.WorkflowState') as MockState:
+        instance = MockState.return_value
+        instance.get.side_effect = lambda key, default=None: {
+            "CurrentStage": "Deployer",
+            "CycleCounter": "5"
         }.get(key, default)
+        instance.data = {"CurrentStage": "Deployer", "CycleCounter": "5"}
+        yield instance
+
+@pytest.fixture
+def manager(mock_state):
+    """Fixture to create a WorkflowManager with a mocked state."""
+    # Since the manager initializes its state in __init__, we need to patch before creating it
+    return WorkflowManager()
+
+def test_validate_deployment_success(manager):
+    """Test that deployment validation succeeds when MCP calls are successful."""
+    with patch('dw6.git_handler.mcp_push_files', return_value="some_commit_sha") as mock_push,
+         patch('dw6.git_handler.mcp_create_and_push_tag') as mock_tag:
         
-        # Instantiate the manager and set the stage
-        manager = WorkflowManager()
-        manager.current_stage = 'Coder'
+        result = manager._validate_deployment()
 
-        # Reset the mock to ignore the call made during initialization
-        mock_file.reset_mock()
+        assert result is True
+        mock_push.assert_called_once_with("feat: Coder stage submission", ["src", "tests"])
+        mock_tag.assert_called_once_with("v1.5", "some_commit_sha", "Release for cycle 5")
 
-        # Act: Call the private method to generate the deliverable
-        manager._generate_coder_deliverable()
+def test_validate_deployment_failure_and_exit(manager):
+    """Test that deployment validation fails and exits if MCP push fails."""
+    with patch('dw6.git_handler.mcp_push_files', return_value=None) as mock_push,
+         patch('dw6.state_manager.WorkflowManager._increment_failure_counter') as mock_increment,
+         patch('sys.exit') as mock_exit:
 
-        # Assert: Check that the mocks were called as expected
-        mock_get_changes.assert_called_once()
-        mock_file.assert_called_once_with(Path('deliverables/coding/cycle_10_coder_deliverable.md'), 'w')
-        
-        handle = mock_file()
-        handle.write.assert_any_call(f"# Coder Stage Deliverable for Requirement 10\n\n")
-        handle.write.assert_any_call('## Changed Files\n\n')
-        handle.write.assert_any_call('\n'.join(f"- `{file}`" for file in mock_changed_files))
-        handle.write.assert_any_call('\n\n## Diff\n\n')
-        handle.write.assert_any_call('```diff\n')
-        handle.write.assert_any_call(mock_diff)
+        result = manager._validate_deployment(allow_failures=False)
 
-    @patch('dw6.state_manager.git_handler.push_to_remote')
-    @patch('dw6.state_manager.git_handler.get_local_tags_for_commit')
-    @patch('dw6.state_manager.git_handler.get_remote_tags_with_commits')
-    @patch('dw6.state_manager.git_handler.get_latest_commit_hash')
-    @patch('dw6.state_manager.git_handler.is_github_token_present')
-    def test_deployer_validation_pushes_to_remote(self, mock_is_token, mock_get_hash, mock_get_remote_tags, mock_get_local_tags, mock_push):
-        """Test that the Deployer stage validation calls push_to_remote."""
-        # Arrange
-        mock_is_token.return_value = True
-        mock_get_hash.return_value = 'dummy_hash'
-        mock_get_remote_tags.return_value = {'v1.0': 'dummy_hash'}
-        
-        with patch('dw6.state_manager.WorkflowState.save'):
-            manager = WorkflowManager()
-        manager.current_stage = 'Deployer'
-
-        # Act
-        manager._validate_deployment()
-
-        # Assert
+        assert result is False
         mock_push.assert_called_once()
+        mock_increment.assert_called_once_with("mcp_push_files")
+        mock_exit.assert_called_once_with(1)
 
-if __name__ == '__main__':
-    unittest.main()
+def test_validate_deployment_failure_allowed(manager):
+    """Test that deployment validation fails but continues if failures are allowed."""
+    with patch('dw6.git_handler.mcp_push_files', return_value=None) as mock_push,
+         patch('dw6.state_manager.WorkflowManager._increment_failure_counter') as mock_increment,
+         patch('sys.exit') as mock_exit:
+
+        result = manager._validate_deployment(allow_failures=True)
+
+        assert result is False
+        mock_push.assert_called_once()
+        mock_increment.assert_called_once_with("mcp_push_files")
+        mock_exit.assert_not_called()
