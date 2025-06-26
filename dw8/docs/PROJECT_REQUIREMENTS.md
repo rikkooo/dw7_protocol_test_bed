@@ -549,6 +549,18 @@ This document is the single source of truth for all project requirements. It is 
 
 ---
 
+### ID: REQ-DW8-056
+
+- **Title:** Fix `NameError` and `GitCommandError` in `git_handler`
+- **Status:** `In Progress`
+- **Priority:** `Critical`
+- **Details:** The deployment push fails due to two errors: a `NameError` because the `time` module is not imported, and a `GitCommandError` because the remote URL with the PAT is malformed. Both must be fixed in `src/dw6/git_handler.py`.
+- **SMRs:**
+  - [ ] Add `import time` to `src/dw6/git_handler.py`.
+  - [ ] Correct the URL construction in the `get_remote_url_with_pat` method to prevent misinterpretation of the PAT.
+
+---
+
 ### ID: REQ-DW8-001
 
 - **Title:** Implement a persistent failure counter within the `WorkflowState`.

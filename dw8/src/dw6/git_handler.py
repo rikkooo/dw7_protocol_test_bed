@@ -1,9 +1,11 @@
 import git
 import sys
 import os
+import time
 from dotenv import load_dotenv
 from pathlib import Path
 import re
+from urllib.parse import urlparse, urlunparse
 
 # --- Environment and Repo Setup ---
 
@@ -42,16 +44,24 @@ def get_remote_url(repo: git.Repo = None) -> str:
         print("ERROR: No remotes found in the repository.", file=sys.stderr)
         sys.exit(1)
     
-    remote_url = repo.remotes.origin.url
+    remote_url = repo.remotes.origin.url.strip()
     token = load_github_token()
     
     # Inject the token into the URL for HTTPS authentication
     if remote_url.startswith("https://"):
-        url_parts = list(re.match(r"(https://)(.*)", remote_url).groups())
-        authenticated_url = f"{url_parts[0]}{token}@{url_parts[1]}"
-        return authenticated_url
-    
-    return remote_url # Return original if not HTTPS
+        try:
+            parts = urlparse(remote_url)
+            new_netloc = f"{token}@{parts.netloc}"
+            path = parts.path
+            if path.endswith('/'):
+                path = path[:-1]
+            authenticated_url = urlunparse(parts._replace(netloc=new_netloc, path=path))
+            return authenticated_url
+        except Exception as e:
+            print(f"ERROR: Could not parse remote URL '{remote_url}'. Error: {e}", file=sys.stderr)
+            sys.exit(1)
+
+    return remote_url
 
 def get_repo_info_from_remote_url(remote_url: str):
     """Extracts the repository owner and name from the remote URL."""
