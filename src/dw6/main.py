@@ -63,51 +63,54 @@ def register_technical_debt(description, issue_type="test", commit_to_fix=None):
     print(f"Successfully logged technical debt {new_id}.")
     return new_id
 
-def revert_to_previous_stage(manager, target_stage_name=None):
-    """Reverts the workflow to the previous stage or a specified target stage."""
-    current_stage = manager.current_stage
-    current_index = STAGES.index(current_stage)
-
-    if target_stage_name:
-        if target_stage_name not in STAGES:
-            print(f"Error: Invalid target stage '{target_stage_name}'.", file=sys.stderr)
-            sys.exit(1)
-        target_index = STAGES.index(target_stage_name)
-    else:
-        target_index = current_index - 1
-
-    if current_index == 0:
-        print("Info: Already at the first stage ('Engineer'). Cannot revert further.", file=sys.stdout)
-        sys.exit(0)
-
-    if target_index < 0:
-        print("Error: Cannot revert past the first stage.", file=sys.stderr)
+def revert_to_previous_stage(manager, target_stage=None):
+    """Reverts the workflow to a previous stage."""
+    try:
+        manager.revert_stage(target_stage)
+    except ValueError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
 
-    target_stage = STAGES[target_index]
+def handle_status(manager):
+    """Handles the status command."""
+    state = manager.get_state()
+    current_stage = state.get("CurrentStage", "Unknown")
+    requirement_pointer = state.get("RequirementPointer", "Unknown")
+    cycle_counter = state.get("CycleCounter", "Unknown")
 
-    if target_index > current_index:
-        print(f"Error: Cannot revert forward from {current_stage} to {target_stage}.")
-        print(f"Use 'approve' to move forward in the workflow.")
-        return
+    print(f"--- DW7 Workflow Status ---")
+    print(f"Cycle: {cycle_counter}")
+    print(f"Current Stage: {current_stage}")
+    print(f"Requirement ID: {requirement_pointer}")
 
-    print(f"Reverting from {current_stage} to {target_stage}...")
-    manager.state.set("CurrentStage", target_stage)
-    manager.state.save()
-    print(f"Successfully reverted to {target_stage} stage.")
+    try:
+        with open("dw7_validation_report.md", "r") as f:
+            content = f.read()
+        
+        # Use regex to find the requirement description
+        match = re.search(f"## Finding {requirement_pointer}:(.*?)\n", content)
+        if match:
+            requirement_title = match.group(1).strip()
+            print(f"Requirement: {requirement_title}")
+        else:
+            print("Requirement description not found in validation report.")
+
+    except FileNotFoundError:
+        print("Validation report not found.")
+    print("---------------------------")
 
 def main():
     """Main entry point for the DW6 CLI."""
-    parser = argparse.ArgumentParser(description="DW6 Workflow Management CLI")
-    subparsers = parser.add_subparsers(dest="command", help="Available commands", required=True)
+    parser = argparse.ArgumentParser(description="DW6 Workflow Management Tool")
+    subparsers = parser.add_subparsers(dest="command", help='Available commands')
 
     # Approve command
     approve_parser = subparsers.add_parser("approve", help="Approve the current stage and advance to the next.")
-    approve_parser.add_argument("--with-tech-debt", action="store_true", help="Approve the stage even with validation failures, logging them as technical debt.")
+    approve_parser.add_argument("--with-tech-debt", action="store_true", help="Acknowledge and approve with outstanding technical debt.")
 
     # New command
-    new_parser = subparsers.add_parser("new", help="Create a new requirement specification from a prompt.")
-    new_parser.add_argument("prompt", type=str, help="The high-level user prompt.")
+    new_parser = subparsers.add_parser("new", help="Create a new deliverable based on a prompt.")
+    new_parser.add_argument("prompt", type=str, help="The prompt to generate the deliverable from.")
 
     # Meta-req command
     meta_req_parser = subparsers.add_parser("meta-req", help="Register a new meta-requirement for the workflow.")
@@ -126,6 +129,9 @@ def main():
     # Do command
     do_parser = subparsers.add_parser("do", help="Execute a governed action.")
     do_parser.add_argument("action", type=str, help="The action to execute.")
+
+    # Status command
+    status_parser = subparsers.add_parser("status", help="Display the current workflow status.")
 
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
@@ -149,9 +155,12 @@ def main():
     elif args.command == "approve":
         manager.approve(with_tech_debt=args.with_tech_debt)
     elif args.command == "new":
+        cycle_counter = manager.state.get("CycleCounter")
         augmenter = PromptAugmenter()
         augmented_prompt = augmenter.augment_prompt(args.prompt)
-        process_prompt(augmented_prompt)
+        process_prompt(augmented_prompt, cycle_counter)
+    elif args.command == "status":
+        handle_status(manager)
 
 if __name__ == "__main__":
     main()

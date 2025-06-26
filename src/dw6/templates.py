@@ -8,13 +8,13 @@ from .state_manager import WorkflowState
 
 WORKING_PHILOSOPHY = """**Working Philosophy:** We always look to granularize projects into small, atomic requirements and sub-requirements. The more granular the requirement, the easier it is to scope, implement, test, and validate. This iterative approach minimizes risk and ensures steady, verifiable progress."""
 
-def process_prompt(prompt_text: str):
+def process_prompt(prompt_text: str, cycle_number: str):
     """
     Augments a raw user prompt and generates a formal technical specification markdown file.
     """
     state = WorkflowState()
     requirement_id = state.get("RequirementPointer")
-    file_path = f"deliverables/engineering/cycle_{requirement_id}_technical_specification.md"
+    file_path = f"deliverables/engineering/cycle_{cycle_number}_technical_specification.md"
 
     content = f"# Requirement: {requirement_id}\n\n"
     content += f"## 1. High-Level Goal\n\n{prompt_text}\n\n"

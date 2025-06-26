@@ -1,7 +1,7 @@
 import sys
 import os
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 from dotenv import load_dotenv
 import git
 from dw6.config import LAST_COMMIT_FILE
@@ -33,8 +33,11 @@ def _get_authenticated_remote_url(repo):
     try:
         remote_url = repo.remotes.origin.url
         if "https://" in remote_url:
-            # Inject token into URL for authentication: https://<token>@github.com/user/repo.git
-            authenticated_url = remote_url.replace("https://", f"https://{token}@")
+            parts = urlparse(remote_url)
+            new_netloc = f"{token}@{parts.hostname}"
+            if parts.port:
+                new_netloc += f":{parts.port}"
+            authenticated_url = urlunparse(parts._replace(netloc=new_netloc))
             return authenticated_url
         else:
             print(f"ERROR: Cannot authenticate with remote URL: {remote_url}", file=sys.stderr)

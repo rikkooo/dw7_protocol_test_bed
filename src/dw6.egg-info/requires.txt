@@ -8,3 +8,4 @@ httpx[socks]
 pytest
 pytest-cov
 pytest-mock
+httpx

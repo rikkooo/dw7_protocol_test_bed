@@ -5,6 +5,7 @@ import os
 import tempfile
 import shutil
 from pathlib import Path
+import git
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
@@ -13,10 +14,13 @@ from dw6.state_manager import WorkflowManager
 class TestWorkflowManagerIntegration(unittest.TestCase):
 
     def setUp(self):
-        """Set up a temporary directory to simulate the project structure."""
+        """Set up a temporary directory and initialize a Git repository."""
         self.test_dir = tempfile.mkdtemp()
         self.original_cwd = os.getcwd()
         os.chdir(self.test_dir)
+
+        # Initialize a Git repository
+        self.repo = git.Repo.init(self.test_dir)
 
         # Create dummy files and directories
         os.makedirs("docs", exist_ok=True)
@@ -24,6 +28,10 @@ class TestWorkflowManagerIntegration(unittest.TestCase):
         os.makedirs("deliverables/coding", exist_ok=True)
         Path("docs/WORKFLOW_MASTER.md").touch()
         Path("docs/PROJECT_REQUIREMENTS.md").touch()
+
+        # Create an initial commit
+        self.repo.index.add(["docs/WORKFLOW_MASTER.md", "docs/PROJECT_REQUIREMENTS.md"])
+        self.repo.index.commit("Initial commit")
 
     def tearDown(self):
         """Clean up the temporary directory."""
@@ -36,7 +44,11 @@ class TestWorkflowManagerIntegration(unittest.TestCase):
         """Ensure approving Coder stage generates a deliverable without altering the real state."""
         # Arrange
         mock_state_instance = mock_WorkflowState.return_value
-        mock_state_instance.get.return_value = 'Coder'
+        mock_state_instance.get.side_effect = lambda key, default=None: {
+            'CurrentStage': 'Coder',
+            'RequirementPointer': '10',
+            'CycleCounter': '10'
+        }.get(key, default)
         mock_get_changes.return_value = (['src/main.py'], 'diff --git a/src/main.py b/src/main.py')
         
         manager = WorkflowManager()
@@ -46,7 +58,7 @@ class TestWorkflowManagerIntegration(unittest.TestCase):
         manager.approve()
 
         # Assert
-        deliverable_path = Path("deliverables/coding/coder_deliverable.md")
+        deliverable_path = Path("deliverables/coding/cycle_10_coder_deliverable.md")
         self.assertTrue(deliverable_path.exists())
         mock_state_instance.save.assert_called_once()
 

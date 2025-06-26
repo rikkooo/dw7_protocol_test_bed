@@ -111,6 +111,7 @@ dependencies = [
 
 [package.optional-dependencies]
 test = [
+    { name = "httpx" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-mock" },
@@ -120,6 +121,7 @@ test = [
 requires-dist = [
     { name = "fastapi" },
     { name = "gitpython" },
+    { name = "httpx", marker = "extra == 'test'" },
     { name = "httpx", extras = ["socks"] },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "pytest-cov", marker = "extra == 'test'" },
