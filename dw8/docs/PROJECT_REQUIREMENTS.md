@@ -727,3 +727,107 @@ This document is the single source of truth for all project requirements. It is 
 - **SMRs:**
   - [ ] Add a probabilistic trigger to the `_advance_stage` method.
   - [ ] Define the "sanity check" prompt and logic.
+---
+
+### ID: REQ-DW8-060
+
+- **Title:** Red Flag: Unhandled Critical Failure in Validator Stage
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** The workflow encountered a critical failure after multiple retries. The system has been reset to the Engineer stage to re-evaluate the approach.
+- **SMRs:**
+  - [ ] Analyze the failure context below to understand the root cause.
+  - [ ] Formulate a new plan to address the failure.
+  - [ ] Implement the new plan.
+- **Failure Context:**
+  - **Exception Type:** `CalledProcessError`
+  - **Exception Message:**
+    ```
+    Command '['/home/ubuntu/venvs/dw7_protocol_test_bed/bin/python', '-m', 'pytest']' returned non-zero exit status 1.
+    ```
+  - **Traceback:**
+    ```
+      File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 81, in approve
+          if self._validate_stage(allow_failures):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 97, in _validate_stage
+          return self._validate_tests(allow_failures)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 210, in _validate_tests
+          raise e
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 200, in _validate_tests
+          subprocess.run([python_executable, "-m", "pytest"], check=True, capture_output=True, text=True)
+        File "/usr/lib/python3.12/subprocess.py", line 571, in run
+          raise CalledProcessError(retcode, process.args,
+      
+    ```
+
+---
+
+### ID: REQ-DW8-061
+
+- **Title:** Red Flag: Unhandled Critical Failure in Validator Stage
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** The workflow encountered a critical failure after multiple retries. The system has been reset to the Engineer stage to re-evaluate the approach.
+- **SMRs:**
+  - [ ] Analyze the failure context below to understand the root cause.
+  - [ ] Formulate a new plan to address the failure.
+  - [ ] Implement the new plan.
+- **Failure Context:**
+  - **Exception Type:** `CalledProcessError`
+  - **Exception Message:**
+    ```
+    Command '['/home/ubuntu/venvs/dw7_protocol_test_bed/bin/python', '-m', 'pytest']' returned non-zero exit status 1.
+    ```
+  - **Traceback:**
+    ```
+      File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 81, in approve
+          if self._validate_stage(allow_failures):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 97, in _validate_stage
+          return self._validate_tests(allow_failures)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 210, in _validate_tests
+          raise e
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 200, in _validate_tests
+          subprocess.run([python_executable, "-m", "pytest"], check=True, capture_output=True, text=True)
+        File "/usr/lib/python3.12/subprocess.py", line 571, in run
+          raise CalledProcessError(retcode, process.args,
+      
+    ```
+
+---
+
+### ID: REQ-DW8-062
+
+- **Title:** Red Flag: Unhandled Critical Failure in Validator Stage
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** The workflow encountered a critical failure after multiple retries. The system has been reset to the Engineer stage to re-evaluate the approach.
+- **SMRs:**
+  - [ ] Analyze the failure context below to understand the root cause.
+  - [ ] Formulate a new plan to address the failure.
+  - [ ] Implement the new plan.
+- **Failure Context:**
+  - **Exception Type:** `CalledProcessError`
+  - **Exception Message:**
+    ```
+    Command '['/home/ubuntu/venvs/dw7_protocol_test_bed/bin/python', '-m', 'pytest']' returned non-zero exit status 1.
+    ```
+  - **Traceback:**
+    ```
+      File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 81, in approve
+          if self._validate_stage(allow_failures):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 97, in _validate_stage
+          return self._validate_tests(allow_failures)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 210, in _validate_tests
+          raise e
+        File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py", line 200, in _validate_tests
+          subprocess.run([python_executable, "-m", "pytest"], check=True, capture_output=True, text=True)
+        File "/usr/lib/python3.12/subprocess.py", line 571, in run
+          raise CalledProcessError(retcode, process.args,
+      
+    ```

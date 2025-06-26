@@ -49,8 +49,10 @@ def get_remote_url(repo: git.Repo = None) -> str:
     
     # Inject the token into the URL for HTTPS authentication
     if remote_url.startswith("https://"):
-        url_without_scheme = remote_url[len("https://"):]
-        authenticated_url = f"https://{token}@{url_without_scheme}"
+        # Strip existing user/pass info if present and inject token using unambiguous format
+        url_without_auth = re.sub(r'//.*?@', '//', remote_url)
+        url_without_scheme = url_without_auth[len("https://"):]
+        authenticated_url = f"https://x-access-token:{token}@{url_without_scheme}"
         return authenticated_url
 
     return remote_url

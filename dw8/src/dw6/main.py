@@ -106,7 +106,7 @@ def main():
 
     # Approve command
     approve_parser = subparsers.add_parser("approve", help="Approve the current stage and advance to the next.")
-    approve_parser.add_argument("--with-tech-debt", action="store_true", help="Acknowledge and approve with outstanding technical debt.")
+    approve_parser.add_argument("--allow-failures", action="store_true", help="Approve even if validation checks fail.")
 
     # New command
     new_parser = subparsers.add_parser("new", help="Create a new deliverable based on a prompt.")
@@ -153,7 +153,7 @@ def main():
         except PermissionError:
             sys.exit(1)
     elif args.command == "approve":
-        manager.approve(with_tech_debt=args.with_tech_debt)
+        manager.approve(allow_failures=args.allow_failures)
     elif args.command == "new":
         cycle_counter = manager.state.get("CycleCounter")
         augmenter = PromptAugmenter()

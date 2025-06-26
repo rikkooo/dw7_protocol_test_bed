@@ -4,6 +4,7 @@ import os
 import subprocess
 import shutil
 import git
+import traceback
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -17,7 +18,6 @@ DELIVERABLE_PATHS = {
     "Coder": "deliverables/coding",
     "Validator": "deliverables/testing",
     "Deployer": "deliverables/deployment",
-    "Rehearsal": "deliverables/rehearsal",
 }
 
 class Governor:
@@ -77,11 +77,14 @@ class WorkflowManager:
         self._print_rules()
 
         print(f"Governor: Validating exit criteria for stage: {self.current_stage}")
-        if self._validate_stage(allow_failures):
-            print("Stage validation successful.")
-            self._advance_stage()
-        else:
-            self._handle_failure()
+        try:
+            if self._validate_stage(allow_failures):
+                print("Stage validation successful.")
+                self._advance_stage()
+            else:
+                self._handle_failure(Exception("Stage validation failed without an exception."))
+        except Exception as e:
+            self._handle_failure(e)
 
     def _print_rules(self):
         rules = self.governor.RULES.get(self.current_stage, [])
@@ -151,20 +154,21 @@ class WorkflowManager:
             f.write("\n```")
         print(f"Generated Coder deliverable at {deliverable_path}")
 
-    def _handle_failure(self):
+    def _handle_failure(self, exception):
         failure_key = f"FailureCounters.{self.current_stage}.{self._get_failure_context()}"
         new_count = self.state.increment(failure_key)
         print(f"[FAILURE_COUNTER] Incremented '{failure_key}' to {new_count}.")
 
         if new_count >= FAILURE_THRESHOLD:
             print("--- Failure threshold reached. Activating Escalation Protocol. ---", file=sys.stderr)
-            print("--- Creating Red Flag requirement and resetting to Engineer stage. ---", file=sys.stderr)
-            # In a real implementation, this would generate a detailed failure report.
+            self._create_red_flag_requirement(exception)
+            print("--- Resetting to Engineer stage. ---", file=sys.stderr)
             self.state.set("CurrentStage", "Engineer")
             self.state.save()
             sys.exit(1) # Terminate the current failed run
         else:
-            print(f"--- Governor: Stage {self.current_stage} Approval Failed ---")
+            print(f"--- Governor: Stage {self.current_stage} Approval Failed. Halting. ---")
+            sys.exit(1)
 
     def _get_failure_context(self):
         if self.current_stage == "Validator":
@@ -188,21 +192,22 @@ class WorkflowManager:
         print(f"Saved current commit SHA for {self.current_stage} stage: {commit_sha[:7]}")
 
     def _validate_tests(self, allow_failures=False):
-        print("Running tests...")
+        print("Validating tests...")
         python_executable = self.state.get("PythonExecutablePath")
         if not python_executable:
-            print("Python executable not found in state. Aborting test validation.", file=sys.stderr)
-            return False
+            raise FileNotFoundError("Python executable path not found in state.")
         try:
-            subprocess.run([python_executable, "-m", "pytest"], check=True, cwd=os.getcwd())
-            print("Tests passed.")
+            subprocess.run([python_executable, "-m", "pytest"], check=True, capture_output=True, text=True)
+            print("All tests passed.")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Tests failed with exit code {e.returncode}.", file=sys.stderr)
+            print("--- Test Failures Detected ---", file=sys.stderr)
+            print(e.stdout, file=sys.stderr)
+            print(e.stderr, file=sys.stderr)
             if allow_failures:
-                print("Continuing despite test failures as per user request.")
-                return False
-            return False
+                print("WARNING: Test failures detected, but approval is forced.", file=sys.stderr)
+                return True
+            raise e
 
     def _validate_deployment(self):
         from dw6 import git_handler
@@ -227,7 +232,7 @@ class WorkflowManager:
                 return True
             except Exception as e:
                 print(f"Deployment validation failed: {e}", file=sys.stderr)
-                return False
+                raise e
 
     def _execute_protocol_evolution(self):
         from dw6 import git_handler
@@ -285,13 +290,54 @@ class WorkflowManager:
             return True
 
         except Exception as e:
-            import traceback
-            print(f"ERROR: Failed during protocol evolution. Exception type: {type(e).__name__}", file=sys.stderr)
-            print(f"ERROR: Exception details: {e}", file=sys.stderr)
-            print("--- Traceback ---", file=sys.stderr)
+            print(f"ERROR: Failed during protocol evolution: {e}", file=sys.stderr)
+            raise e
+
+    def _create_red_flag_requirement(self, exception):
+        print("--- Creating Red Flag requirement... ---", file=sys.stderr)
+        try:
+            with open(REQUIREMENTS_FILE, "r+") as f:
+                content = f.read()
+                req_ids = [int(num) for num in re.findall(r"REQ-DW8-(\d+)", content)]
+                next_id = max(req_ids) + 1 if req_ids else 1
+                new_req_id = f"REQ-DW8-{next_id:03d}"
+
+                exc_type = type(exception).__name__
+                exc_message = str(exception).replace('\n', '\n    ')
+                tb_str = "".join(traceback.format_tb(exception.__traceback__)).replace('\n', '\n      ')
+
+                red_flag_template = f"""
+---
+
+### ID: {new_req_id}
+
+- **Title:** Red Flag: Unhandled Critical Failure in {self.current_stage} Stage
+- **Status:** `Pending`
+- **Priority:** `Critical`
+- **Details:** The workflow encountered a critical failure after multiple retries. The system has been reset to the Engineer stage to re-evaluate the approach.
+- **SMRs:**
+  - [ ] Analyze the failure context below to understand the root cause.
+  - [ ] Formulate a new plan to address the failure.
+  - [ ] Implement the new plan.
+- **Failure Context:**
+  - **Exception Type:** `{exc_type}`
+  - **Exception Message:**
+    ```
+    {exc_message}
+    ```
+  - **Traceback:**
+    ```
+    {tb_str}
+    ```
+"""
+                f.write(red_flag_template)
+            
+            print(f"Successfully created and appended new requirement {new_req_id} to {REQUIREMENTS_FILE}")
+
+        except Exception as e:
+            print(f"FATAL: Could not create Red Flag requirement. Error: {e}", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
-            print("-----------------", file=sys.stderr)
-            return False
+
 
 class WorkflowState:
     def __init__(self, state_file=".workflow_state"):
