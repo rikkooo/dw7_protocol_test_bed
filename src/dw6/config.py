@@ -1,7 +1,7 @@
-from pathlib import Path
+# src/dw6/config.py
 
-# Define the root directory of the project
-PROJECT_ROOT = Path.cwd()
+# Stage definitions in the order of the workflow
+STAGES = ["Engineer", "Researcher", "Coder", "Validator", "Deployer"]
 
-# Path to the file that stores the SHA of the last approved commit
-LAST_COMMIT_FILE = PROJECT_ROOT / "logs" / ".last_commit_sha"
+# File paths
+STATE_FILE = "logs/workflow_state.txt"

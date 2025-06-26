@@ -14,72 +14,33 @@ def main():
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    # 'new' command
+    new_parser = subparsers.add_parser("new", help="Start a new development cycle for a requirement.")
+    new_parser.add_argument("requirement_id", type=str, help="The ID of the requirement to work on.")
+
     # 'approve' command
-    approve_parser = subparsers.add_parser(
-        "approve", help="Approve the current stage and advance to the next."
-    )
+    approve_parser = subparsers.add_parser("approve", help="Approve the current stage and advance to the next.")
 
-    # 'status' command
-    status_parser = subparsers.add_parser(
-        "status", help="Display the current status of the workflow."
-    )
-
-    # 'engineer' command group
-    engineer_parser = subparsers.add_parser(
-        "engineer", help="Commands for the engineering stage."
-    )
-    engineer_subparsers = engineer_parser.add_subparsers(dest="engineer_command", required=True)
-
-    # 'engineer start' command
-    engineer_start_parser = engineer_subparsers.add_parser(
-        "start", help="Start the engineering stage by creating the technical specification document."
-    )
+    # 'meta-req' command
+    meta_req_parser = subparsers.add_parser("meta-req", help="Manage meta-requirements.")
+    meta_req_subparsers = meta_req_parser.add_subparsers(dest="meta_command", required=True)
+    
+    # 'meta-req new' command
+    new_meta_parser = meta_req_subparsers.add_parser("new", help="Create a new meta-requirement.")
+    new_meta_parser.add_argument("-t", "--title", required=True, help="Title of the meta-requirement.")
+    new_meta_parser.add_argument("-d", "--details", required=True, help="Detailed description of the requirement.")
+    new_meta_parser.add_argument("-p", "--priority", required=True, choices=["Critical", "High", "Medium", "Low"], help="Priority of the requirement.")
 
     args = parser.parse_args()
     manager = WorkflowManager()
 
-    if args.command == "approve":
+    if args.command == "new":
+        manager.start_new_cycle(args.requirement_id)
+    elif args.command == "approve":
         manager.approve()
-    elif args.command == "status":
-        state = manager.get_state()
-        print("--- Current Workflow Status ---")
-        for key, value in state.items():
-            print(f"{key}: {value}")
-        print("-----------------------------")
-    elif args.command == "engineer":
-        if args.engineer_command == "start":
-            handle_engineer_start(manager)
-
-def handle_engineer_start(manager):
-    """
-    Handles the logic for the 'engineer start' command.
-    """
-    state = manager.get_state()
-    project_name = os.path.basename(os.getcwd())
-    cycle_number = state['RequirementPointer']
-    
-    spec_dir = "deliverables/engineering"
-    spec_filename = f"cycle_{cycle_number}_technical_specification.md"
-    spec_filepath = os.path.join(spec_dir, spec_filename)
-
-    if os.path.exists(spec_filepath):
-        print(f"Error: Technical specification file already exists at '{spec_filepath}'.")
-        return
-
-    os.makedirs(spec_dir, exist_ok=True)
-
-    content = TECHNICAL_SPECIFICATION_TEMPLATE.format(
-        project_name=project_name,
-        cycle_number=cycle_number,
-        date=datetime.now().strftime("%Y-%m-%d")
-    )
-
-    with open(spec_filepath, "w") as f:
-        f.write(content)
-
-    print(f"Successfully created technical specification at '{spec_filepath}'.")
-    print("You can now begin detailing the project requirements in this file.")
-
+    elif args.command == "meta-req":
+        if args.meta_command == "new":
+            manager.create_new_meta_requirement(args.title, args.details, args.priority)
 
 if __name__ == "__main__":
     main()
