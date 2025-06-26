@@ -101,7 +101,7 @@ def push_to_remote(repo: git.Repo = None, retries=3, delay=5):
                 time.sleep(delay)
             else:
                 print("FATAL: All push attempts failed.", file=sys.stderr)
-                sys.exit(1)
+                raise e
 
 def get_latest_commit_hash(repo: git.Repo = None):
     """Gets the hash of the latest commit."""

@@ -584,8 +584,9 @@ This document is the single source of truth for all project requirements. It is 
 - **SMRs:**
     - [x] In `git_handler.py`, modify the `push_to_remote` function to print the exact, full `remote_url` it is using for the `git push` command *before* the command is executed. This will make the malformed URL visible in the logs.
   - [x] Analyze the logged URL to identify the source of the parsing error.
-  - [ ] In `get_remote_url`, replace `repo.remotes.origin.url` with `repo.config_reader().get_value('remote "origin"', 'url')` to always get the pristine URL.
-  - [ ] Remove the debug print statement from `push_to_remote`.
+  - [x] In `get_remote_url`, replace `repo.remotes.origin.url` with `repo.config_reader().get_value('remote "origin"', 'url')` to always get the pristine URL.
+  - [x] Remove the debug print statement from `push_to_remote`.
+  - [ ] In `push_to_remote`, re-raise the `GitCommandError` after the final retry attempt fails to ensure the error is not swallowed.
 
 ---
 
