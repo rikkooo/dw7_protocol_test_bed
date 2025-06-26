@@ -201,15 +201,19 @@ class WorkflowManager:
             return True
 
         if not local_tags:
-            print(f"Deployment validation failed: Latest commit ({latest_commit_sha[:7]}) has not been tagged.", file=sys.stderr)
+            print("Deployment validation failed: No local tags found for the latest commit.", file=sys.stderr)
             if not allow_failures:
                 sys.exit(1)
-            print("WARNING: Proceeding despite deployment validation failures. Technical debt has been logged.")
+            return
+
+        print(f"Deployment validation successful: Latest commit is tagged with: {', '.join(local_tags)}.")
+
+        # Only push if there are new changes
+        if git_handler.is_push_required():
+            print("Pushing changes to remote repository...")
+            git_handler.push_to_remote()
         else:
-            print(f"Deployment validation successful: Latest commit is tagged with: {', '.join(local_tags)}.")
-        
-        print("Pushing changes to remote repository...")
-        git_handler.push_to_remote()
+            print("Skipping push, remote is already up-to-date.")
         return True
 
     def _run_pre_transition_actions(self):

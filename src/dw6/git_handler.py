@@ -6,8 +6,17 @@ from dotenv import load_dotenv
 import git
 from dw6.config import LAST_COMMIT_FILE
 
-# Load environment variables from .env file
-load_dotenv()
+# Find the project root by looking for the .git directory
+project_root = Path.cwd()
+while not (project_root / '.git').exists():
+    if project_root.parent == project_root:
+        print("ERROR: Could not find the project root (.git directory).", file=sys.stderr)
+        sys.exit(1)
+    project_root = project_root.parent
+
+# Load environment variables from .env file in the project root
+dotenv_path = project_root / '.env'
+load_dotenv(dotenv_path=dotenv_path)
 
 # --- Helper Functions ---
 
@@ -58,6 +67,39 @@ def is_github_token_present():
         print("Example: GITHUB_TOKEN=ghp_YourTokenHere", file=sys.stderr)
         return False
     return True
+
+def is_push_required():
+    """Checks if the local branch has commits that the remote branch does not."""
+    repo = get_repo()
+    try:
+        # Fetch the latest state from the remote without merging
+        print("[GIT] Fetching from remote to check status...")
+        repo.remotes.origin.fetch()
+
+        active_branch = repo.active_branch
+        tracking_branch = active_branch.tracking_branch()
+
+        if not tracking_branch:
+            print(f"WARNING: Local branch '{active_branch.name}' is not tracking a remote branch. Push is required to set upstream.", file=sys.stderr)
+            return True
+
+        # Get the list of commits that are in the local branch but not in the remote tracking branch
+        commits_to_push = list(repo.iter_commits(f'{tracking_branch.name}..{active_branch.name}'))
+
+        if not commits_to_push:
+            print("[GIT] Local branch is up-to-date with the remote. No push required.")
+            return False
+        else:
+            print(f"[GIT] Local branch is ahead of the remote by {len(commits_to_push)} commit(s). Push is required.")
+            return True
+
+    except git.GitCommandError as e:
+        print(f"ERROR: Could not check for pending pushes.\n{e}", file=sys.stderr)
+        # In case of error, assume a push is required to be safe
+        return True
+    except Exception as e:
+        print(f"An unexpected error occurred while checking for pending pushes: {e}", file=sys.stderr)
+        return True
 
 def is_working_directory_clean():
     """Checks if the Git working directory is clean (no uncommitted changes)."""
