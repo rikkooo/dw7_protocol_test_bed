@@ -117,5 +117,13 @@
     "status": "Deployed",
     "priority": "High",
     "path": "./reqs/REQ-DW8-015.md"
+  },
+  {
+    "id": "REQ-DW8-OS-003",
+    "title": "[Execution] Create Migration Script for Existing Requirements",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-003.md",
+    "completed_at": "2025-06-27T21:55:31.707374+00:00"
   }
 ]

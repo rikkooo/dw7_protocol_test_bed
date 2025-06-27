@@ -60,32 +60,39 @@ version = "0.1.0"
         assert deployer.config["PROJECT_REPO_URL"] == "https://github.com/user/test-project.git"
         assert deployer.config["OFFICIAL_PROTOCOL_DIRECTORY"] == "/tmp/dw_official"
 
-    @patch('dw6.git_handler.mcp5')
+    @patch('git.remote.Remote.push')
     @patch('dw6.git_handler.input', return_value='dummy_token_from_input')
     @patch('dw6.git_handler.save_github_token')
-    def test_credential_prompting(self, mock_save_token, mock_input, mock_mcp5, temp_project):
-        """Tests that the user is prompted for credentials if not found."""
-        # Start with a bad token to ensure the retry logic is what triggers the prompt
+    def test_credential_prompting_on_push_failure(self, mock_save_token, mock_input, mock_push, temp_project):
+        """Tests that the user is prompted for credentials if the git push fails with an auth error."""
+        # Arrange
+        # Ensure no environment token is present
         os.environ.pop('GITHUB_TOKEN', None)
+        # Start with a bad token in the .env to force the initial failure
         (temp_project / ".env").write_text('GITHUB_TOKEN="bad_token"')
-
-        # Mock the push method to simulate failure then success
-        mock_mcp5.push_files.side_effect = [
-            Exception('Authentication failed'), # First call fails
-            None  # Second call succeeds
-        ]
-
+    
         repo = git.Repo(temp_project)
         repo.create_remote('origin', 'https://github.com/dummy/dummy.git')
-
-        # Directly call the handler which contains the retry logic
+    
+        # Configure the mock for Remote.push
+        # Simulate an authentication failure on the first call, and success on the second
+        mock_push.side_effect = [
+            git.exc.GitCommandError('push', 128, stderr='fatal: Authentication failed'),
+            None  # Success
+        ]
+    
+        # Act
         from dw6.git_handler import push_to_remote
-        push_to_remote(files=['README.md'], message='Test credential prompting', repo=repo)
-
-        # Check that the prompt was triggered by the failure
+        # Call the function without tags, just a standard push
+        push_to_remote(repo=repo)
+    
+        # Assert
+        # The push should have been attempted twice
+        assert mock_push.call_count == 2
+        # The user should have been prompted for a new token
         mock_input.assert_called_once()
+        # The new token should have been saved
         mock_save_token.assert_called_once_with('dummy_token_from_input', temp_project / '.env')
-        assert mock_mcp5.push_files.call_count == 2
 
     @patch('dw6.git_handler.git.Repo')
     @patch('dw6.workflow.dp.exec_proto_evo.git_handler')

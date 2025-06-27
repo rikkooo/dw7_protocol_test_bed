@@ -127,13 +127,14 @@ class WorkflowKernel:
                 pending_events = json.load(f)
 
             if pending_events:
-                next_event = pending_events[0]
-                req_id = next_event.get("id")
+                next_event_summary = pending_events[0]
+                req_id = next_event_summary.get("id")
                 
                 if req_id:
                     self.state.set("RequirementPointer", req_id)
                     self.state.save()
-                    self._load_event_details(req_id)
+                    # Pass the full summary to the loader
+                    self._load_event_details(next_event_summary)
                     print(f"--- Governor: RequirementPointer set to next event in queue: {req_id}. ---")
                 else:
                     print(f"--- Governor: Error: Event in queue is missing an 'id'. ---", file=sys.stderr)
@@ -146,16 +147,55 @@ class WorkflowKernel:
             print(f"--- Governor: Error: Could not decode JSON from {PENDING_EVENTS_FILE}. ---", file=sys.stderr)
         except Exception as e:
             print(f"Error advancing requirement pointer: {e}", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
 
-    def _load_event_details(self, event_id):
-        """Loads the full event data from the corresponding JSON file."""
-        event_file = Path(f"events/{event_id}.json")
+    def _load_event_details(self, event_summary):
+        """Loads the full event data from the markdown file specified in the event summary."""
+        event_id = event_summary.get("id")
+        # The path in the JSON is relative to the project root, e.g., "./docs/reqs/..."
+        # Path() handles this correctly.
+        event_path_str = event_summary.get("path")
+
+        if not event_path_str:
+            print(f"--- Governor: WARNING: Event summary for {event_id} is missing a 'path'. ---", file=sys.stderr)
+            self.current_event = {"id": event_id, "title": "Details not found (missing path)"}
+            return
+
+        event_file = Path(event_path_str)
         if event_file.exists():
-            with open(event_file, "r") as f:
-                self.current_event = json.load(f)
+            try:
+                with open(event_file, "r", encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Basic parsing of the markdown file
+                title_match = re.search(r'#\s*.*:\s*(.*)', content)
+                title = title_match.group(1).strip() if title_match else event_summary.get("title", "Title not found")
+
+                description_match = re.search(r'##\s*1\.\s*Description\s*\n\s*(.*?)\n\s*##', content, re.DOTALL)
+                description = description_match.group(1).strip() if description_match else "Description not found."
+
+                ac_match = re.search(r'##\s*2\.\s*Acceptance\s*Criteria\s*\n\s*(.*)', content, re.DOTALL)
+                acceptance_criteria = []
+                if ac_match:
+                    ac_text = ac_match.group(1)
+                    # Find all list items, which start with '-'
+                    criteria_lines = re.findall(r'-\s*(.*)', ac_text)
+                    for line in criteria_lines:
+                        acceptance_criteria.append({"text": line.strip(), "completed": False})
+
+                self.current_event = {
+                    "id": event_id,
+                    "title": title,
+                    "description": description,
+                    "acceptance_criteria": acceptance_criteria
+                }
+
+            except Exception as e:
+                print(f"--- Governor: ERROR parsing event file {event_file}: {e} ---", file=sys.stderr)
+                self.current_event = {"id": event_id, "title": "Details not found (parsing error)"}
         else:
-            print(f"--- Governor: WARNING: Event file not found for {event_id} ---", file=sys.stderr)
-            self.current_event = {"id": event_id, "title": "Details not found"}
+            print(f"--- Governor: WARNING: Event file not found at {event_file} for {event_id} ---", file=sys.stderr)
+            self.current_event = {"id": event_id, "title": "Details not found (file missing)"}
 
     def _perform_context_refresh(self):
         print("\n--- Governor: Performing Mandatory Context Refresh ---")

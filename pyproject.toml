@@ -11,6 +11,7 @@ dependencies = [
     "python-dotenv",
     "GitPython",
     "httpx[socks]",
+    "httpx",
 ]
 
 [project.optional-dependencies]
@@ -18,7 +19,6 @@ test = [
     "pytest",
     "pytest-cov",
     "pytest-mock",
-    "httpx",
 ]
 
 [tool.setuptools.packages.find]

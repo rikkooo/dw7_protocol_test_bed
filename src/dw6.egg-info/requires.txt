@@ -3,9 +3,9 @@ uvicorn
 python-dotenv
 GitPython
 httpx[socks]
+httpx
 
 [test]
 pytest
 pytest-cov
 pytest-mock
-httpx
