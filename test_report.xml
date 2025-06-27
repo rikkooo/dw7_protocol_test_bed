@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="19" time="12.672" timestamp="2025-06-27T18:14:28.076901+08:00" hostname="legion"><testcase classname="tests.test_architecture" name="test_architecture_is_sound" time="0.000" /><testcase classname="tests.test_augmenter" name="test_augment_prompt" time="0.001" /><testcase classname="tests.test_deployer.TestDeployerStage" name="test_config_loading" time="0.009" /><testcase classname="tests.test_deployer.TestDeployerStage" name="test_credential_prompting" time="12.552"><failure message="AssertionError: Expected 'input' to have been called once. Called 0 times.">self = &lt;MagicMock name='input' id='140583549180608'&gt;
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'input' to have been called once. Called 0 times.
+
+/usr/lib/python3.12/unittest/mock.py:928: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;test_deployer.TestDeployerStage object at 0x7fdc289c79b0&gt;
+mock_input = &lt;MagicMock name='input' id='140583549180608'&gt;
+mock_push = &lt;MagicMock name='push' id='140583555350016'&gt;
+temp_project = PosixPath('/tmp/pytest-of-ubuntu/pytest-8/test_credential_prompting0/test_project')
+
+    @patch('git.Remote.push')
+    @patch('dw6.git_handler.input', return_value='dummy_token_from_input')
+    def test_credential_prompting(self, mock_input, mock_push, temp_project):
+        """Tests that the user is prompted for credentials if not found."""
+        # Remove the .env file to trigger the prompt
+        (temp_project / ".env").unlink(missing_ok=True)
+    
+        state = WorkflowState()
+        deployer = DeployerStage(state)
+    
+        # The git_handler.load_github_token will be called during the deployment process.
+        # We patch the actual git push command to avoid network calls.
+        deployer._execute_standard_deployment()
+    
+        # Check that the user was prompted and the token was saved
+&gt;       mock_input.assert_called_once()
+E       AssertionError: Expected 'input' to have been called once. Called 0 times.
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_deployer.py:75: AssertionError</failure></testcase><testcase classname="tests.test_deployer.TestDeployerStage" name="test_protocol_evolution_dual_push" time="0.012"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = &lt;MagicMock name='push_to_remote' id='140583551024496'&gt;.call_count">self = &lt;test_deployer.TestDeployerStage object at 0x7fdc289c7b00&gt;
+mock_push = &lt;MagicMock name='push_to_remote' id='140583551024496'&gt;
+mock_repo = &lt;MagicMock name='Repo' id='140583549189344'&gt;
+temp_project = PosixPath('/tmp/pytest-of-ubuntu/pytest-8/test_protocol_evolution_dual_p0/test_project')
+
+    @patch('git.Repo')
+    @patch('dw6.git_handler.push_to_remote')
+    def test_protocol_evolution_dual_push(self, mock_push, mock_repo, temp_project):
+        """Tests that protocol evolution triggers a push to both project and official repos."""
+        # Setup state for protocol evolution
+        state = WorkflowState()
+        state.set("is_protocol_update", "true")
+        deployer = DeployerStage(state)
+    
+        # Mock the git repo and remotes
+        mock_repo_instance = MagicMock()
+        mock_repo.return_value = mock_repo_instance
+        mock_origin = MagicMock()
+        mock_origin.name = 'origin'
+        mock_official = MagicMock()
+        mock_official.name = 'official_protocol_repo'
+        mock_repo_instance.remotes = [mock_origin]
+    
+        # Mock the create_remote to return our mock official remote
+        mock_repo_instance.create_remote.return_value = mock_official
+    
+        # Execute the validation, which should trigger protocol evolution
+        deployer.validate()
+    
+        # Assert that push was called for both remotes
+&gt;       assert mock_push.call_count == 1 # The main push to origin
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 0 == 1
+E        +  where 0 = &lt;MagicMock name='push_to_remote' id='140583551024496'&gt;.call_count
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_deployer.py:105: AssertionError</failure></testcase><testcase classname="tests.test_environment_management.TestWorkflowStateInitialization" name="test_state_initialization_creates_env_and_persists_path" time="0.001" /><testcase classname="tests.test_placeholder" name="test_placeholder" time="0.000" /><testcase classname="tests.test_setup.TestSetup" name="test_create_venv_does_not_exist" time="0.000" /><testcase classname="tests.test_setup.TestSetup" name="test_create_venv_exists" time="0.000" /><testcase classname="tests.test_setup.TestSetup" name="test_install_dependencies" time="0.000" /><testcase classname="tests.test_state_manager.TestStateManager" name="test_placeholder" time="0.001" /><testcase classname="tests.test_state_manager_integration.TestWorkflowManagerIntegration" name="test_engineer_to_coder_transition" time="0.007" /><testcase classname="tests.test_state_manager_integration.TestWorkflowManagerIntegration" name="test_engineer_to_researcher_transition" time="0.001" /><testcase classname="tests.test_state_manager_integration.TestWorkflowManagerIntegration" name="test_failure_counter_and_rehearsal_transition" time="0.001" /><testcase classname="tests.test_state_manager_integration.TestWorkflowManagerIntegration" name="test_researcher_to_coder_transition" time="0.001" /><testcase classname="tests.test_validator.TestValidatorStage" name="test_validate_fails_on_pytest_error" time="0.001" /><testcase classname="tests.test_validator.TestValidatorStage" name="test_validate_fails_on_test_failure" time="0.000" /><testcase classname="tests.test_validator.TestValidatorStage" name="test_validate_succeeds" time="0.001" /><testcase classname="tests.test_validator.TestValidatorStage" name="test_validate_succeeds_with_failures_allowed" time="0.001" /></testsuite></testsuites>
