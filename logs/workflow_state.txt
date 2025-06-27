@@ -1,2 +1,6 @@
-CurrentStage=Coder
-RequirementPointer=10
+CurrentRequirementID=REQ-DW8-011
+CurrentStage=Engineer
+CycleCounter=3
+FailureCounters.Validator.pytest=9
+PythonExecutablePath=/home/ubuntu/venvs/dw7_protocol_test_bed/bin/python
+RequirementPointer=12

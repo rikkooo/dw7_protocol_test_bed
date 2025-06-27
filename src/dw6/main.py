@@ -5,7 +5,7 @@ import re
 import subprocess
 from pathlib import Path
 from datetime import datetime, timezone
-from dw6.state_manager import WorkflowManager, STAGES
+from dw6.state_manager import WorkflowManager, WorkflowState, STAGES
 from dw6.augmenter import PromptAugmenter
 from dw6.templates import process_prompt
 
@@ -73,7 +73,7 @@ def revert_to_previous_stage(manager, target_stage=None):
 
 def handle_status(manager):
     """Handles the status command."""
-    state = manager.get_state()
+    state = manager.state
     current_stage = state.get("CurrentStage", "Unknown")
     requirement_pointer = state.get("RequirementPointer", "Unknown")
     cycle_counter = state.get("CycleCounter", "Unknown")
@@ -106,7 +106,8 @@ def main():
 
     # Approve command
     approve_parser = subparsers.add_parser("approve", help="Approve the current stage and advance to the next.")
-    approve_parser.add_argument("--with-tech-debt", action="store_true", help="Acknowledge and approve with outstanding technical debt.")
+    approve_parser.add_argument("--allow-failures", action="store_true", help="Approve even if validation checks fail.")
+    approve_parser.add_argument("--needs-research", action="store_true", help="Transition to the Researcher stage instead of Coder.")
 
     # New command
     new_parser = subparsers.add_parser("new", help="Create a new deliverable based on a prompt.")
@@ -133,12 +134,17 @@ def main():
     # Status command
     status_parser = subparsers.add_parser("status", help="Display the current workflow status.")
 
+    # Breakdown command
+    breakdown_parser = subparsers.add_parser("breakdown", help="Break down a requirement into sub-tasks.")
+    breakdown_parser.add_argument("req_id", type=str, help="The ID of the requirement to break down (e.g., REQ-DW8-012).")
+
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
     args = parser.parse_args()
-    manager = WorkflowManager()
+    state = WorkflowState()
+    manager = WorkflowManager(state)
     
     if args.command == "meta-req":
         register_meta_requirement(args.description)
@@ -153,7 +159,7 @@ def main():
         except PermissionError:
             sys.exit(1)
     elif args.command == "approve":
-        manager.approve(with_tech_debt=args.with_tech_debt)
+        manager.approve(allow_failures=args.allow_failures, needs_research=args.needs_research)
     elif args.command == "new":
         cycle_counter = manager.state.get("CycleCounter")
         augmenter = PromptAugmenter()
@@ -161,6 +167,55 @@ def main():
         process_prompt(augmented_prompt, cycle_counter)
     elif args.command == "status":
         handle_status(manager)
+    elif args.command == "breakdown":
+        handle_breakdown(manager, args.req_id)
+
+def handle_breakdown(manager, req_id):
+    if manager.state.get("CurrentStage") != "Engineer":
+        print("Error: The 'breakdown' command can only be used in the Engineer stage.", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"--- Starting breakdown for {req_id} ---")
+    print("Enter Sub-Meta-Requirements (SMRs) one by one. Type 'done' when finished.")
+    
+    smrs = []
+    while True:
+        smr = input(f"SMR {len(smrs) + 1}: ")
+        if smr.lower() == 'done':
+            break
+        smrs.append(smr)
+
+    if not smrs:
+        print("No SMRs entered. Aborting.")
+        return
+
+    try:
+        with open("docs/PROJECT_REQUIREMENTS.md", "r+") as f:
+            content = f.read()
+            
+            # Find the requirement and replace the SMR section
+            req_pattern = rf"(### ID: {re.escape(req_id)}\n(?:(?!- \*\*SMRs:\*\*).)*\n- \*\*SMRs:\*\*\n)((?:  - \[ \].*\n)*)"
+            match = re.search(req_pattern, content, re.DOTALL)
+
+            if not match:
+                print(f"Error: Could not find requirement {req_id} with an SMR section to update.", file=sys.stderr)
+                return
+
+            start_of_smr_block = match.group(1)
+            new_smr_block = "".join([f"  - [ ] {s}\n" for s in smrs])
+            
+            updated_content = content.replace(match.group(0), start_of_smr_block + new_smr_block)
+            
+            f.seek(0)
+            f.write(updated_content)
+            f.truncate()
+
+        print(f"Successfully updated {req_id} with {len(smrs)} SMRs.")
+
+    except FileNotFoundError:
+        print("Error: docs/PROJECT_REQUIREMENTS.md not found.", file=sys.stderr)
+    except Exception as e:
+        print(f"An error occurred: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

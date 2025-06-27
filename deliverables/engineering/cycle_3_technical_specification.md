@@ -1,64 +1,68 @@
-# Technical Specification: Enforce Test Presence in Validator Stage
-
-**Cycle:** 3
-**Requirement ID:** 4
-**Date:** 2025-06-25
+# Technical Specification for REQ-DW8-011: Robust and Persistent Virtual Environment Management
 
 ## 1. Overview
 
-This cycle addresses a critical flaw in the DW6 protocol: the `Validator` stage can be approved without any tests being present or executed. This change will enforce the presence and execution of a valid test suite, ensuring that all code changes are verified before moving forward.
+The previous development cycle was plagued by persistent, difficult-to-diagnose errors stemming from an inconsistent and unreliable Python virtual environment. The AI agent repeatedly failed to use the correct, activated environment, leading to `AttributeError`, `ModuleNotFound`, and incorrect script execution. This cognitive fixation on a broken environment highlights a critical flaw in the DW protocol: the environment is treated as an implicit, transient dependency rather than a core, stateful component of the workflow.
 
-## 2. Scope
+This document outlines the plan to fix this by making virtual environment management an explicit, robust, and persistent part of the DW8 protocol.
 
-### In Scope
+## 2. Proposed Solution
 
-*   Modify the `_validate_stage` method in `state_manager.py` for the `Validator` stage.
-*   Add a check to ensure the `tests` directory exists and contains at least one test file (matching `test_*.py`).
-*   Integrate a `pytest --collect-only` command to verify that tests are being collected.
-*   Parse the output of `pytest` to ensure at least one test was run.
+We will address this by implementing the four Sub-Meta-Requirements (SMRs) of `REQ-DW8-011`. The core idea is to create a standardized, external virtual environment at the beginning of a project, store the absolute path to its Python executable in the workflow's state file, and use that explicit path for all subsequent Python-related commands.
 
-### Out of Scope
+## 3. Implementation Details
 
-*   Complex analysis of test coverage or quality.
-*   Support for testing frameworks other than `pytest`.
+### SMR-1: Standardize Environment Location & SMR-4: Update Project Setup
 
-## 3. System Architecture
+These two SMRs will be implemented together by modifying the project's startup process. The current test bed does not have a formal start script, so we will modify the `WorkflowManager` to simulate this process. In a real DW8 implementation, this logic would live in a `/start-project-dw8.md` workflow.
 
-The validation logic will be contained entirely within the `_validate_stage` method in `state_manager.py`. It will interact with the file system to check for test files and run `pytest` as a subprocess to collect and execute tests.
+**File to Modify:** `src/dw6/state_manager.py`
 
-```mermaid
-graph TD;
-    A[state_manager.py] -->|Approves Validator stage| B(Validation Logic);
-    B -->|Checks for test files| C(File System);
-    B -->|Runs pytest --collect-only| D(Pytest);
-    B -->|Runs pytest| D;
-    D -->|Returns output| B;
-    B -->|Fails or Succeeds| E(Workflow);
-```
+1. **Modify `WorkflowState.initialize_state()`:**
+   - This method will be enhanced to perform a one-time setup if the environment is not already configured.
+   - It will define a standard venv path: `~/venvs/<project_name>/` (e.g., `/home/ubuntu/venvs/dw7_protocol_test_bed/`).
+   - It will check if this directory exists. If not, it will execute the following shell commands:
+     - `mkdir -p ~/venvs/`
+     - `python3 -m venv ~/venvs/<project_name>`
+     - `~/venvs/<project_name>/bin/python -m pip install -e .`
 
-## 4. Data Model
+### SMR-2: Persist Environment Path in State
 
-No changes to the data model are required for this cycle.
+**File to Modify:** `src/dw6/state_manager.py`
 
-## 5. Functional Requirements (User Stories)
+1. **Modify `WorkflowState.initialize_state()`:**
+   - After the one-time setup, the method will calculate the absolute path to the Python executable (e.g., `/home/ubuntu/venvs/dw7_protocol_test_bed/bin/python`).
+   - It will add a new key to the state data: `PythonExecutablePath`.
+   - The initial `workflow_state.txt` will now contain this key, making the environment's location a persistent part of the project state.
 
-*   **US-01:** As a developer, I want the workflow to prevent me from approving the `Validator` stage if I have not written any tests, so that I don't accidentally merge unverified code.
-    *   **Acceptance Criteria 1:** The `Validator` stage approval fails if the `tests` directory does not exist or is empty.
-    *   **Acceptance Criteria 2:** The approval fails if `pytest` runs but collects zero tests.
-    *   **Acceptance Criteria 3:** The error message clearly explains why the validation failed (e.g., "No tests found.").
+### SMR-3: Modify Command Execution
 
-## 6. Implementation Plan
+This SMR requires using the newly persisted path for all Python command execution. We will implement a concrete example of this pattern.
 
-1.  **Task:** In `state_manager.py`, update the `_validate_stage` method for the `Validator` stage.
-2.  **Task:** Before running `pytest`, add a check using `os.path.exists` and `os.listdir` to verify that the `tests` directory exists and contains files matching the `test_*.py` pattern.
-3.  **Task:** If the check fails, exit the process with a clear error message.
-4.  **Task:** Modify the existing `subprocess.run` call for `pytest`. First, run with the `--collect-only` flag.
-5.  **Task:** Use regular expressions to parse the output of the collection step and extract the number of collected tests.
-6.  **Task:** If the number of collected tests is zero, exit with an error.
-7.  **Task:** If tests are collected, proceed with the full `pytest` run as before.
-8.  **Task:** Add a new test to `tests/test_state_manager.py` to verify the new validation logic. Mock the file system and the `subprocess.run` calls to simulate different scenarios (no tests, tests found, etc.).
+**File to Modify:** `src/dw6/state_manager.py`
 
-## 7. Questions & Assumptions
+1. **Modify `WorkflowManager._validate_tests()`:**
+   - The method currently calls `subprocess.run(["python", "-m", "pytest"], ...)`.
+   - It will be updated to first retrieve the `PythonExecutablePath` from the `self.state` object.
+   - The `subprocess.run` call will be changed to `subprocess.run([python_executable_path, "-m", "pytest"], ...)`, where `python_executable_path` is the value retrieved from the state.
 
-*   **Assumption:** The project will continue to use `pytest` as its sole testing framework.
-*   **Assumption:** All test files will follow the `test_*.py` naming convention.
+## 4. Testing Strategy
+
+We will create a new test file to verify the correctness of these changes.
+
+**New File:** `tests/test_environment_management.py`
+
+1. **`test_state_initialization_creates_env_and_persists_path`:**
+   - This test will patch `os.path.exists`, `subprocess.run`, and the `open` built-in.
+   - It will instantiate `WorkflowState` and assert that the setup commands (`mkdir`, `venv`, `pip install`) are called in the correct order when the environment does not exist.
+   - It will verify that the final state data written to the file contains the correct `PythonExecutablePath`.
+
+2. **`test_validate_tests_uses_persistent_python_path`:**
+   - This test will patch `subprocess.run`.
+   - It will create a `WorkflowManager` instance, ensuring its state has a `PythonExecutablePath`.
+   - It will call `_validate_tests()` and assert that `subprocess.run` was called with a command list starting with the correct, absolute path to the Python executable.
+
+## 5. Deliverables
+
+- Modified `src/dw6/state_manager.py`
+- New test file `tests/test_environment_management.py`

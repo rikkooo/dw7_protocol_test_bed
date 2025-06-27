@@ -15,7 +15,14 @@ src/dw6.egg-info/dependency_links.txt
 src/dw6.egg-info/entry_points.txt
 src/dw6.egg-info/requires.txt
 src/dw6.egg-info/top_level.txt
+src/dw6/workflow/coder.py
+src/dw6/workflow/deployer.py
+src/dw6/workflow/engineer.py
+src/dw6/workflow/kernel.py
+src/dw6/workflow/researcher.py
+src/dw6/workflow/validator.py
 tests/test_augmenter.py
+tests/test_environment_management.py
 tests/test_git_handler.py
 tests/test_placeholder.py
 tests/test_setup.py

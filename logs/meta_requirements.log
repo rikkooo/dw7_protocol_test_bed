@@ -1,0 +1,1 @@
+[ID:1] [TS:2025-06-26 21:34:22 UTC] Expand protocol evolution to trigger on any workflow code change, not just when the 'is_protocol_update' flag is set. This ensures bug fixes and enhancements automatically result in a new protocol version.

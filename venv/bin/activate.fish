@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/ubuntu/devs/dw6_test_bed_v4/venv
+set -gx VIRTUAL_ENV /home/ubuntu/devs/dw7_protocol_test_bed/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

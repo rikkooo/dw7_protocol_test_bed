@@ -13,16 +13,17 @@ dependencies = [
     "httpx[socks]",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[project.scripts]
-dw6 = "dw6.main:main"
-
 [project.optional-dependencies]
 test = [
     "pytest",
     "pytest-cov",
     "pytest-mock",
     "httpx",
+    "GitPython",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+dw6 = "dw6.main:main"
