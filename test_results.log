@@ -7,4 +7,135 @@ collected 19 items
 
 tests/test_architecture.py .                                             [  5%]
 tests/test_augmenter.py .                                                [ 10%]
-tests/test_deployer.py .
+tests/test_deployer.py .FF                                               [ 26%]
+tests/test_environment_management.py .                                   [ 31%]
+tests/test_placeholder.py .                                              [ 36%]
+tests/test_setup.py ...                                                  [ 52%]
+tests/test_state_manager.py .                                            [ 57%]
+tests/test_state_manager_integration.py ....                             [ 78%]
+tests/test_validator.py ....                                             [100%]
+
+=================================== FAILURES ===================================
+_________________ TestDeployerStage.test_credential_prompting __________________
+
+self = <MagicMock name='input' id='123386051653904'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'input' to have been called once. Called 0 times.
+
+/usr/lib/python3.12/unittest/mock.py:928: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_deployer.TestDeployerStage object at 0x70380d713110>
+mock_input = <MagicMock name='input' id='123386051653904'>
+mock_push = <MagicMock name='push' id='123386049690368'>
+temp_project = PosixPath('/tmp/pytest-of-ubuntu/pytest-7/test_credential_prompting0/test_project')
+
+    @patch('git.Remote.push')
+    @patch('dw6.git_handler.input', return_value='dummy_token_from_input')
+    def test_credential_prompting(self, mock_input, mock_push, temp_project):
+        """Tests that the user is prompted for credentials if not found."""
+        # Remove the .env file to trigger the prompt
+        (temp_project / ".env").unlink(missing_ok=True)
+    
+        state = WorkflowState()
+        deployer = DeployerStage(state)
+    
+        # The git_handler.load_github_token will be called during the deployment process.
+        # We patch the actual git push command to avoid network calls.
+        deployer._execute_standard_deployment()
+    
+        # Check that the user was prompted and the token was saved
+>       mock_input.assert_called_once()
+E       AssertionError: Expected 'input' to have been called once. Called 0 times.
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_deployer.py:75: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Environment path set to: /home/ubuntu/venvs/test_project/bin/python
+--- Governor: Executing Standard Deployment Workflow... ---
+--- Governor: Found uncommitted changes. Committing... ---
+--- Governor: Committed changes with message: 'feat(cycle): complete development cycle for requirement None' ---
+--- Governor: Pushing changes to remote... ---
+[GIT] Pushing to main (Attempt 1/3)...
+[GIT] Pushing to main (Attempt 2/3)...
+[GIT] Pushing to main (Attempt 3/3)...
+----------------------------- Captured stderr call -----------------------------
+ERROR: Failed to push to remote. Cmd('git') failed due to: exit code(128)
+  cmdline: git push https://*****:*****@github.com/rikkooo/dw7_protocol_test_bed.git main
+  stderr: 'remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/rikkooo/dw7_protocol_test_bed.git/''
+Retrying in 5 seconds...
+ERROR: Failed to push to remote. Cmd('git') failed due to: exit code(128)
+  cmdline: git push https://*****:*****@github.com/rikkooo/dw7_protocol_test_bed.git main
+  stderr: 'remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/rikkooo/dw7_protocol_test_bed.git/''
+Retrying in 5 seconds...
+ERROR: Failed to push to remote. Cmd('git') failed due to: exit code(128)
+  cmdline: git push https://*****:*****@github.com/rikkooo/dw7_protocol_test_bed.git main
+  stderr: 'remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/rikkooo/dw7_protocol_test_bed.git/''
+FATAL: All push attempts failed.
+Error during standard deployment: Cmd('git') failed due to: exit code(128)
+  cmdline: git push https://*****:*****@github.com/rikkooo/dw7_protocol_test_bed.git main
+  stderr: 'remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/rikkooo/dw7_protocol_test_bed.git/''
+_____________ TestDeployerStage.test_protocol_evolution_dual_push ______________
+
+self = <test_deployer.TestDeployerStage object at 0x70380d7133e0>
+mock_push = <MagicMock name='push_to_remote' id='123386046354864'>
+mock_repo = <MagicMock name='Repo' id='123386046358608'>
+temp_project = PosixPath('/tmp/pytest-of-ubuntu/pytest-7/test_protocol_evolution_dual_p0/test_project')
+
+    @patch('git.Repo')
+    @patch('dw6.git_handler.push_to_remote')
+    def test_protocol_evolution_dual_push(self, mock_push, mock_repo, temp_project):
+        """Tests that protocol evolution triggers a push to both project and official repos."""
+        # Setup state for protocol evolution
+        state = WorkflowState()
+        state.set("is_protocol_update", "true")
+        deployer = DeployerStage(state)
+    
+        # Mock the git repo and remotes
+        mock_repo_instance = MagicMock()
+        mock_repo.return_value = mock_repo_instance
+        mock_origin = MagicMock()
+        mock_origin.name = 'origin'
+        mock_official = MagicMock()
+        mock_official.name = 'official_protocol_repo'
+        mock_repo_instance.remotes = [mock_origin]
+    
+        # Mock the create_remote to return our mock official remote
+        mock_repo_instance.create_remote.return_value = mock_official
+    
+        # Execute the validation, which should trigger protocol evolution
+        deployer.validate()
+    
+        # Assert that push was called for both remotes
+>       assert mock_push.call_count == 1 # The main push to origin
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <MagicMock name='push_to_remote' id='123386046354864'>.call_count
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_deployer.py:105: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Environment path set to: /home/ubuntu/venvs/test_project/bin/python
+--- Governor: Executing Protocol Evolution Sub-Workflow... ---
+----------------------------- Captured stderr call -----------------------------
+Error during protocol evolution: invalid literal for int() with base 10: 'st'
+=========================== short test summary info ============================
+FAILED tests/test_deployer.py::TestDeployerStage::test_credential_prompting
+FAILED tests/test_deployer.py::TestDeployerStage::test_protocol_evolution_dual_push
+======================== 2 failed, 17 passed in 12.88s =========================
