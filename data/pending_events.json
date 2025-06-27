@@ -1,12 +1,5 @@
 [
   {
-    "id": "REQ-DW8-OS-005",
-    "title": "[Execution] Implement Event Queue Completion Logic",
-    "status": "Pending",
-    "priority": "Critical",
-    "path": "./reqs/REQ-DW8-OS-005.md"
-  },
-  {
     "id": "REQ-DW8-OS-006",
     "title": "[Execution] Transition `workflow_state` to JSON",
     "status": "Pending",
