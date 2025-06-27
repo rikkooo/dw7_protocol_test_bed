@@ -76,3 +76,31 @@ version = "0.1.0"
         env_file = temp_project / ".env"
         assert env_file.exists()
         assert "GITHUB_TOKEN=\"dummy_token_from_input\"" in env_file.read_text()
+
+    @patch('git.Repo')
+    @patch('dw6.git_handler.push_to_remote')
+    def test_protocol_evolution_dual_push(self, mock_push, mock_repo, temp_project):
+        """Tests that protocol evolution triggers a push to both project and official repos."""
+        # Setup state for protocol evolution
+        state = WorkflowState()
+        state.set("is_protocol_update", "true")
+        deployer = DeployerStage(state)
+
+        # Mock the git repo and remotes
+        mock_repo_instance = MagicMock()
+        mock_repo.return_value = mock_repo_instance
+        mock_origin = MagicMock()
+        mock_origin.name = 'origin'
+        mock_official = MagicMock()
+        mock_official.name = 'official_protocol_repo'
+        mock_repo_instance.remotes = [mock_origin]
+
+        # Mock the create_remote to return our mock official remote
+        mock_repo_instance.create_remote.return_value = mock_official
+
+        # Execute the validation, which should trigger protocol evolution
+        deployer.validate()
+
+        # Assert that push was called for both remotes
+        assert mock_push.call_count == 1 # The main push to origin
+        mock_official.push.assert_called_once() # The push to the official repo

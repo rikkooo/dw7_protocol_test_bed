@@ -17,8 +17,8 @@ Format: `[Status] [Priority] [ID] [Title] -> [Path]`
 [D] [H] [REQ-DW8-001] Implement a persistent failure counter -> ./reqs/REQ-DW8-001.md
 [D] [H] [REQ-DW8-002] Implement the Rehearsal State -> ./reqs/REQ-DW8-002.md
 [D] [H] [REQ-DW8-004] Implement Rehearsal Stage Logic -> ./reqs/REQ-DW8-004.md
-[I] [C] [REQ-DW8-011] Implement Deployer Configuration and Credential Management -> ./reqs/REQ-DW8-011.md
-[I] [H] [REQ-DW8-008] Automate Standard Project Deployment -> ./reqs/REQ-DW8-008.md
+[D] [C] [REQ-DW8-011] Implement Deployer Configuration and Credential Management -> ./reqs/REQ-DW8-011.md
+[D] [H] [REQ-DW8-008] Automate Standard Project Deployment -> ./reqs/REQ-DW8-008.md
 [P] [H] [REQ-DW8-010] Implement Dual-Push for Protocol Evolution -> ./reqs/REQ-DW8-010.md
 [P] [H] [REQ-DW8-013] Implement and Adhere to Dynamic Requirement Protocol -> ./reqs/REQ-DW8-013.md
 [P] [M] [REQ-DW8-009] Generate Final Project Documentation -> ./reqs/REQ-DW8-009.md

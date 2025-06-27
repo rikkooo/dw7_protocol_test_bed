@@ -85,13 +85,31 @@ class DeployerStage:
             files_to_commit = [str(new_protocol_dir), str(new_workflow_file)]
             git_handler.add_commit_files(files_to_commit, commit_message)
 
-            # 5. Tagging
+            # 5. Tagging and Dual-Push
             tag_name = f"v{new_protocol_name.replace('dw', '')}.0.0"
-            git_handler.create_and_push_tag(tag_name, message=f"Release {new_protocol_name}")
+            repo.create_tag(tag_name, message=f"Release {tag_name}")
+            print(f"Created new protocol tag: {tag_name}")
+
+            # SMR-DW8-010.1: Push to project repository
+            print("--- Governor: Pushing protocol update to project repository... ---")
+            git_handler.push_to_remote(repo=repo, tags=True)
+
+            # SMR-DW8-010.2: Push to official protocol repository
+            print("--- Governor: Pushing protocol update to official repository... ---")
+            official_repo_url_with_token = git_handler.get_remote_url_with_token(protocol_repo_url)
+            official_remote_name = "official_protocol_repo"
             
-            print("Protocol evolution steps completed and pushed to remote.")
+            try:
+                if official_remote_name in [remote.name for remote in repo.remotes]:
+                    repo.delete_remote(official_remote_name)
+                official_remote = repo.create_remote(official_remote_name, official_repo_url_with_token)
+                official_remote.push(refspec=f"refs/heads/{repo.active_branch.name}:refs/heads/{repo.active_branch.name}", tags=True)
+                print("--- Governor: Successfully pushed to official protocol repository. ---")
+            finally:
+                if official_remote_name in [remote.name for remote in repo.remotes]:
+                    repo.delete_remote(official_remote_name)
+
             self.state.set("is_protocol_update", "false")
-            self._synchronize_protocol_files()
             return True
 
         except Exception as e:
@@ -99,32 +117,8 @@ class DeployerStage:
             return False
 
     def _synchronize_protocol_files(self):
-        try:
-            print("--- Governor: Synchronizing protocol files... ---")
-            source_dir = Path(os.getcwd()) / "src" / "dw6"
-            dest_dir = Path(self.config.get("OFFICIAL_PROTOCOL_DIRECTORY", "/home/ubuntu/devs/dw/dw8"))
-
-            if dest_dir.exists():
-                shutil.rmtree(dest_dir)
-            shutil.copytree(source_dir, dest_dir)
-
-            print(f"Copied protocol files from {source_dir} to {dest_dir}")
-
-            protocol_repo_url = self.config.get("OFFICIAL_PROTOCOL_REPOSITORY")
-            if not protocol_repo_url:
-                print("--- Governor: HALT: OFFICIAL_PROTOCOL_REPOSITORY not set in config. ---", file=sys.stderr)
-                return
-
-            repo_path = "/home/ubuntu/devs/windsurf-development-workflow"
-            repo = git.Repo(path=repo_path)
-            repo.git.add(all=True)
-            repo.index.commit("feat(protocol): synchronize dw8 protocol files")
-            repo.remotes.origin.push()
-
-            print("Pushed protocol file changes to windsurf-development-workflow repository.")
-
-        except Exception as e:
-            print(f"Error during protocol synchronization: {e}", file=sys.stderr)
+        # This method is now deprecated. The logic has been moved to _execute_protocol_evolution.
+        pass
 
     def _execute_standard_deployment(self):
         try:
