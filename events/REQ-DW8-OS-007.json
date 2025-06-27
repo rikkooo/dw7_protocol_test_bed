@@ -1,10 +1,8 @@
 {
   "id": "REQ-DW8-OS-007",
-  "title": "Refactor Requirement Files to JSON Events",
-  "priority": "High",
-  "status": "Pending",
-  "type": "Execution",
+  "title": "[Execution] Refactor Requirement Files to JSON Events",
   "description": "This requirement completes the transition of our task definitions to a fully machine-readable format. All individual requirement documents in `/reqs/*.md` will be converted to structured JSON files in the new `/events/` directory. This makes them parsable and queryable by the system.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-OS-007.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

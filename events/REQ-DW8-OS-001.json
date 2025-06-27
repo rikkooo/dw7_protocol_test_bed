@@ -1,10 +1,8 @@
 {
   "id": "REQ-DW8-OS-001",
-  "title": "Formalize the \"DW8 Operating System\" architecture",
-  "priority": "Critical",
-  "status": "Pending",
-  "type": "Design",
+  "title": "[Design] Formalize the \"DW8 Operating System\" architecture",
   "description": "This requirement formalizes the new \"Operating System\" paradigm for the DW8 protocol. It involves creating a comprehensive architecture document that details the Kernel, Event Queues, Registers, Interrupt Handling, and other core OS concepts. This document will serve as the blueprint for the entire OS-level refactoring.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-OS-001.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

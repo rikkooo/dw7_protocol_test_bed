@@ -1,12 +1,5 @@
 [
   {
-    "id": "REQ-DW8-OS-004",
-    "title": "[Execution] Refactor Kernel to Read from `pending_events.json`",
-    "status": "Pending",
-    "priority": "Critical",
-    "path": "./reqs/REQ-DW8-OS-004.md"
-  },
-  {
     "id": "REQ-DW8-OS-005",
     "title": "[Execution] Implement Event Queue Completion Logic",
     "status": "Pending",
@@ -124,5 +117,13 @@
     "status": "Pending",
     "priority": "Medium",
     "path": "./reqs/REQ-DW8-EXEC-005.md"
+  },
+  {
+    "id": "REQ-DW8-OS-005",
+    "title": "[Execution] Migrate Requirement Details from Markdown to JSON Files",
+    "status": "Pending",
+    "priority": "Medium",
+    "created_at": "2025-06-27T22:16:45.397415+00:00",
+    "path": "docs/reqs/REQ-DW8-OS-005.md"
   }
 ]

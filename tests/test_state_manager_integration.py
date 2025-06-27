@@ -74,5 +74,32 @@ class TestWorkflowManagerIntegration(unittest.TestCase):
 
         mock_state_instance.set.assert_called_with('CurrentStage', 'Coder')
 
+    def test_create_new_requirement_json(self):
+        mock_state_instance = self.mock_WorkflowState.return_value
+        mock_state_instance.get.return_value = 'Engineer'  # Set a default stage
+        manager = WorkflowManager(mock_state_instance)
+
+        req_id = "REQ-DW8-TEST-001"
+        title = "Test JSON Requirement"
+        description = "This is a test description."
+        acceptance_criteria = ["Criterion 1", "Criterion 2"]
+
+        # Mock the file system
+        m = mock_open()
+        with patch("builtins.open", m):
+            with patch("pathlib.Path.exists", return_value=False):
+                with patch("pathlib.Path.mkdir"):
+                    manager.create_new_requirement(req_id, title, description, acceptance_criteria)
+
+        # Verify the event file was created correctly
+        event_file_path = Path(f"events/{req_id}.json")
+        m.assert_any_call(event_file_path, "w", encoding='utf-8')
+
+        # Verify the pending events queue was updated (testing the creation path)
+        pending_file_path = "data/pending_events.json"
+        # The code opens this file for 'r+' first, then 'w' in the except block.
+        # We will check the 'w' call which happens when the file doesn't exist, as mocked.
+        m.assert_any_call(pending_file_path, "w")
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,64 +1,78 @@
-import json
-import re
 import os
+import re
+import json
+from pathlib import Path
 
-# Define paths relative to the script's location
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
-
-SOURCE_MD_PATH = os.path.join(PROJECT_ROOT, 'docs', 'PROJECT_REQUIREMENTS.md')
-PENDING_JSON_PATH = os.path.join(PROJECT_ROOT, 'data', 'pending_events.json')
-PROCESSED_JSON_PATH = os.path.join(PROJECT_ROOT, 'data', 'processed_events.json')
-
-# Regex to capture the components of a requirement line
-REQ_PATTERN = re.compile(r'^\[([PD])\] \[([CHML])\] \[(REQ-DW8-.*?)\] (.*?) -> (\./.*?\.md)$')
+SOURCE_DIR = Path("docs/reqs")
+DEST_DIR = Path("events")
 
 def migrate_requirements():
-    """
-    Parses the Markdown requirements file and migrates the entries
-    to the corresponding JSON event queues.
-    """
-    pending_events = []
-    processed_events = []
-
-    print(f"Reading from {SOURCE_MD_PATH}...")
-    try:
-        with open(SOURCE_MD_PATH, 'r') as f:
-            for line in f:
-                match = REQ_PATTERN.match(line.strip())
-                if match:
-                    status_char, priority_char, req_id, title, path = match.groups()
-
-                    # Map characters to full text
-                    status = 'Deployed' if status_char == 'D' else 'Pending'
-                    priority_map = {'C': 'Critical', 'H': 'High', 'M': 'Medium', 'L': 'Low'}
-                    priority = priority_map.get(priority_char, 'Unknown')
-
-                    event = {
-                        'id': req_id,
-                        'title': title.strip(),
-                        'status': status,
-                        'priority': priority,
-                        'path': path
-                    }
-
-                    if status == 'Deployed':
-                        processed_events.append(event)
-                    else:
-                        pending_events.append(event)
-
-    except FileNotFoundError:
-        print(f"Error: Source file not found at {SOURCE_MD_PATH}")
+    """Migrates requirement files from Markdown to JSON format."""
+    if not SOURCE_DIR.exists():
+        print(f"Source directory not found: {SOURCE_DIR}")
         return
 
-    # Write to JSON files
-    print(f"Writing {len(pending_events)} events to {PENDING_JSON_PATH}")
-    with open(PENDING_JSON_PATH, 'w') as f:
-        json.dump(pending_events, f, indent=2)
+    DEST_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"Migrating .md files from {SOURCE_DIR} to .json files in {DEST_DIR}...")
 
-    print(f"Writing {len(processed_events)} events to {PROCESSED_JSON_PATH}")
-    with open(PROCESSED_JSON_PATH, 'w') as f:
-        json.dump(processed_events, f, indent=2)
+    for md_file in SOURCE_DIR.glob("*.md"):
+        try:
+            with open(md_file, "r", encoding='utf-8') as f:
+                content = f.read()
+
+            # Extract data using regex
+            req_id, title = None, None
+
+            # Strategy 1: H1 header format (e.g., # REQ-ID: Title)
+            h1_match = re.search(r'^#.*(REQ-DW8-[\w-]+):(.*)', content, re.MULTILINE)
+            if h1_match:
+                req_id, title = h1_match.groups()
+
+            # Strategy 2: Markdown list format (e.g., ### ID: REQ-ID, - **Title:** Title)
+            if not req_id:
+                id_match = re.search(r'^##+\s*ID:\s*(REQ-DW8-[\w-]+)', content, re.MULTILINE)
+                title_match_list = re.search(r'^-\s*\*\*Title:\*\*\s*(.*)', content, re.MULTILINE)
+                if id_match and title_match_list:
+                    req_id = id_match.group(1)
+                    title = title_match_list.group(1)
+
+            if not req_id or not title:
+                print(f"Could not parse title or ID from {md_file}. Skipping.")
+                continue
+
+            title = title.strip()
+            req_id = req_id.strip()
+
+            description_match = re.search(r'##\s*1\.\s*Description\s*\n\s*(.*?)\n\s*##', content, re.DOTALL)
+            description = description_match.group(1).strip() if description_match else ""
+
+            ac_match = re.search(r'##\s*2\.\s*Acceptance\s*Criteria\s*\n\s*(.*)', content, re.DOTALL)
+            acceptance_criteria = []
+            if ac_match:
+                ac_text = ac_match.group(1)
+                criteria_lines = re.findall(r'-\s*\[ \]\s*(.*)', ac_text)
+                for line in criteria_lines:
+                    acceptance_criteria.append({"text": line.strip(), "completed": False})
+
+            # Create JSON structure
+            json_data = {
+                "id": req_id,
+                "title": title,
+                "description": description,
+                "acceptance_criteria": acceptance_criteria,
+                "status": "Pending", # Default status
+                "priority": "Medium" # Default priority
+            }
+
+            # Write JSON file
+            json_file_path = DEST_DIR / f"{req_id}.json"
+            with open(json_file_path, "w", encoding='utf-8') as f:
+                json.dump(json_data, f, indent=2)
+            
+            print(f"Successfully migrated {md_file.name} to {json_file_path.name}")
+
+        except Exception as e:
+            print(f"Error processing {md_file.name}: {e}")
 
     print("Migration complete.")
 

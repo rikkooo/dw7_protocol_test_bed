@@ -1,15 +1,13 @@
-# REQ-DW8-OS-005: [Execution] Implement Event Queue Completion Logic
-
-- **Priority:** [C]
-- **Status:** [P]
-- **Type:** Execution
+# REQ-DW8-OS-005: [Execution] Migrate Requirement Details from Markdown to JSON Files
 
 ## 1. Description
 
-This requirement implements the second half of the event queue logic. When an event is successfully completed (after the final stage in its instruction set), the Kernel must remove it from `data/pending_events.json` and append it to `data/processed_events.json`.
+This requirement completes the transition to a fully JSON-based event system. It involves creating a migration script to convert all existing requirement .md files in docs/reqs/ into structured .json files in a new events/ directory. The WorkflowKernel will then be updated to read directly from these JSON files, eliminating the need for markdown parsing.
 
 ## 2. Acceptance Criteria
 
-- A new method is added to the `WorkflowKernel` (e.g., `_finalize_event`).
-- This method is called at the end of a successful workflow cycle.
-- The method atomically reads the pending queue, removes the completed event, and appends it to the processed queue.
+- [ ] A migration script scripts/migrate_reqs_to_json.py is created.
+- [ ] The script successfully parses all .md files in docs/reqs/ and creates corresponding .json files in events/.
+- [ ] The WorkflowKernel._load_event_details method is refactored to read directly from the new .json files.
+- [ ] The old markdown parsing logic in the kernel is removed.
+- [ ] All tests pass after the refactoring.

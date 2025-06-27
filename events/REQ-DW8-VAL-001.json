@@ -1,6 +1,6 @@
 {
-  "id": "REQ-DW8-002",
-  "title": "Implement the Rehearsal State",
+  "id": "REQ-DW8-VAL-001",
+  "title": "End-to-End Workflow Engine Validation",
   "description": "",
   "acceptance_criteria": [],
   "status": "Pending",

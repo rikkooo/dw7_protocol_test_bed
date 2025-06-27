@@ -1,9 +1,8 @@
 {
   "id": "REQ-DW8-017",
-  "title": "Refactor All Major Classes to Use Code Granularity Protocol",
-  "priority": "Medium",
-  "status": "Pending",
-  "type": "Execution",
+  "title": "[Execution] Refactor All Major Classes to Use Code Granularity Protocol",
+  "description": "The Code Granularity Protocol, successfully implemented for `deployer.py`, has proven to be a powerful pattern for reducing context size, improving maintainability, and enhancing edit reliability. This pattern involves transforming large classes into lean interfaces that dynamically load their methods from individual files in a dedicated subdirectory.\n\nThis requirement serves as an epic or theme to apply this same refactoring pattern to all other major, monolithic classes within the project codebase.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-017.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

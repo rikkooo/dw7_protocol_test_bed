@@ -1,9 +1,8 @@
 {
   "id": "REQ-DW8-018",
-  "title": "Investigate and Redesign Environment Management and Enforcement",
-  "priority": "High",
-  "status": "Pending",
-  "type": "Sherlock Mode (Investigation & Design)",
+  "title": "[Sherlock Mode] Investigate and Redesign Environment Management and Enforcement",
+  "description": "A persistent pain point in the development cycle is the inconsistent and fragile virtual environment (`venv`) management. The environment context is frequently lost between sessions or stage transitions, forcing repeated, manual re-installation of dependencies and causing unnecessary delays and errors.\n\nThis \"Sherlock Mode\" requirement is to investigate the root cause of this problem and design a robust, automated enforcement mechanism.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-018.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

@@ -1,10 +1,8 @@
 {
   "id": "REQ-DW8-OS-011",
-  "title": "Design and Document a `CONTEXT_MANAGEMENT_PROTOCOL.md`",
-  "priority": "Medium",
-  "status": "Pending",
-  "type": "Design",
+  "title": "[Design] Design and Document a `CONTEXT_MANAGEMENT_PROTOCOL.md`",
   "description": "To combat context decay, this requirement is to design a formal protocol for managing the AI's context window. Initially, this will be a simple, periodic refresh strategy. The protocol will define when and what context should be provided to the AI to keep it aligned with the project's high-level goals.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-OS-011.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

@@ -1,9 +1,8 @@
 {
   "id": "REQ-DW8-016",
-  "title": "Investigate and Fortify Workflow Adherence Protocol",
-  "priority": "High",
-  "status": "Pending",
-  "type": "Sherlock Mode (Investigation & Design)",
+  "title": "[Sherlock Mode] Investigate and Fortify Workflow Adherence Protocol",
+  "description": "It has been observed that the agent (Gem) sometimes operates outside the bounds of the prescribed development workflow. This \"free as a bird\" behavior indicates that the protocol has exploitable holes that compromise the structured, step-by-step process we aim to enforce.\n\nThis requirement initiates a \"Sherlock Mode\" investigation to understand why this happens and to design fortifications to keep the agent \"on the tracks.\"",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-016.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

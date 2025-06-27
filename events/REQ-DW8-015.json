@@ -1,9 +1,8 @@
 {
   "id": "REQ-DW8-015",
-  "title": "Investigate and Redesign State Machine Gatekeeping Rules",
-  "priority": "High",
-  "status": "Pending",
-  "type": "Sherlock Mode (Investigation & Design)",
+  "title": "[Sherlock Mode] Investigate and Redesign State Machine Gatekeeping Rules",
+  "description": "The project's state machine, managed by the \"Governor,\" has shown signs of weakness. The transition criteria between stages (Engineer, Coder, Validator, Deployer) are not being strictly enforced, allowing for an unstructured and sometimes anarchical workflow. This undermines the stability and predictability of the development protocol.\n\nThis requirement initiates a \"Sherlock Mode\" investigation to address this critical issue. No code will be implemented under this requirement.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-015.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

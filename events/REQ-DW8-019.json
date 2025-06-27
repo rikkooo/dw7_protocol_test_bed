@@ -1,9 +1,8 @@
 {
   "id": "REQ-DW8-019",
-  "title": "Investigate and Enhance Git/Deployment Workflow",
-  "priority": "Medium",
-  "status": "Pending",
-  "type": "Sherlock Mode (Investigation & Design)",
+  "title": "[Sherlock Mode] Investigate and Enhance Git/Deployment Workflow",
+  "description": "Our Git and deployment workflow, while functional, has several areas that require enhancement to improve clarity, robustness, and automation. This \"Sherlock Mode\" requirement is to investigate these areas and design formal protocols to address them.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-019.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

@@ -1,6 +1,8 @@
 {
   "id": "REQ-DW8-014",
-  "title": "Title requires manual entry",
+  "title": "Implement Code Granularity Protocol to Improve Edit Reliability",
+  "description": "",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-014.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

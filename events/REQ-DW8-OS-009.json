@@ -1,10 +1,8 @@
 {
   "id": "REQ-DW8-OS-009",
-  "title": "Implement Dynamic Event Prioritization",
-  "priority": "Medium",
-  "status": "Pending",
-  "type": "Execution",
+  "title": "[Execution] Implement Dynamic Event Prioritization",
   "description": "This requirement implements the \"interrupt\" mechanism for our OS. It provides a method to inject a new, high-priority event at the front of the `pending_events.json` queue, ensuring it is processed next, regardless of other pending tasks. This is critical for handling urgent bugs or incorporating new ideas from brainstorming sessions.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-OS-009.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

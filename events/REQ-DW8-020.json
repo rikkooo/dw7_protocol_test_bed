@@ -1,9 +1,8 @@
 {
   "id": "REQ-DW8-020",
-  "title": "Investigate Transitioning Key Documents from MD to JSON",
-  "priority": "Low",
-  "status": "Pending",
-  "type": "Sherlock Mode (Investigation & Design)",
+  "title": "[Sherlock Mode] Investigate Transitioning Key Documents from MD to JSON",
+  "description": "Many of our project's core documents (requirements, state files, etc.) are in Markdown format. While flexible, MD can be difficult to parse systematically and is more prone to formatting errors that can break automated processes. JSON, being a strictly structured format, could offer more reliability for machine-readable documents.\n\nThis \"Sherlock Mode\" requirement is to investigate the feasibility and benefits of transitioning some of our documents from Markdown to JSON.",
   "acceptance_criteria": [],
-  "source_file": "docs/reqs/REQ-DW8-020.md"
+  "status": "Pending",
+  "priority": "Medium"
 }

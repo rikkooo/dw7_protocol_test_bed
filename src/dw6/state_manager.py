@@ -104,6 +104,9 @@ class WorkflowManager:
             raise ValueError(f"Unknown stage: {self.current_stage_name}")
         return stage_class(self.state)
 
+    def create_new_requirement(self, requirement_id, title, description, acceptance_criteria):
+        self.kernel.create_new_requirement(requirement_id, title, description, acceptance_criteria)
+
     def approve(self, needs_research=False, allow_failures=False):
         print(f"--- Governor: Attempting to approve stage {self.current_stage_name}... ---")
         try:

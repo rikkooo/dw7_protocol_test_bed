@@ -1,23 +1,8 @@
 {
   "id": "REQ-DW8-074",
-  "title": "Title requires manual entry",
-  "acceptance_criteria": [
-    {
-      "completed": false,
-      "text": "**SMR-DW8-074.1:** Start the workflow from the `Engineer` stage."
-    },
-    {
-      "completed": false,
-      "text": "**SMR-DW8-074.2:** As the `Coder`, create a simple test file (e.g., `tests/test_architecture.py`) that asserts a basic truth (e.g., `assert True`)."
-    },
-    {
-      "completed": false,
-      "text": "**SMR-DW8-074.3:** As the `Validator`, run the test suite and confirm it passes."
-    },
-    {
-      "completed": false,
-      "text": "**SMR-DW8-074.4:** As the `Deployer`, complete the deployment stage successfully."
-    }
-  ],
-  "source_file": "docs/reqs/REQ-DW8-074.md"
+  "title": "End-to-End Test of New Architecture",
+  "description": "",
+  "acceptance_criteria": [],
+  "status": "Pending",
+  "priority": "Medium"
 }

@@ -1,6 +1,6 @@
 {
-  "id": "REQ-DW8-002",
-  "title": "Implement the Rehearsal State",
+  "id": "REQ-DW8-010",
+  "title": "Implement Dual-Push for Protocol Evolution",
   "description": "",
   "acceptance_criteria": [],
   "status": "Pending",

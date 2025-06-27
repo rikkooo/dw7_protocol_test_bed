@@ -17,6 +17,9 @@ def main():
     # 'new' command
     new_parser = subparsers.add_parser("new", help="Start a new development cycle for a requirement.")
     new_parser.add_argument("requirement_id", type=str, help="The ID of the requirement to work on.")
+    new_parser.add_argument("-t", "--title", required=True, help="Title of the requirement.")
+    new_parser.add_argument("-d", "--description", required=True, help="Detailed description of the requirement.")
+    new_parser.add_argument("-a", "--acceptance-criteria", required=True, nargs='+', help="List of acceptance criteria.")
 
     # 'approve' command
     approve_parser = subparsers.add_parser("approve", help="Approve the current stage and advance to the next.")
@@ -36,7 +39,12 @@ def main():
     manager = WorkflowManager(state)
 
     if args.command == "new":
-        manager.start_new_cycle(args.requirement_id)
+        manager.create_new_requirement(
+            args.requirement_id,
+            args.title,
+            args.description,
+            args.acceptance_criteria
+        )
     elif args.command == "approve":
         manager.approve()
     elif args.command == "meta-req":

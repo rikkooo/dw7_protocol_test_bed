@@ -125,5 +125,13 @@
     "priority": "Critical",
     "path": "./reqs/REQ-DW8-OS-003.md",
     "completed_at": "2025-06-27T21:55:31.707374+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-004",
+    "title": "[Execution] Refactor Kernel to Read from `pending_events.json`",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-004.md",
+    "completed_at": "2025-06-27T22:05:33.824073+00:00"
   }
 ]

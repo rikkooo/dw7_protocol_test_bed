@@ -1,6 +1,6 @@
 {
-  "id": "REQ-DW8-002",
-  "title": "Implement the Rehearsal State",
+  "id": "REQ-DW8-011",
+  "title": "Implement Deployer Configuration and Credential Management",
   "description": "",
   "acceptance_criteria": [],
   "status": "Pending",

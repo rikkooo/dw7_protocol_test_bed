@@ -150,52 +150,67 @@ class WorkflowKernel:
             traceback.print_exc(file=sys.stderr)
 
     def _load_event_details(self, event_summary):
-        """Loads the full event data from the markdown file specified in the event summary."""
+        """Loads the full event data from the JSON file in the events/ directory."""
         event_id = event_summary.get("id")
-        # The path in the JSON is relative to the project root, e.g., "./docs/reqs/..."
-        # Path() handles this correctly.
-        event_path_str = event_summary.get("path")
-
-        if not event_path_str:
-            print(f"--- Governor: WARNING: Event summary for {event_id} is missing a 'path'. ---", file=sys.stderr)
-            self.current_event = {"id": event_id, "title": "Details not found (missing path)"}
+        if not event_id:
+            print(f"--- Governor: WARNING: Event summary is missing an 'id'. ---", file=sys.stderr)
+            self.current_event = {"id": "Unknown", "title": "Details not found (missing ID)"}
             return
 
-        event_file = Path(event_path_str)
+        event_file = Path(f"events/{event_id}.json")
         if event_file.exists():
             try:
                 with open(event_file, "r", encoding='utf-8') as f:
-                    content = f.read()
-                
-                # Basic parsing of the markdown file
-                title_match = re.search(r'#\s*.*:\s*(.*)', content)
-                title = title_match.group(1).strip() if title_match else event_summary.get("title", "Title not found")
-
-                description_match = re.search(r'##\s*1\.\s*Description\s*\n\s*(.*?)\n\s*##', content, re.DOTALL)
-                description = description_match.group(1).strip() if description_match else "Description not found."
-
-                ac_match = re.search(r'##\s*2\.\s*Acceptance\s*Criteria\s*\n\s*(.*)', content, re.DOTALL)
-                acceptance_criteria = []
-                if ac_match:
-                    ac_text = ac_match.group(1)
-                    # Find all list items, which start with '-'
-                    criteria_lines = re.findall(r'-\s*(.*)', ac_text)
-                    for line in criteria_lines:
-                        acceptance_criteria.append({"text": line.strip(), "completed": False})
-
-                self.current_event = {
-                    "id": event_id,
-                    "title": title,
-                    "description": description,
-                    "acceptance_criteria": acceptance_criteria
-                }
-
+                    self.current_event = json.load(f)
             except Exception as e:
                 print(f"--- Governor: ERROR parsing event file {event_file}: {e} ---", file=sys.stderr)
-                self.current_event = {"id": event_id, "title": "Details not found (parsing error)"}
+                self.current_event = {"id": event_id, "title": f"Details not found (parsing error for {event_id})"}
         else:
             print(f"--- Governor: WARNING: Event file not found at {event_file} for {event_id} ---", file=sys.stderr)
-            self.current_event = {"id": event_id, "title": "Details not found (file missing)"}
+            self.current_event = {"id": event_id, "title": f"Details not found (file missing for {event_id})"}
+
+    def create_new_requirement(self, requirement_id, title, description, acceptance_criteria):
+        """Creates a new requirement file and adds it to the pending events queue."""
+        print(f"--- Governor: Creating new requirement: {requirement_id} ---")
+
+        # Create the detailed JSON event file
+        event_data = {
+            "id": requirement_id,
+            "title": title,
+            "description": description,
+            "acceptance_criteria": [{"text": ac, "completed": False} for ac in acceptance_criteria],
+            "status": "Pending",
+            "priority": "Medium",
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+
+        event_path = Path(f"events/{requirement_id}.json")
+        event_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(event_path, "w", encoding='utf-8') as f:
+            json.dump(event_data, f, indent=2)
+
+        # Create a summary event for the pending queue
+        event_summary = {
+            "id": requirement_id,
+            "title": title,
+            "status": "Pending",
+            "priority": "Medium",
+            "created_at": event_data["created_at"]
+        }
+
+        # Append summary to pending_events.json
+        try:
+            with open(PENDING_EVENTS_FILE, "r+") as f:
+                pending_events = json.load(f)
+                pending_events.append(event_summary)
+                f.seek(0)
+                json.dump(pending_events, f, indent=2)
+                f.truncate()
+        except (FileNotFoundError, json.JSONDecodeError):
+            with open(PENDING_EVENTS_FILE, "w") as f:
+                json.dump([event_summary], f, indent=2)
+        
+        print(f"--- Governor: Successfully created {requirement_id} and added to event queue. ---")
 
     def _perform_context_refresh(self):
         print("\n--- Governor: Performing Mandatory Context Refresh ---")
