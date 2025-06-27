@@ -162,8 +162,10 @@ class DeployerStage:
                 else:
                     raise # Re-raise other git errors
 
-            print(f"--- Governor: DEBUG: latest_tag_str is '{latest_tag_str}' ---")
-            major, minor, patch = map(int, latest_tag_str.lstrip('v').split('.'))
+            version_parts = latest_tag_str.lstrip('v').split('.')
+            major = int(version_parts[0])
+            minor = int(version_parts[1])
+            patch = int(version_parts[2]) if len(version_parts) > 2 else 0
             new_tag_str = f"v{major}.{minor}.{patch + 1}"
             print(f"--- Governor: Creating new version tag: {new_tag_str} ---")
             repo.create_tag(new_tag_str, message=f"Release {new_tag_str}")
