@@ -19,7 +19,7 @@ Format: `[Status] [Priority] [ID] [Title] -> [Path]`
 [D] [H] [REQ-DW8-004] Implement Rehearsal Stage Logic -> ./reqs/REQ-DW8-004.md
 [D] [C] [REQ-DW8-011] Implement Deployer Configuration and Credential Management -> ./reqs/REQ-DW8-011.md
 [D] [H] [REQ-DW8-008] Automate Standard Project Deployment -> ./reqs/REQ-DW8-008.md
-[P] [H] [REQ-DW8-010] Implement Dual-Push for Protocol Evolution -> ./reqs/REQ-DW8-010.md
+[I] [H] [REQ-DW8-010] Implement Dual-Push for Protocol Evolution -> ./reqs/REQ-DW8-010.md
 [P] [H] [REQ-DW8-013] Implement and Adhere to Dynamic Requirement Protocol -> ./reqs/REQ-DW8-013.md
 [P] [M] [REQ-DW8-009] Generate Final Project Documentation -> ./reqs/REQ-DW8-009.md
 [P] [M] [REQ-DW8-014] Implement Code Granularity Protocol to Improve Edit Reliability -> ./reqs/REQ-DW8-014.md
