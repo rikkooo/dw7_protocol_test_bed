@@ -1,0 +1,10 @@
+{
+  "id": "REQ-DW8-OS-006",
+  "title": "Transition `workflow_state` to JSON",
+  "priority": "High",
+  "status": "Pending",
+  "type": "Execution",
+  "description": "This requirement transitions our core state management file from its current custom format (`.workflow_state`) to a standard, robust `workflow_state.json`. This will allow for more reliable state parsing and manipulation using standard libraries.",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-OS-006.md"
+}

@@ -24,6 +24,9 @@ class TestDeployerStage:
         repo.git.add(".")
         repo.index.commit("Initial commit")
 
+        # Add a dummy tag for versioning
+        repo.create_tag("v7.0.0", message="Initial version")
+
         # Create a deployer config file
         docs_dir = project_dir / "docs"
         docs_dir.mkdir()
@@ -57,29 +60,36 @@ version = "0.1.0"
         assert deployer.config["PROJECT_REPO_URL"] == "https://github.com/user/test-project.git"
         assert deployer.config["OFFICIAL_PROTOCOL_DIRECTORY"] == "/tmp/dw_official"
 
-    @patch('git.Remote.push')
+    @patch('dw6.git_handler.mcp5')
     @patch('dw6.git_handler.input', return_value='dummy_token_from_input')
-    def test_credential_prompting(self, mock_input, mock_push, temp_project):
+    @patch('dw6.git_handler.save_github_token')
+    def test_credential_prompting(self, mock_save_token, mock_input, mock_mcp5, temp_project):
         """Tests that the user is prompted for credentials if not found."""
-        # Remove the .env file to trigger the prompt
-        (temp_project / ".env").unlink(missing_ok=True)
+        # Start with a bad token to ensure the retry logic is what triggers the prompt
+        os.environ.pop('GITHUB_TOKEN', None)
+        (temp_project / ".env").write_text('GITHUB_TOKEN="bad_token"')
 
-        state = WorkflowState()
-        deployer = DeployerStage(state)
+        # Mock the push method to simulate failure then success
+        mock_mcp5.push_files.side_effect = [
+            Exception('Authentication failed'), # First call fails
+            None  # Second call succeeds
+        ]
 
-        # The git_handler.load_github_token will be called during the deployment process.
-        # We patch the actual git push command to avoid network calls.
-        deployer._execute_standard_deployment()
+        repo = git.Repo(temp_project)
+        repo.create_remote('origin', 'https://github.com/dummy/dummy.git')
 
-        # Check that the user was prompted and the token was saved
+        # Directly call the handler which contains the retry logic
+        from dw6.git_handler import push_to_remote
+        push_to_remote(files=['README.md'], message='Test credential prompting', repo=repo)
+
+        # Check that the prompt was triggered by the failure
         mock_input.assert_called_once()
-        env_file = temp_project / ".env"
-        assert env_file.exists()
-        assert "GITHUB_TOKEN=\"dummy_token_from_input\"" in env_file.read_text()
+        mock_save_token.assert_called_once_with('dummy_token_from_input', temp_project / '.env')
+        assert mock_mcp5.push_files.call_count == 2
 
-    @patch('git.Repo')
-    @patch('dw6.git_handler.push_to_remote')
-    def test_protocol_evolution_dual_push(self, mock_push, mock_repo, temp_project):
+    @patch('dw6.git_handler.git.Repo')
+    @patch('dw6.workflow.dp.exec_proto_evo.git_handler')
+    def test_protocol_evolution_dual_push(self, mock_git_handler, mock_repo, temp_project):
         """Tests that protocol evolution triggers a push to both project and official repos."""
         # Setup state for protocol evolution
         state = WorkflowState()
@@ -89,18 +99,21 @@ version = "0.1.0"
         # Mock the git repo and remotes
         mock_repo_instance = MagicMock()
         mock_repo.return_value = mock_repo_instance
-        mock_origin = MagicMock()
-        mock_origin.name = 'origin'
+        mock_repo_instance.active_branch.name = 'main' # Mock active branch
+
         mock_official = MagicMock()
         mock_official.name = 'official_protocol_repo'
-        mock_repo_instance.remotes = [mock_origin]
-
-        # Mock the create_remote to return our mock official remote
         mock_repo_instance.create_remote.return_value = mock_official
 
         # Execute the validation, which should trigger protocol evolution
         deployer.validate()
 
-        # Assert that push was called for both remotes
-        assert mock_push.call_count == 1 # The main push to origin
-        mock_official.push.assert_called_once() # The push to the official repo
+        # Assert that the project repo push was called via the handler
+        mock_git_handler.push_to_remote.assert_called_once_with(
+            files=['.'], 
+            message='Pushing protocol update to project repository', 
+            repo=mock_repo_instance
+        )
+
+        # Assert that the official repo push was called on the remote object
+        mock_official.push.assert_called_once()

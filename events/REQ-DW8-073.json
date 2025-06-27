@@ -1,0 +1,31 @@
+{
+  "id": "REQ-DW8-073",
+  "title": "Title requires manual entry",
+  "acceptance_criteria": [
+    {
+      "completed": false,
+      "text": "**SMR-DW8-073.1:** Establish the new directory structure for individual requirement files (e.g., `docs/reqs/`)."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-073.2:** Redefine `docs/PROJECT_REQUIREMENTS.md` to be a lightweight 'Master Requirement Index' with the format `[Markers] [Title] -> [Path]`."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-073.3:** Implement the logic for creating and managing individual requirement and bug-report files in their respective directories."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-073.4:** Update the `WorkflowManager` to follow the new 'read index -> read specific file' workflow."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-073.5:** Create a migration script to convert existing requirements into the new granular format."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-073.6:** Update the `AI_PROTOCOL_TUTORIAL.md` to reflect this new, more efficient way of working."
+    }
+  ],
+  "source_file": "docs/reqs/REQ-DW8-073.md"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "REQ-DW8-OS-004",
+  "title": "Refactor Kernel to Read from `pending_events.json`",
+  "priority": "Critical",
+  "status": "Pending",
+  "type": "Execution",
+  "description": "This requirement modifies the core logic of the `WorkflowKernel`. Instead of parsing `PROJECT_REQUIREMENTS.md` to find the next task, it will now read the first entry from the `data/pending_events.json` queue. This changes the fundamental process scheduling mechanism of the system.",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-OS-004.md"
+}

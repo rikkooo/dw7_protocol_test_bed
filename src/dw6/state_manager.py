@@ -139,19 +139,37 @@ class WorkflowManager:
                 self.kernel._handle_failure(e)
                 print(f"--- Governor: Stage {self.current_stage_name} Approval Failed. Halting. ---", file=sys.stderr)
 
+import json
+
 class WorkflowState:
-    def __init__(self, state_file=".workflow_state"):
+    def __init__(self, state_file="data/workflow_state.json"):
         self.state_file = Path(state_file)
         self.data = {}
         self.load()
 
     def load(self):
-        if self.state_file.exists():
-            with open(self.state_file, "r") as f:
+        # One-time migration from old format
+        old_state_file = Path('.workflow_state')
+        if old_state_file.exists() and not self.state_file.exists():
+            print(f"--- Governor: Migrating state from {old_state_file} to {self.state_file} ---")
+            temp_data = {}
+            with open(old_state_file, "r") as f:
                 for line in f:
                     if "=" in line:
                         key, value = line.strip().split("=", 1)
-                        self.data[key] = value
+                        temp_data[key] = value
+            self.data = temp_data
+            self.save()
+            old_state_file.unlink() # Remove old file after successful migration
+            return
+
+        if self.state_file.exists() and self.state_file.stat().st_size > 0:
+            try:
+                with open(self.state_file, "r") as f:
+                    self.data = json.load(f)
+            except json.JSONDecodeError:
+                print(f"--- Governor: WARNING: Could not decode JSON from {self.state_file}. Re-initializing. ---", file=sys.stderr)
+                self.initialize_state()
         else:
             self.initialize_state()
 
@@ -224,5 +242,4 @@ class WorkflowState:
     def save(self):
         self.state_file.parent.mkdir(parents=True, exist_ok=True)
         with open(self.state_file, "w") as f:
-            for key, value in sorted(self.data.items()):
-                f.write(f"{key}={value}\n")
+            json.dump(self.data, f, indent=2, sort_keys=True)

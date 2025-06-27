@@ -1,0 +1,27 @@
+{
+  "id": "REQ-DW8-",
+  "title": "013",
+  "acceptance_criteria": [
+    {
+      "completed": false,
+      "text": "**SMR-DW8-013.1:** The AI must be able to locate and read the `DW8_DYNAMIC_REQUIREMENT_PROTOCOL.md` file to understand the procedure."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-013.2:** When a new requirement is triggered, the AI must explicitly state it is following the protocol."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-013.3:** The AI must correctly create a new, well-formed MR file in `docs/reqs/`."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-013.4:** The AI must correctly update the master index at `docs/PROJECT_REQUIREMENTS.md`."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-013.5:** The AI must correctly re-sort the pending requirements in the master index according to priority after adding a new one."
+    }
+  ],
+  "source_file": "docs/reqs/REQ-DW8-013.md"
+}

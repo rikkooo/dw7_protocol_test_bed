@@ -1,0 +1,9 @@
+{
+  "id": "REQ-DW8-015",
+  "title": "Investigate and Redesign State Machine Gatekeeping Rules",
+  "priority": "High",
+  "status": "Pending",
+  "type": "Sherlock Mode (Investigation & Design)",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-015.md"
+}

@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 src/dw6/__init__.py
 src/dw6/__main__.py
@@ -19,10 +20,22 @@ src/dw6/workflow/coder.py
 src/dw6/workflow/deployer.py
 src/dw6/workflow/engineer.py
 src/dw6/workflow/kernel.py
+src/dw6/workflow/rehearsal.py
 src/dw6/workflow/researcher.py
 src/dw6/workflow/validator.py
+src/dw6/workflow/dp/__init__.py
+src/dw6/workflow/dp/chk_proj_cpl.py
+src/dw6/workflow/dp/exec_proto_evo.py
+src/dw6/workflow/dp/exec_std_dep.py
+src/dw6/workflow/dp/gen_final_readme.py
+src/dw6/workflow/dp/init.py
+src/dw6/workflow/dp/ld_cfg.py
+src/dw6/workflow/dp/validate.py
+tests/test_architecture.py
 tests/test_augmenter.py
+tests/test_deployer.py
 tests/test_environment_management.py
+tests/test_final_documentation.py
 tests/test_git_handler.py
 tests/test_placeholder.py
 tests/test_setup.py

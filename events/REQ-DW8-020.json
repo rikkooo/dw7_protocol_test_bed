@@ -1,0 +1,9 @@
+{
+  "id": "REQ-DW8-020",
+  "title": "Investigate Transitioning Key Documents from MD to JSON",
+  "priority": "Low",
+  "status": "Pending",
+  "type": "Sherlock Mode (Investigation & Design)",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-020.md"
+}

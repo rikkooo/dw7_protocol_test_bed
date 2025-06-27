@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import argparse
 import os
 from datetime import datetime
-from dw6.state_manager import WorkflowManager
+from dw6.state_manager import WorkflowState, WorkflowManager
 from dw6.templates import TECHNICAL_SPECIFICATION_TEMPLATE
 
 def main():
@@ -32,7 +32,8 @@ def main():
     new_meta_parser.add_argument("-p", "--priority", required=True, choices=["Critical", "High", "Medium", "Low"], help="Priority of the requirement.")
 
     args = parser.parse_args()
-    manager = WorkflowManager()
+    state = WorkflowState()
+    manager = WorkflowManager(state)
 
     if args.command == "new":
         manager.start_new_cycle(args.requirement_id)

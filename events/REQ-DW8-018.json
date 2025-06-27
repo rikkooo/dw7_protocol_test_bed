@@ -1,0 +1,9 @@
+{
+  "id": "REQ-DW8-018",
+  "title": "Investigate and Redesign Environment Management and Enforcement",
+  "priority": "High",
+  "status": "Pending",
+  "type": "Sherlock Mode (Investigation & Design)",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-018.md"
+}

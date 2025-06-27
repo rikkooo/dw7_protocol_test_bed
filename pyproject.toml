@@ -19,7 +19,6 @@ test = [
     "pytest-cov",
     "pytest-mock",
     "httpx",
-    "GitPython",
 ]
 
 [tool.setuptools.packages.find]

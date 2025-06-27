@@ -1,0 +1,135 @@
+[
+  {
+    "id": "REQ-DW8-OS-003",
+    "title": "[Execution] Create Migration Script for Existing Requirements",
+    "status": "Pending",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-003.md"
+  },
+  {
+    "id": "REQ-DW8-OS-004",
+    "title": "[Execution] Refactor Kernel to Read from `pending_events.json`",
+    "status": "Pending",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-004.md"
+  },
+  {
+    "id": "REQ-DW8-OS-005",
+    "title": "[Execution] Implement Event Queue Completion Logic",
+    "status": "Pending",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-005.md"
+  },
+  {
+    "id": "REQ-DW8-OS-006",
+    "title": "[Execution] Transition `workflow_state` to JSON",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-006.md"
+  },
+  {
+    "id": "REQ-DW8-OS-007",
+    "title": "[Execution] Refactor Requirement Files to JSON Events",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-007.md"
+  },
+  {
+    "id": "REQ-DW8-OS-008",
+    "title": "[Execution] Implement Decoupled Deployer Logic",
+    "status": "Pending",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-OS-008.md"
+  },
+  {
+    "id": "REQ-DW8-OS-009",
+    "title": "[Execution] Implement Dynamic Event Prioritization",
+    "status": "Pending",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-OS-009.md"
+  },
+  {
+    "id": "REQ-DW8-OS-010",
+    "title": "[Design] Design and Document a `BOOT_PROTOCOL.md`",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-010.md"
+  },
+  {
+    "id": "REQ-DW8-OS-011",
+    "title": "[Design] Design and Document a `CONTEXT_MANAGEMENT_PROTOCOL.md`",
+    "status": "Pending",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-OS-011.md"
+  },
+  {
+    "id": "REQ-DW8-OS-012",
+    "title": "[Design] Re-design the `Rehearsal` Stage as an Interrupt Handler",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-012.md"
+  },
+  {
+    "id": "REQ-DW8-016",
+    "title": "[Sherlock Mode] Investigate and Fortify Workflow Adherence Protocol",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-016.md"
+  },
+  {
+    "id": "REQ-DW8-017",
+    "title": "[Execution] Refactor All Major Classes to Use Code Granularity Protocol",
+    "status": "Pending",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-017.md"
+  },
+  {
+    "id": "REQ-DW8-018",
+    "title": "[Sherlock Mode] Investigate and Redesign Environment Management and Enforcement",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-018.md"
+  },
+  {
+    "id": "REQ-DW8-019",
+    "title": "[Sherlock Mode] Investigate and Enhance Git/Deployment Workflow",
+    "status": "Pending",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-019.md"
+  },
+  {
+    "id": "REQ-DW8-EXEC-001",
+    "title": "[Execution] Refactor Governor for Centralized Gatekeeping",
+    "status": "Pending",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-EXEC-001.md"
+  },
+  {
+    "id": "REQ-DW8-EXEC-002",
+    "title": "[Execution] Remove Decentralized Stage Validation Methods",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-EXEC-002.md"
+  },
+  {
+    "id": "REQ-DW8-EXEC-003",
+    "title": "[Execution] Deprecate and Remove 'allow_failures' Bypass",
+    "status": "Pending",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-EXEC-003.md"
+  },
+  {
+    "id": "REQ-DW8-EXEC-004",
+    "title": "[Execution] Adapt WorkflowKernel for Governor-Led Transitions",
+    "status": "Pending",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-EXEC-004.md"
+  },
+  {
+    "id": "REQ-DW8-EXEC-005",
+    "title": "[Execution] Implement Automatic Git Revert on Validation Failure",
+    "status": "Pending",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-EXEC-005.md"
+  }
+]

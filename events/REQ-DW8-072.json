@@ -1,0 +1,23 @@
+{
+  "id": "REQ-DW8-072",
+  "title": "Title requires manual entry",
+  "acceptance_criteria": [
+    {
+      "completed": false,
+      "text": "**SMR-DW8-072.1:** Modify the context generation script to summarize previous achievements instead of listing all changes."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-072.2:** Modify the context generation script to summarize the next steps clearly."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-072.3:** Remove raw exception tracebacks from the mandatory context refresh."
+    },
+    {
+      "completed": false,
+      "text": "**SMR-DW8-072.4:** Ensure the AI Protocol Tutorial remains a core part of the context."
+    }
+  ],
+  "source_file": "docs/reqs/REQ-DW8-072.md"
+}

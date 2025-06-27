@@ -23,7 +23,7 @@ class TestWorkflowStateInitialization(unittest.TestCase):
         mock_basename.return_value = "dw7_protocol_test_bed"
         # 1st call to exists() is for the state file (False = new project)
         # 2nd call is for the python executable (False = venv needs creation)
-        mock_exists.side_effect = [False, False] 
+        mock_exists.return_value = False 
 
         # Act
         state = WorkflowState()

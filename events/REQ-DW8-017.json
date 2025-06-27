@@ -1,0 +1,9 @@
+{
+  "id": "REQ-DW8-017",
+  "title": "Refactor All Major Classes to Use Code Granularity Protocol",
+  "priority": "Medium",
+  "status": "Pending",
+  "type": "Execution",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-017.md"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "REQ-DW8-OS-003",
+  "title": "Create Migration Script for Existing Requirements",
+  "priority": "Critical",
+  "status": "Pending",
+  "type": "Execution",
+  "description": "To transition to the new OS model without losing our project history and pending tasks, we need a one-time migration script. This script will parse the existing `docs/PROJECT_REQUIREMENTS.md` and the individual `/reqs/*.md` files, converting them into the new JSON event format.",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-OS-003.md"
+}

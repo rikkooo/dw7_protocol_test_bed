@@ -1,0 +1,9 @@
+{
+  "id": "REQ-DW8-019",
+  "title": "Investigate and Enhance Git/Deployment Workflow",
+  "priority": "Medium",
+  "status": "Pending",
+  "type": "Sherlock Mode (Investigation & Design)",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-019.md"
+}

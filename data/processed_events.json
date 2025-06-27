@@ -1,0 +1,121 @@
+[
+  {
+    "id": "REQ-DW8-073",
+    "title": "Architect and Implement a Pointer-Based Memory System",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-073.md"
+  },
+  {
+    "id": "REQ-DW8-072",
+    "title": "Simplify and Refine AI Context Refresh Protocol",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-072.md"
+  },
+  {
+    "id": "REQ-DW8-074",
+    "title": "End-to-End Test of New Architecture",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-074.md"
+  },
+  {
+    "id": "REQ-DW8-001",
+    "title": "Implement a persistent failure counter",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-001.md"
+  },
+  {
+    "id": "REQ-DW8-002",
+    "title": "Implement the Rehearsal State",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-002.md"
+  },
+  {
+    "id": "REQ-DW8-004",
+    "title": "Implement Rehearsal Stage Logic",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-004.md"
+  },
+  {
+    "id": "REQ-DW8-011",
+    "title": "Implement Deployer Configuration and Credential Management",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-011.md"
+  },
+  {
+    "id": "REQ-DW8-008",
+    "title": "Automate Standard Project Deployment",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-008.md"
+  },
+  {
+    "id": "REQ-DW8-010",
+    "title": "Implement Dual-Push for Protocol Evolution",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-010.md"
+  },
+  {
+    "id": "REQ-DW8-075",
+    "title": "Implement Robust Command Output Handling",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-075.md"
+  },
+  {
+    "id": "REQ-DW8-013",
+    "title": "Implement and Adhere to Dynamic Requirement Protocol",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-013.md"
+  },
+  {
+    "id": "REQ-DW8-009",
+    "title": "Generate Final Project Documentation",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-009.md"
+  },
+  {
+    "id": "REQ-DW8-014",
+    "title": "Implement Code Granularity Protocol to Improve Edit Reliability",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-014.md"
+  },
+  {
+    "id": "REQ-DW8-012",
+    "title": "Document Requirement List Abbreviations",
+    "status": "Deployed",
+    "priority": "Low",
+    "path": "./reqs/REQ-DW8-012.md"
+  },
+  {
+    "id": "REQ-DW8-OS-001",
+    "title": "[Design] Formalize the \"DW8 Operating System\" architecture",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-001.md"
+  },
+  {
+    "id": "REQ-DW8-OS-002",
+    "title": "[Execution] Replace `PROJECT_REQUIREMENTS.md` with Event Queues",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-OS-002.md"
+  },
+  {
+    "id": "REQ-DW8-015",
+    "title": "[Sherlock Mode] Investigate and Redesign State Machine Gatekeeping Rules",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-015.md"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "id": "REQ-DW8-OS-002",
+  "title": "Replace `PROJECT_REQUIREMENTS.md` with Event Queues",
+  "priority": "Critical",
+  "status": "Pending",
+  "type": "Execution",
+  "description": "This requirement is to replace the single, monolithic `PROJECT_REQUIREMENTS.md` file with a more robust and efficient dual-queue system implemented in JSON. This is a foundational step in the OS refactoring.\n\n- **`pending_events.json`**: Will hold the list of tasks to be processed.\n- **`processed_events.json`**: Will hold a log of completed tasks.",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-OS-002.md"
+}

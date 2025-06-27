@@ -3,11 +3,13 @@ import sys
 import os
 import traceback
 import git
+import json
 from pathlib import Path
 from datetime import datetime, timezone
 
-# Assuming these constants will be moved to a central config or are accessible
-REQUIREMENTS_FILE = "docs/PROJECT_REQUIREMENTS.md"
+# Define constants for the new data files
+PENDING_EVENTS_FILE = "data/pending_events.json"
+PROCESSED_EVENTS_FILE = "data/processed_events.json"
 FAILURE_THRESHOLD = 3
 STAGES = ["Engineer", "Researcher", "Coder", "Validator", "Deployer", "Rehearsal"]
 
@@ -16,6 +18,7 @@ class WorkflowKernel:
         self.state = state
         self.current_stage = self.state.get("CurrentStage")
         self.python_executable_path = self.state.get("PythonExecutablePath")
+        self.current_event = None
 
     def advance_stage(self, needs_research=False):
         self._reset_failure_counters(self.current_stage)
@@ -43,6 +46,7 @@ class WorkflowKernel:
         self.state.set("CurrentStage", next_stage)
         if next_stage == "Engineer":
             self.state.increment("CycleCounter")
+            self._complete_event_in_queue()
             self._advance_requirement_pointer()
             self._perform_context_refresh()
         self.state.save()
@@ -85,59 +89,108 @@ class WorkflowKernel:
         except Exception as e:
             print(f"Error saving commit SHA: {e}", file=sys.stderr)
 
+    def _complete_event_in_queue(self):
+        try:
+            with open(PENDING_EVENTS_FILE, "r") as f:
+                pending_events = json.load(f)
+            
+            if not pending_events:
+                print("--- Governor: No pending events to complete. ---")
+                return
+
+            # Move the completed event
+            completed_event = pending_events.pop(0)
+            completed_event['status'] = 'Deployed'
+            completed_event['completed_at'] = datetime.now(timezone.utc).isoformat()
+
+            with open(PROCESSED_EVENTS_FILE, "r+") as f:
+                processed_events = json.load(f)
+                processed_events.append(completed_event)
+                f.seek(0)
+                json.dump(processed_events, f, indent=2)
+                f.truncate()
+
+            # Update the pending events queue
+            with open(PENDING_EVENTS_FILE, "w") as f:
+                json.dump(pending_events, f, indent=2)
+
+            print(f"--- Governor: Event {completed_event.get('id')} moved to processed queue. ---")
+
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"--- Governor: Error processing event queues: {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"--- Governor: Unexpected error completing event in queue: {e}", file=sys.stderr)
+
     def _advance_requirement_pointer(self):
         try:
-            with open(REQUIREMENTS_FILE, "r") as f:
-                lines = f.readlines()
+            with open(PENDING_EVENTS_FILE, "r") as f:
+                pending_events = json.load(f)
 
-            # Find the first line that contains '[P]' for 'Pending'
-            for line in lines:
-                if line.strip().startswith('[P]'):
-                    req_id_match = re.search(r'\[(REQ-DW8-\d+)\]', line)
-                    if req_id_match:
-                        req_id = req_id_match.group(1)
-                        self.state.set("RequirementPointer", req_id)
-                        self.state.save()
-                        print(f"--- Governor: RequirementPointer set to first pending requirement: {req_id}. ---")
-                        return
-            
-            print("--- Governor: No pending requirements found. ---")
+            if pending_events:
+                next_event = pending_events[0]
+                req_id = next_event.get("id")
+                
+                if req_id:
+                    self.state.set("RequirementPointer", req_id)
+                    self.state.save()
+                    self._load_event_details(req_id)
+                    print(f"--- Governor: RequirementPointer set to next event in queue: {req_id}. ---")
+                else:
+                    print(f"--- Governor: Error: Event in queue is missing an 'id'. ---", file=sys.stderr)
+            else:
+                print("--- Governor: No pending events found in the queue. ---")
 
+        except FileNotFoundError:
+            print(f"--- Governor: Error: Pending events file not found at {PENDING_EVENTS_FILE}. ---", file=sys.stderr)
+        except json.JSONDecodeError:
+            print(f"--- Governor: Error: Could not decode JSON from {PENDING_EVENTS_FILE}. ---", file=sys.stderr)
         except Exception as e:
             print(f"Error advancing requirement pointer: {e}", file=sys.stderr)
 
+    def _load_event_details(self, event_id):
+        """Loads the full event data from the corresponding JSON file."""
+        event_file = Path(f"events/{event_id}.json")
+        if event_file.exists():
+            with open(event_file, "r") as f:
+                self.current_event = json.load(f)
+        else:
+            print(f"--- Governor: WARNING: Event file not found for {event_id} ---", file=sys.stderr)
+            self.current_event = {"id": event_id, "title": "Details not found"}
+
     def _perform_context_refresh(self):
         print("\n--- Governor: Performing Mandatory Context Refresh ---")
-        try:
-            active_req_id = self.state.get("RequirementPointer")
-            if not active_req_id:
-                print("--- Governor: No active requirement pointer found. Cannot refresh context. ---", file=sys.stderr)
-                return
+        if not self.current_event:
+            print("--- Governor: No active event loaded. Cannot refresh context. ---", file=sys.stderr)
+            return
 
-            req_file_path = f"docs/reqs/{active_req_id}.md"
-            print(f"\n*** Active Requirement ({active_req_id}) ***")
-            if os.path.exists(req_file_path):
-                with open(req_file_path, "r") as f:
-                    print(f.read())
-            else:
-                print(f"--- Governor: Requirement file not found: {req_file_path} ---", file=sys.stderr)
+        print(f"\n*** Active Event ({self.current_event.get('id')}) ***")
+        print(f"Title: {self.current_event.get('title')}")
+        print(f"Description: {self.current_event.get('description')}")
+        print("Acceptance Criteria:")
+        for i, smr in enumerate(self.current_event.get('acceptance_criteria', [])):
+            status = "[x]" if smr.get('completed') else "[ ]"
+            print(f"  {i+1}. {status} {smr.get('text')}")
 
-            tutorial_file = "docs/AI_PROTOCOL_TUTORIAL.md"
-            if os.path.exists(tutorial_file):
-                print(f"\n*** AI Protocol Tutorial ({os.path.basename(tutorial_file)}) ***")
-                with open(tutorial_file, "r") as f:
-                    print(f.read())
-            print("\n--- Context Refresh Complete ---\n")
-        except Exception as e:
-            print(f"Error during context refresh: {e}", file=sys.stderr)
+        tutorial_file = "docs/AI_PROTOCOL_TUTORIAL.md"
+        if os.path.exists(tutorial_file):
+            print(f"\n*** AI Protocol Tutorial ({os.path.basename(tutorial_file)}) ***")
+            with open(tutorial_file, "r") as f:
+                print(f.read())
+        print("\n--- Context Refresh Complete ---\n")
 
     def _create_red_flag_requirement(self, exception):
         try:
-            # Determine the next requirement ID
-            with open(REQUIREMENTS_FILE, "r") as f:
-                content = f.read()
-            req_ids = [int(num) for num in re.findall(r'REQ-DW8-(\d+)', content)]
-            next_id = max(req_ids) + 1 if req_ids else 1
+            # Determine the next requirement ID by checking both queues
+            all_ids = []
+            for event_file in [PENDING_EVENTS_FILE, PROCESSED_EVENTS_FILE]:
+                try:
+                    with open(event_file, "r") as f:
+                        events = json.load(f)
+                        all_ids.extend([int(num) for event in events for num in re.findall(r'REQ-DW8-(\d+)', event.get('id', '')) if num])
+                except (FileNotFoundError, json.JSONDecodeError, ValueError):
+                    pass  # Ignore if file doesn't exist, is empty/invalid, or contains non-matching IDs
+
+            next_id = max(all_ids) + 1 if all_ids else 1
             new_req_id = f"REQ-DW8-{next_id:03d}"
 
             # Create the detailed red flag requirement file
@@ -171,13 +224,28 @@ class WorkflowKernel:
                 f.write(red_flag_content)
             print(f"Successfully created red flag file: {red_flag_path}")
 
-            # Prepend the new requirement to the master index to give it top priority
-            new_index_line = f"[P] [C] [{new_req_id}] Red Flag: Unhandled Critical Failure in {self.current_stage} Stage -> ./reqs/{new_req_id}.md\n"
-            with open(REQUIREMENTS_FILE, "r+") as f:
-                content = f.read()
-                f.seek(0, 0)
-                f.write(new_index_line + content)
-            print(f"Successfully prepended {new_req_id} to {REQUIREMENTS_FILE}")
+            # Create the new event object
+            new_event = {
+                "id": new_req_id,
+                "title": f"Red Flag: Unhandled Critical Failure in {self.current_stage} Stage",
+                "status": "Pending",
+                "priority": "Critical",
+                "path": f"./reqs/{new_req_id}.md"
+            }
+
+            # Prepend the new event to the pending queue to give it top priority
+            try:
+                with open(PENDING_EVENTS_FILE, "r+") as f:
+                    pending_events = json.load(f)
+                    pending_events.insert(0, new_event)
+                    f.seek(0)
+                    json.dump(pending_events, f, indent=2)
+                    f.truncate()
+            except (FileNotFoundError, json.JSONDecodeError):
+                with open(PENDING_EVENTS_FILE, "w") as f:
+                    json.dump([new_event], f, indent=2)
+
+            print(f"Successfully injected {new_req_id} into {PENDING_EVENTS_FILE}")
 
             return new_req_id
 

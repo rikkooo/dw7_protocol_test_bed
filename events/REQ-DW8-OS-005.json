@@ -1,0 +1,10 @@
+{
+  "id": "REQ-DW8-OS-005",
+  "title": "Implement Event Queue Completion Logic",
+  "priority": "Critical",
+  "status": "Pending",
+  "type": "Execution",
+  "description": "This requirement implements the second half of the event queue logic. When an event is successfully completed (after the final stage in its instruction set), the Kernel must remove it from `data/pending_events.json` and append it to `data/processed_events.json`.",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-OS-005.md"
+}

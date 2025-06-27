@@ -1,0 +1,9 @@
+{
+  "id": "REQ-DW8-016",
+  "title": "Investigate and Fortify Workflow Adherence Protocol",
+  "priority": "High",
+  "status": "Pending",
+  "type": "Sherlock Mode (Investigation & Design)",
+  "acceptance_criteria": [],
+  "source_file": "docs/reqs/REQ-DW8-016.md"
+}
