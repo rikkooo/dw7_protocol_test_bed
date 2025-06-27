@@ -1,12 +1,5 @@
 [
   {
-    "id": "REQ-DW8-OS-006",
-    "title": "[Execution] Transition `workflow_state` to JSON",
-    "status": "Pending",
-    "priority": "High",
-    "path": "./reqs/REQ-DW8-OS-006.md"
-  },
-  {
     "id": "REQ-DW8-OS-007",
     "title": "[Execution] Refactor Requirement Files to JSON Events",
     "status": "Pending",

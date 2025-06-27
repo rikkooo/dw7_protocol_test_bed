@@ -141,5 +141,13 @@
     "priority": "Critical",
     "path": "./reqs/REQ-DW8-OS-005.md",
     "completed_at": "2025-06-27T22:24:07.508470+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-006",
+    "title": "[Execution] Transition `workflow_state` to JSON",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-006.md",
+    "completed_at": "2025-06-27T22:26:25.192210+00:00"
   }
 ]
