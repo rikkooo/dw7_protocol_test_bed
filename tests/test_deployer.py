@@ -36,6 +36,14 @@ class TestDeployerStage:
         # Create a dummy .env file
         (project_dir / ".env").write_text("GITHUB_TOKEN=dummy_token_from_file")
 
+        # Create a pyproject.toml to make it a valid project
+        (project_dir / "pyproject.toml").write_text(
+            """[project]
+name = "test-project"
+version = "0.1.0"
+"""
+        )
+
         # Change the current working directory to the project directory
         os.chdir(project_dir)
 

@@ -152,7 +152,15 @@ class DeployerStage:
             git_handler.push_to_remote(repo=repo)
             
             # SMR-DW8-008.5: Apply a version tag
-            latest_tag_str = repo.git.describe('--tags', '--abbrev=0', N=1, fallback="v0.0.0")
+            # SMR-DW8-008.5: Apply a version tag
+            try:
+                # Get the latest tag, or fallback to v0.0.0 if no tags exist
+                latest_tag_str = repo.git.describe('--tags', '--abbrev=0')
+            except git.exc.GitCommandError as e:
+                if "No names found, cannot describe anything" in str(e):
+                    latest_tag_str = "v0.0.0"
+                else:
+                    raise # Re-raise other git errors
             major, minor, patch = map(int, latest_tag_str.lstrip('v').split('.'))
             new_tag_str = f"v{major}.{minor}.{patch + 1}"
             print(f"--- Governor: Creating new version tag: {new_tag_str} ---")
