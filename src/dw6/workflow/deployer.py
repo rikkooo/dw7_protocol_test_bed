@@ -161,6 +161,8 @@ class DeployerStage:
                     latest_tag_str = "v0.0.0"
                 else:
                     raise # Re-raise other git errors
+
+            print(f"--- Governor: DEBUG: latest_tag_str is '{latest_tag_str}' ---")
             major, minor, patch = map(int, latest_tag_str.lstrip('v').split('.'))
             new_tag_str = f"v{major}.{minor}.{patch + 1}"
             print(f"--- Governor: Creating new version tag: {new_tag_str} ---")
