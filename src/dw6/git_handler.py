@@ -88,61 +88,49 @@ def add_commit_files(files, message):
         else:
             sys.exit(1)
 
-def push_to_remote(files, message, branch='main', repo=None):
-    """Pushes a list of files with content to the remote repository, with retry on failure."""
-    print(f"--- Governor: Pushing files via GitHub MCP: {files} ---")
+def push_to_remote(repo=None, tags=False):
+    """Pushes the current branch and optionally tags to the remote repository."""
     if repo is None:
         repo = get_repo()
 
-    owner, repo_name = get_repo_info_from_remote_url(repo.remotes.origin.url)
-    if not owner or not repo_name:
-        print("FATAL: Could not determine repository owner and name from remote URL.", file=sys.stderr)
-        return False
-
-    files_to_push = []
-    project_root = get_project_root()
-    for file_path in files:
-        try:
-            # Ensure file_path is treated as relative to the project root
-            full_path = project_root / file_path
-            with open(full_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            files_to_push.append({"path": str(file_path), "content": content})
-        except FileNotFoundError:
-            print(f"ERROR: File not found for push: {full_path}", file=sys.stderr)
-            return False
-        except Exception as e:
-            print(f"ERROR: Could not read file {file_path}: {e}", file=sys.stderr)
-            return False
-
+    remote = repo.remotes.origin
+    
     # Retry logic for authentication
     for attempt in range(2):
         try:
-            load_github_token(repo_path=repo.working_dir) # Ensure token is loaded
-            mcp5.push_files(
-                owner=owner,
-                repo=repo_name,
-                branch=branch,
-                files=files_to_push,
-                message=message
-            )
-            print("--- Governor: Successfully pushed files via GitHub MCP. ---")
+            # Load the token to ensure the credential helper is up-to-date
+            load_github_token(repo_path=repo.working_dir)
+            
+            if tags:
+                print("--- Governor: Pushing tags to remote... ---")
+                result = remote.push(tags=True)
+            else:
+                print(f"--- Governor: Pushing branch '{repo.active_branch.name}' to remote... ---")
+                result = remote.push(refspec=f'{repo.active_branch.name}:{repo.active_branch.name}')
+
+            # Check for errors in the push result
+            for info in result:
+                if info.flags & git.PushInfo.ERROR:
+                    raise git.exc.GitCommandError(f"Push failed: {info.summary}")
+            
+            print("--- Governor: Push successful. ---")
             return True
-        except Exception as e:
-            print(f"GitHub MCP push failed (attempt {attempt + 1}/2): {e}", file=sys.stderr)
-            if attempt == 0:
+
+        except git.exc.GitCommandError as e:
+            print(f"Push failed (attempt {attempt + 1}/2): {e}", file=sys.stderr)
+            if 'Authentication failed' in str(e) and attempt == 0:
                 # Force a token re-prompt on the next iteration
+                print("--- Governor: Authentication failed. Clearing token and retrying. ---")
                 os.environ.pop('GITHUB_TOKEN', None)
                 (Path(repo.working_dir) / '.env').unlink(missing_ok=True)
             else:
-                print("FATAL: GitHub MCP push failed after multiple retries.", file=sys.stderr)
+                print("FATAL: Git push failed after multiple retries.", file=sys.stderr)
                 return False
+        except Exception as e:
+            print(f"An unexpected error occurred during push: {e}", file=sys.stderr)
+            return False
+            
     return False
-
-    # This function will now be a placeholder for the agent to call the MCP tool.
-    # The agent must fill in the mcp5_push_files tool call here.
-    print("MCP PUSH GOES HERE")
-    return True
 
 def get_latest_commit_hash(repo: git.Repo = None):
     """Gets the hash of the latest commit."""
