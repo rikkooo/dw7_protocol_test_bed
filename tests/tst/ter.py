@@ -7,7 +7,16 @@ def ter(self):
     Tests the transition from the Engineer to the Researcher stage.
     """
     mock_state_instance = self.mock_WorkflowState.return_value
-    mock_state_instance.get.return_value = 'Engineer'
+    
+    def get_side_effect(key, default=None):
+        state = {
+            'CurrentStage': 'Engineer',
+            'is_protocol_update': False
+        }
+        return state.get(key, default)
+
+    mock_state_instance.get.side_effect = get_side_effect
+    
     manager = WorkflowManager(mock_state_instance)
 
     with patch('dw6.workflow.engineer.EngineerStage.validate', return_value=True):

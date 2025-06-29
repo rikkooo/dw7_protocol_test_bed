@@ -1,0 +1,14 @@
+{
+  "id": "REQ-DW8-EXEC-001",
+  "title": "[Sherlock] Create the Composable AI Operations Manual Chapters",
+  "description": "Deconstruct existing documentation into granular chapter files within 'docs/manual_chapters/'. Create the master index file 'docs/AI_OPERATIONS_MANUAL.md' that lists these chapters in order.",
+  "acceptance_criteria": [
+    "Create the 'docs/manual_chapters/' directory.",
+    "Create individual, granular chapter files (e.g., '01_vision.md') by migrating and refactoring content from old docs.",
+    "Create the 'docs/AI_OPERATIONS_MANUAL.md' file to act as an ordered index of the chapter files.",
+    "Deprecate or remove the old, now-redundant documentation files."
+  ],
+  "type": "Standard",
+  "priority": "High",
+  "status": "Pending"
+}

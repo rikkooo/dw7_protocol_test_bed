@@ -11,8 +11,24 @@ from tests.tst import tfc, ter, tec, trc, tcn, tvte, tvtd, thp
 class TestWorkflowManagerIntegration(unittest.TestCase):
 
     def setUp(self):
-        self.patcher = patch('dw6.state_manager.WorkflowState')
+        self.patcher = patch('dw6.state_manager.WorkflowState', autospec=True)
         self.mock_WorkflowState = self.patcher.start()
+
+        # The WorkflowState class dynamically loads its methods. The `autospec` feature
+        # creates a mock that correctly passes `isinstance` checks, but it doesn't
+        # know about the dynamically added methods. We must add them to the mock manually.
+        mock_instance = self.mock_WorkflowState.return_value
+        mock_instance.get = MagicMock()
+        mock_instance.set = MagicMock()
+        mock_instance.increment = MagicMock()
+        mock_instance.delete = MagicMock()
+        mock_instance.get_current_event_details = MagicMock()
+        mock_instance.advance_requirement_pointer = MagicMock()
+        mock_instance.archive_completed_event = MagicMock()
+        mock_instance.create_red_flag_event = MagicMock()
+        mock_instance.add_pending_event = MagicMock()
+        mock_instance.get_failure_counter = MagicMock()
+        mock_instance.save = MagicMock()
 
     def tearDown(self):
         self.patcher.stop()

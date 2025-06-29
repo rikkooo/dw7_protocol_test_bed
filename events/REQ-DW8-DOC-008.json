@@ -1,0 +1,22 @@
+{
+    "id": "REQ-DW8-DOC-008",
+    "title": "[Sherlock] Design the 'Dynamic Mission Brief' System",
+    "description": "Design the technical implementation for the 'Dynamic Mission Brief' system. This involves specifying how the Governor will detect the context of the AI's current task and automatically prepend the relevant '_CONTEXT.md' file to its instructions.",
+    "acceptance_criteria": [
+        {
+            "text": "Create a design document or flowchart illustrating the logic flow.",
+            "completed": false
+        },
+        {
+            "text": "The design must specify how the system identifies the relevant context directory.",
+            "completed": false
+        },
+        {
+            "text": "The design must detail the mechanism for prepending the context to the AI's prompt/instructions.",
+            "completed": false
+        }
+    ],
+    "status": "pending",
+    "priority": "High",
+    "mode": "Sherlock"
+}

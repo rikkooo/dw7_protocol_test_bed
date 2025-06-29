@@ -1,0 +1,22 @@
+{
+    "id": "REQ-DW8-DOC-010",
+    "title": "[Sherlock] Design the Composable Manual Build System",
+    "description": "Design the file structure and the Python script ('scripts/build_manual.py') responsible for compiling the individual manual chapters into a single file for AI consumption during a 'total recall'.",
+    "acceptance_criteria": [
+        {
+            "text": "Define the final directory structure for the composable manual.",
+            "completed": false
+        },
+        {
+            "text": "Produce a Python script that reads a master index file and concatenates chapter files into a single '.compiled' output file.",
+            "completed": false
+        },
+        {
+            "text": "Specify the exact command the Governor will use to trigger this build script.",
+            "completed": false
+        }
+    ],
+    "status": "pending",
+    "priority": "High",
+    "mode": "Sherlock"
+}

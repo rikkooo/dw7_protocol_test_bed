@@ -7,7 +7,16 @@ def trc(self):
     Tests the transition from the Researcher to the Coder stage.
     """
     mock_state_instance = self.mock_WorkflowState.return_value
-    mock_state_instance.get.return_value = 'Researcher'
+
+    def get_side_effect(key, default=None):
+        state = {
+            'CurrentStage': 'Researcher',
+            'is_protocol_update': False
+        }
+        return state.get(key, default)
+
+    mock_state_instance.get.side_effect = get_side_effect
+
     manager = WorkflowManager(mock_state_instance)
 
     with patch('dw6.workflow.researcher.ResearcherStage.validate', return_value=True):

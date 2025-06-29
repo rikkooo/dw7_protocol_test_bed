@@ -15,6 +15,11 @@ def advance_stage(self, needs_research=False):
             next_stage = "Validator"
         elif self.current_stage == "Validator":
             # A successful validation of a protocol update completes the cycle.
+            print("--- Governor: Requirement cycle complete. ---")
+            current_event = self.state.get_current_event_details()
+            if current_event:
+                self.state.archive_completed_event(current_event)
+            self.state.advance_requirement_pointer()
             next_stage = "Engineer"
         else:
             # This case should not be reached in a protocol update cycle.
@@ -66,7 +71,7 @@ def advance_stage(self, needs_research=False):
     if next_stage == "Engineer":
         print("--- Governor: Requirement cycle complete. ---")
         self.state.increment("CycleCounter")
-        self._advance_requirement_pointer()
+        self.state.advance_requirement_pointer()
         self._perform_context_refresh()
 
     # If we are entering the Coder stage, record the starting commit hash.

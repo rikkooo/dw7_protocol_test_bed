@@ -50,8 +50,7 @@ class WorkflowKernel:
         self.current_stage = self.state.get("CurrentStage")
         self.python_executable_path = self.state.get("PythonExecutablePath")
 
-        # 5. Load the details of the current requirement pointed to by the state
-        self.load_current_event_details()
+
 
     def _load_methods(self):
         """

@@ -1,0 +1,22 @@
+{
+    "id": "REQ-DW8-DOC-007",
+    "title": "[Sherlock] Formalize the AI-Cognitive Documentation Framework (AI-CDF)",
+    "description": "Define the principles and structure of the AI-CDF, a new framework for creating and maintaining documentation that is optimized for AI agent consumption. This includes defining the three pillars: Dynamic Mission Brief, Operations Manual, and Living Documentation Protocol.",
+    "acceptance_criteria": [
+        {
+            "text": "Produce a formal document detailing the AI-CDF.",
+            "completed": false
+        },
+        {
+            "text": "The document must clearly define the purpose and structure of the 'AI_OPERATIONS_MANUAL.md'.",
+            "completed": false
+        },
+        {
+            "text": "The document must specify the purpose and placement of '_CONTEXT.md' files.",
+            "completed": false
+        }
+    ],
+    "status": "pending",
+    "priority": "High",
+    "mode": "Sherlock"
+}

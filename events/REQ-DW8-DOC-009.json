@@ -1,0 +1,22 @@
+{
+    "id": "REQ-DW8-DOC-009",
+    "title": "[Sherlock] Design the 'Smart' Living Documentation Protocol",
+    "description": "Design an intelligent update protocol where '_CONTEXT.md' files are explicitly linked to their corresponding manual chapters. This allows the Governor to enforce highly specific and low-cost documentation update checks.",
+    "acceptance_criteria": [
+        {
+            "text": "Update the design document to specify a metadata header in '_CONTEXT.md' files for linking (e.g., 'Manual-Chapter: <filename>').",
+            "completed": false
+        },
+        {
+            "text": "Update the Governor's query to be specific, referencing the linked chapter found in the context file.",
+            "completed": false
+        },
+        {
+            "text": "The design must detail how the Governor parses the '_CONTEXT.md' to find the linked chapter to validate.",
+            "completed": false
+        }
+    ],
+    "status": "pending",
+    "priority": "High",
+    "mode": "Sherlock"
+}
