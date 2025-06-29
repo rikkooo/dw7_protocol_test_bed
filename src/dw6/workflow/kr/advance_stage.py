@@ -3,24 +3,40 @@ from datetime import datetime, timezone
 def advance_stage(self, needs_research=False):
     """
     Advances the workflow to the next stage based on the current stage and event type.
-    This method implements the core state machine logic of the DW8 protocol.
+    This method implements the core state machine logic of the DW8 protocol,
+    including handling for the Protocol Update Interrupt.
     """
-    # Determine the next stage
-    if self.current_stage == "Rehearsal":
-        next_stage = self.state.get("PreviousStage", "Engineer")
-        self.state.delete("PreviousStage")  # Clean up state
-    elif self.current_stage == "Engineer":
-        next_stage = "Researcher" if needs_research else "Coder"
-    elif self.current_stage == "Researcher":
-        next_stage = "Coder"
-    elif self.current_stage == "Coder":
-        next_stage = "Validator"
-    elif self.current_stage == "Validator":
-        next_stage = "Deployer" if self.current_event and self.current_event.get("type") == "Deployment" else "Engineer"
-    elif self.current_stage == "Deployer":
-        next_stage = "Engineer"
+    # --- Protocol Update Interrupt Handling ---
+    if self.state.get("is_protocol_update"):
+        print("--- Governor: Protocol Update Interrupt detected. Engaging specialized workflow. ---")
+        if self.current_stage == "Engineer":
+            next_stage = "Coder"
+        elif self.current_stage == "Coder":
+            next_stage = "Validator"
+        elif self.current_stage == "Validator":
+            # A successful validation of a protocol update completes the cycle.
+            next_stage = "Engineer"
+        else:
+            # This case should not be reached in a protocol update cycle.
+            # It indicates a state corruption or manual override.
+            raise Exception(f"Invalid stage {self.current_stage} for Protocol Update workflow.")
     else:
-        raise Exception(f"Unknown stage transition from {self.current_stage}")
+        # --- Standard Workflow Logic ---
+        if self.current_stage == "Rehearsal":
+            next_stage = self.state.get("PreviousStage", "Engineer")
+            self.state.delete("PreviousStage")  # Clean up state
+        elif self.current_stage == "Engineer":
+            next_stage = "Researcher" if needs_research else "Coder"
+        elif self.current_stage == "Researcher":
+            next_stage = "Coder"
+        elif self.current_stage == "Coder":
+            next_stage = "Validator"
+        elif self.current_stage == "Validator":
+            next_stage = "Deployer" if self.current_event and self.current_event.get("type") == "Deployment" else "Engineer"
+        elif self.current_stage == "Deployer":
+            next_stage = "Engineer"
+        else:
+            raise Exception(f"Unknown stage transition from {self.current_stage}")
 
     # Log stage transition timings
     timestamp = datetime.now(timezone.utc).isoformat()
