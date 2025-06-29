@@ -24,8 +24,23 @@ DELIVERABLE_PATHS = {
 
 class Governor:
     """
-    The Governor enforces the rules of the DW8 protocol, ensuring that
-    only authorized actions are performed in each stage of the workflow.
+    Enforces the rules and permissions of the DW8 protocol.
+
+    The Governor acts as a security layer, ensuring that all actions performed
+    within the workflow adhere to the strict rules defined for each stage.
+    It maintains a rule set (`RULES`) that maps each stage to a list of
+    permitted commands or actions.
+
+    Before any significant action is executed by the `WorkflowManager`, the
+    Governor's `authorize` method is called to verify that the action is
+    allowed in the current stage. This prevents unauthorized operations and
+    maintains the integrity of the workflow.
+
+    Its methods are loaded dynamically from `src/dw6/st/governor_*.py`.
+
+    Attributes:
+        state (WorkflowState): An instance of the workflow state manager.
+        current_stage (str): The name of the current workflow stage.
     """
     RULES = {
         "Engineer": [
@@ -89,9 +104,27 @@ class Governor:
 
 class WorkflowManager:
     """
-    The WorkflowManager is the high-level orchestrator. It interprets user
-    commands and directs the WorkflowKernel and Stage modules to execute
-    the appropriate actions.
+    The high-level orchestrator for the DW8 workflow.
+
+    The WorkflowManager acts as the central command processor. It receives
+    commands from the command-line interface (CLI), interprets them, and
+    delegates tasks to the appropriate components. It is the primary entry
+    point for user-driven actions like `approve`, `new`, and `status`.
+
+    It coordinates the actions of two key sub-components:
+    - Governor: Enforces the rules and permissions for the current workflow stage.
+    - WorkflowKernel: Executes the core logic of the workflow, such as advancing
+      stages and managing requirement state.
+
+    Like other core components, it uses a dynamic method loading pattern,
+    with its methods defined in `src/dw6/st/manager_*.py` files.
+
+    Attributes:
+        state (WorkflowState): An instance of the workflow state manager.
+        governor (Governor): An instance of the Governor.
+        kernel (WorkflowKernel): An instance of the workflow kernel.
+        current_stage_name (str): The name of the current workflow stage.
+        stage_module (module): The dynamically loaded module for the current stage.
     """
     def __init__(self, state):
         self.state = state
@@ -119,8 +152,21 @@ class WorkflowManager:
 
 class WorkflowState:
     """
-    The WorkflowState class manages the persistent state of the workflow,
-    reading from and writing to the `workflow_state.json` file.
+    Manages the persistent state of the workflow via `workflow_state.json`.
+
+    This class is the single source of truth for the live operational state of
+    the DW8 system. It is responsible for reading, writing, and providing
+    access to critical state variables such as `CurrentStage`, 
+    `RequirementPointer`, and various counters and statistics.
+
+    The class uses a dynamic method loading pattern. All state manipulation
+    methods (e.g., `get`, `set`, `save`, `load`) are defined in individual 
+    files within the `src/dw6/st/` directory and are loaded at runtime. 
+    This makes the state management system highly modular and extensible.
+
+    Attributes:
+        state_file (Path): The path to the JSON file that stores the workflow state.
+        data (dict): A dictionary holding the in-memory representation of the state.
     """
     def __init__(self, state_file="data/workflow_state.json"):
         self.state_file = Path(state_file)

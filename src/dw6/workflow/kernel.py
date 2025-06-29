@@ -6,15 +6,27 @@ from types import MethodType
 
 class WorkflowKernel:
     """
-    The DW8 Workflow Kernel.
+    The core engine of the DW8 workflow.
 
-    This class serves as a lean interface that dynamically loads its methods
-    from individual files within the 'kr' subdirectory. This modular design,
-    mandated by Riko, enhances maintainability and reduces context instability
-    by isolating method implementations.
+    The WorkflowKernel is the heart of the system, responsible for executing the
+    fundamental logic of the development workflow. It is designed as a lean,
+    dynamically-loaded interface that orchestrates state transitions, processes
+    events, handles failures, and manages the overall lifecycle of a development
+    task according to the DW8 protocol.
 
-    The kernel orchestrates the entire development workflow, managing state
-    transitions, event handling, and failure recovery based on the DW8 protocol.
+    Its modular design is a key feature. All of its operational methods (e.g.,
+    `advance_stage`, `load_current_event_details`, `_handle_failure`) are
+    defined in individual files within the `src/dw6/workflow/kr/` subdirectory.
+    This isolates logic, enhances maintainability, and aligns with the Prism
+    Protocol's goal of context stability.
+
+    Attributes:
+        state (WorkflowState): An instance of the workflow state manager.
+        pending_events (list): A list of events waiting to be processed.
+        current_event (dict): The event currently being processed.
+        current_stage (str): The name of the current workflow stage.
+        python_executable_path (str): The path to the Python executable in the
+                                      active virtual environment.
     """
     def __init__(self, state, pending_events):
         self.state = state
