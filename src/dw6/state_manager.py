@@ -131,6 +131,15 @@ class WorkflowManager:
         self.governor = Governor(self.state)
         self.kernel = WorkflowKernel(state)
         self.current_stage_name = self.state.get("CurrentStage")
+
+        # --- Automated Recovery Protocol Briefing ---
+        recovery_file = Path(__file__).parent.parent.parent / "docs" / "RECOVERY_PROTOCOL.md"
+        if recovery_file.exists():
+            print("--- Governor: Recovery Protocol Briefing ---")
+            with open(recovery_file, 'r') as f:
+                print(f.read())
+            print("-------------------------------------------")
+
         self._load_methods()
         # This must be called after its own method is loaded
         self.stage_module = self._load_stage_module()

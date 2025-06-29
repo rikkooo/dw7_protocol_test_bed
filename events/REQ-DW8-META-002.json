@@ -1,0 +1,16 @@
+{
+  "id": "REQ-DW8-META-002",
+  "title": "Implement Automated Context Recovery Protocol",
+  "status": "Pending",
+  "priority": "Critical",
+  "details": "Implement an automated system to prevent AI context loss (amnesia) by injecting a recovery briefing at the start of every workflow cycle. This is a meta-task to improve system robustness.",
+  "sub_requirements": [
+    "SMR-META-002.1: Create a concise recovery briefing file at `docs/RECOVERY_PROTOCOL.md`. This file will contain the 3-step procedure for re-engaging the workflow.",
+    "SMR-META-002.2: Modify the `WorkflowManager` core logic. On initialization, it must check for `docs/RECOVERY_PROTOCOL.md`, read it, and print its contents to the console as part of the standard startup output.",
+    "SMR-META-002.3: Ensure the output is clean and well-formatted to act as an effective briefing for the AI agent."
+  ],
+  "affected_documents": [
+    "docs/RECOVERY_PROTOCOL.md",
+    "src/dw6/workflow_manager.py"
+  ]
+}
