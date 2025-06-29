@@ -43,3 +43,9 @@ def load(self):
             "failure_rates_by_stage": {}
         }
         self.save()
+
+    # Data migration for is_protocol_update flag
+    if "is_protocol_update" not in self.data:
+        print("--- Governor: Migrating state to include is_protocol_update flag. ---")
+        self.data["is_protocol_update"] = False
+        self.save()
