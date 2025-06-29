@@ -44,12 +44,12 @@ class Governor:
     """
     RULES = {
         "Engineer": [
-            "uv run dw6 new",
-            "uv run dw6 meta-req",
+            "dw6 new",
+            "dw6 meta-req",
             "ls",
             "cat",
             "view_file_outline",
-            "uv run dw6 approve"
+            "dw6 approve"
         ],
         "Researcher": [
             "searxng_web_search",
@@ -60,7 +60,7 @@ class Governor:
             "view_line_range",
             "mcp3_read_file",
             "ls",
-            "uv run dw6 approve"
+            "dw6 approve"
         ],
         "Coder": [
             "replace_file_content",
@@ -68,17 +68,17 @@ class Governor:
             "view_file_outline",
             "ls",
             "mkdir",
-            "uv run dw6 approve"
+            "dw6 approve"
         ],
         "Validator": [
             "uv run pytest",
-            "uv run dw6 approve"
+            "dw6 approve"
         ],
         "Deployer": [
             "git add",
             "git commit",
             "git tag",
-            "uv run dw6 approve"
+            "dw6 approve"
         ]
     }
 
