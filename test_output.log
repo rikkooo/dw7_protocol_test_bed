@@ -1,0 +1,452 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.7, pytest-8.4.1, pluggy-1.6.0
+rootdir: /home/ubuntu/devs/dw7_protocol_test_bed
+configfile: pytest.ini
+plugins: cov-6.2.1, mock-3.14.1, anyio-4.9.0
+collected 24 items
+
+tests/test_architecture.py .                                             [  4%]
+tests/test_augmenter.py .                                                [  8%]
+tests/test_deployer.py ...                                               [ 20%]
+tests/test_environment_management.py F                                   [ 25%]
+tests/test_final_documentation.py ..                                     [ 33%]
+tests/test_placeholder.py .                                              [ 37%]
+tests/test_setup.py ...                                                  [ 50%]
+tests/test_state_manager.py .                                            [ 54%]
+tests/test_state_manager_integration.py FF.FF.F                          [ 83%]
+tests/test_validator.py ....                                             [100%]
+
+=================================== FAILURES ===================================
+_ TestWorkflowStateInitialization.test_state_initialization_creates_env_and_persists_path _
+/usr/lib/python3.12/unittest/mock.py:1392: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1374: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1447: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'dw6.state_manager.subprocess'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'dw6.state_manager' has no attribute 'subprocess'
+
+/usr/lib/python3.12/pkgutil.py:528: AttributeError
+_______ TestWorkflowManagerIntegration.test_create_new_requirement_json ________
+
+self = <MagicMock name='open' id='123286393768944'>
+args = (PosixPath('events/REQ-DW8-TEST-001.json'), 'w')
+kwargs = {'encoding': 'utf-8'}
+expected = call(PosixPath('events/REQ-DW8-TEST-001.json'), 'w', encoding='utf-8')
+cause = None, actual = [call('events/REQ-DW8-TEST-001.json', 'w')]
+expected_string = "open(PosixPath('events/REQ-DW8-TEST-001.json'), 'w', encoding='utf-8')"
+
+    def assert_any_call(self, /, *args, **kwargs):
+        """assert the mock has been called with the specified arguments.
+    
+        The assert passes if the mock has *ever* been called, unlike
+        `assert_called_with` and `assert_called_once_with` that only pass if
+        the call is the most recent one."""
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        cause = expected if isinstance(expected, Exception) else None
+        actual = [self._call_matcher(c) for c in self.call_args_list]
+        if cause or expected not in _AnyComparer(actual):
+            expected_string = self._format_mock_call_signature(args, kwargs)
+>           raise AssertionError(
+                '%s call not found' % expected_string
+            ) from cause
+E           AssertionError: open(PosixPath('events/REQ-DW8-TEST-001.json'), 'w', encoding='utf-8') call not found
+
+/usr/lib/python3.12/unittest/mock.py:1020: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_state_manager_integration.TestWorkflowManagerIntegration testMethod=test_create_new_requirement_json>
+
+    def test_create_new_requirement_json(self):
+        mock_state_instance = self.mock_WorkflowState.return_value
+        mock_state_instance.get.return_value = 'Engineer'  # Set a default stage
+        manager = WorkflowManager(mock_state_instance)
+    
+        req_id = "REQ-DW8-TEST-001"
+        title = "Test JSON Requirement"
+        description = "This is a test description."
+        acceptance_criteria = ["Criterion 1", "Criterion 2"]
+    
+        # Mock the file system
+        m = mock_open()
+        with patch("builtins.open", m):
+            with patch("pathlib.Path.exists", return_value=False):
+                with patch("pathlib.Path.mkdir"):
+                    manager.create_new_requirement(req_id, title, description, acceptance_criteria)
+    
+        # Verify the event file was created correctly
+        event_file_path = Path(f"events/{req_id}.json")
+>       m.assert_any_call(event_file_path, "w", encoding='utf-8')
+E       AssertionError: open(PosixPath('events/REQ-DW8-TEST-001.json'), 'w', encoding='utf-8') call not found
+E       
+E       pytest introspection follows:
+E       
+E       Args:
+E       assert ('events/REQ-...01.json', 'w') == (PosixPath('e...1.json'), 'w')
+E         
+E         At index 0 diff: 'events/REQ-DW8-TEST-001.json' != PosixPath('events/REQ-DW8-TEST-001.json')
+E         Use -v to get more diff
+E       Kwargs:
+E       assert {} == {'encoding': 'utf-8'}
+E         
+E         Right contains 1 more item:
+E         {'encoding': 'utf-8'}
+E         Use -v to get more diff
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_state_manager_integration.py:97: AssertionError
+----------------------------- Captured stdout call -----------------------------
+--- Governor: .env file loaded successfully. ---
+Successfully created requirement file: events/REQ-DW8-TEST-001.json
+Successfully injected REQ-DW8-TEST-001 into the pending events queue.
+----------------------------- Captured stderr call -----------------------------
+--- Governor: An unexpected error occurred while loading pending events: 'str' object has no attribute 'get' ---
+_______ TestWorkflowManagerIntegration.test_engineer_to_coder_transition _______
+
+self = <MagicMock name='validate' id='123286393820592'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'validate' to have been called once. Called 0 times.
+
+/usr/lib/python3.12/unittest/mock.py:928: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_state_manager_integration.TestWorkflowManagerIntegration testMethod=test_engineer_to_coder_transition>
+mock_validate = <MagicMock name='validate' id='123286393820592'>
+
+    @patch('dw6.workflow.engineer.EngineerStage.validate', return_value=True)
+    def test_engineer_to_coder_transition(self, mock_validate):
+        mock_state_instance = self.mock_WorkflowState.return_value
+        mock_state_instance.get.return_value = 'Engineer'
+        manager = WorkflowManager(mock_state_instance)
+    
+        manager.approve(needs_research=False)
+    
+>       mock_validate.assert_called_once()
+E       AssertionError: Expected 'validate' to have been called once. Called 0 times.
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_state_manager_integration.py:65: AssertionError
+----------------------------- Captured stdout call -----------------------------
+--- Governor: .env file loaded successfully. ---
+--- Governor: Stage advanced from Engineer to Coder. ---
+--- Governor: Stage 'Engineer' approved and advanced. ---
+----------------------------- Captured stderr call -----------------------------
+--- Governor: An unexpected error occurred while loading pending events: 'str' object has no attribute 'get' ---
+_ TestWorkflowManagerIntegration.test_failure_counter_and_rehearsal_transition _
+/usr/lib/python3.12/unittest/mock.py:1392: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1374: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1463: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7020d9c2e810>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <class 'dw6.workflow.kernel.WorkflowKernel'> does not have the attribute '_handle_failure'
+
+/usr/lib/python3.12/unittest/mock.py:1436: AttributeError
+______ TestWorkflowManagerIntegration.test_high_priority_event_insertion _______
+/usr/lib/python3.12/unittest/mock.py:1392: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1374: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1447: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'dw6.workflow.kernel.json'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'dw6.workflow.kernel' has no attribute 'json'
+
+/usr/lib/python3.12/pkgutil.py:528: AttributeError
+_______ TestWorkflowManagerIntegration.test_validator_stage_transitions ________
+
+self = <dw6.state_manager.WorkflowManager object at 0x7020d9aa59d0>
+needs_research = False, allow_failures = False
+
+    def approve(self, needs_research=False, allow_failures=False):
+        try:
+    
+    
+            # If execution is successful, advance to the next stage
+>           self.kernel.advance_stage(needs_research=needs_research)
+
+/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_approve.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/advance_stage.py:53: in advance_stage
+    self._advance_requirement_pointer()
+/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/_advance_requirement_pointer.py:8: in _advance_requirement_pointer
+    current_index = next(i for i, event in enumerate(self.pending_events) if event.get("id") == current_id)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <enumerate object at 0x7020d95aee30>
+
+>   current_index = next(i for i, event in enumerate(self.pending_events) if event.get("id") == current_id)
+                                                                             ^^^^^^^^^
+E   AttributeError: 'str' object has no attribute 'get'
+
+/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/_advance_requirement_pointer.py:8: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_state_manager_integration.TestWorkflowManagerIntegration testMethod=test_validator_stage_transitions>
+
+    def test_validator_stage_transitions(self):
+        mock_state_instance = self.mock_WorkflowState.return_value
+        mock_state_instance.get.return_value = 'Validator'
+        manager = WorkflowManager(mock_state_instance)
+    
+        # Mock the event type for a standard event
+        manager.kernel.current_event = {"type": "Standard"}
+    
+        with patch('dw6.workflow.validator.ValidatorStage.validate', return_value=True):
+>           manager.approve()
+
+/home/ubuntu/devs/dw7_protocol_test_bed/tests/test_state_manager_integration.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_approve.py:20: in approve
+    self.kernel._handle_failure(e)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <dw6.workflow.kernel.WorkflowKernel object at 0x7020d9aa5850>
+exception = AttributeError("'str' object has no attribute 'get'")
+
+    def _handle_failure(self, exception):
+        failure_key, current_failure_count = self._get_failure_context()
+        self.state.increment(failure_key)
+    
+>       if current_failure_count + 1 >= FAILURE_THRESHOLD:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: can only concatenate str (not "int") to str
+
+/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/_handle_failure.py:9: TypeError
+----------------------------- Captured stdout call -----------------------------
+--- Governor: .env file loaded successfully. ---
+--- Governor: Requirement cycle complete. ---
+----------------------------- Captured stderr call -----------------------------
+--- Governor: An unexpected error occurred while loading pending events: 'str' object has no attribute 'get' ---
+--- Governor: Stage execution failed. Error: 'str' object has no attribute 'get' ---
+Traceback (most recent call last):
+  File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_approve.py", line 9, in approve
+    self.kernel.advance_stage(needs_research=needs_research)
+  File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/advance_stage.py", line 53, in advance_stage
+    self._advance_requirement_pointer()
+  File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/_advance_requirement_pointer.py", line 8, in _advance_requirement_pointer
+    current_index = next(i for i, event in enumerate(self.pending_events) if event.get("id") == current_id)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kr/_advance_requirement_pointer.py", line 8, in <genexpr>
+    current_index = next(i for i, event in enumerate(self.pending_events) if event.get("id") == current_id)
+                                                                             ^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+=========================== short test summary info ============================
+FAILED tests/test_environment_management.py::TestWorkflowStateInitialization::test_state_initialization_creates_env_and_persists_path
+FAILED tests/test_state_manager_integration.py::TestWorkflowManagerIntegration::test_create_new_requirement_json
+FAILED tests/test_state_manager_integration.py::TestWorkflowManagerIntegration::test_engineer_to_coder_transition
+FAILED tests/test_state_manager_integration.py::TestWorkflowManagerIntegration::test_failure_counter_and_rehearsal_transition
+FAILED tests/test_state_manager_integration.py::TestWorkflowManagerIntegration::test_high_priority_event_insertion
+FAILED tests/test_state_manager_integration.py::TestWorkflowManagerIntegration::test_validator_stage_transitions
+========================= 6 failed, 18 passed in 5.08s =========================

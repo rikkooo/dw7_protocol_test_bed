@@ -1,8 +1,26 @@
 {
   "id": "REQ-DW8-020",
-  "title": "[Sherlock Mode] Investigate Transitioning Key Documents from MD to JSON",
-  "description": "Many of our project's core documents (requirements, state files, etc.) are in Markdown format. While flexible, MD can be difficult to parse systematically and is more prone to formatting errors that can break automated processes. JSON, being a strictly structured format, could offer more reliability for machine-readable documents.\n\nThis \"Sherlock Mode\" requirement is to investigate the feasibility and benefits of transitioning some of our documents from Markdown to JSON.",
-  "acceptance_criteria": [],
+  "title": "Implement Context Window Canary & System Health Check",
+  "description": "To combat context loss, the workflow will use a 'canary' value (like a password) stored in its state. At key points, the Governor will check if the agent remembers the canary. A failure triggers a 'Small Boot' procedure to perform a full context refresh and system health check.",
+  "acceptance_criteria": [
+    {
+      "text": "A canary value is stored in workflow_state.json.",
+      "completed": false
+    },
+    {
+      "text": "The kernel has a mechanism to validate the agent's memory of the canary.",
+      "completed": false
+    },
+    {
+      "text": "A failure triggers a 'Small Boot' state that reloads detailed project context, architecture, and recent conversation history.",
+      "completed": false
+    },
+    {
+      "text": "During 'Small Boot', a comprehensive system health check (git, env, dependencies) is performed.",
+      "completed": false
+    }
+  ],
   "status": "Pending",
-  "priority": "Medium"
+  "priority": "Medium",
+  "type": "Standard"
 }

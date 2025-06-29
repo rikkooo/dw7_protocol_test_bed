@@ -1,0 +1,19 @@
+{
+  "id": "REQ-DW8-017-02",
+  "type": "Standard",
+  "title": "[Execution] Refactor WorkflowKernel to Use Code Granularity Protocol",
+  "description": "This is the second sub-task of the REQ-DW8-017 epic. It focuses on refactoring the WorkflowKernel class in workflow/kernel.py to follow the Code Granularity Protocol.",
+  "acceptance_criteria": [
+    {
+      "text": "The WorkflowKernel class is refactored to follow the Code Granularity Protocol.",
+      "completed": false
+    },
+    {
+      "text": "All existing tests continue to pass after the refactor.",
+      "completed": false
+    }
+  ],
+  "status": "Pending",
+  "priority": "Medium",
+  "created_at": "2025-06-27T22:46:25.865882+00:00"
+}

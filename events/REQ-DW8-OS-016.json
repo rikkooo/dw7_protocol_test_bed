@@ -1,0 +1,70 @@
+{
+  "id": "REQ-DW8-OS-016",
+  "title": "Implement the Context Integrity Protocol",
+  "description": "To combat context window resets (\"memory loss\"), which pose a critical threat to project stability, we will implement a proactive Context Integrity Protocol. This protocol will provide a reliable, automated mechanism for detecting and recovering from context loss, ensuring the AI engineer remains synchronized with the project's state and goals.",
+  "acceptance_criteria": [
+    {
+      "text": "**SMR-1: Create a `check-context` CLI Command.**",
+      "completed": false
+    },
+    {
+      "text": "A new command, `uv run python -m dw6.main check-context`, is added to `cli.py`.",
+      "completed": false
+    },
+    {
+      "text": "This command will trigger the Context Integrity Protocol.",
+      "completed": false
+    },
+    {
+      "text": "**SMR-2: Implement the \"Cognitive Checkpoint\".**",
+      "completed": false
+    },
+    {
+      "text": "A new key, `CognitiveCheckpoint`, is added to the `data/workflow_state.json` file. Its value will be a secret phrase or key (e.g., \"Riko\").",
+      "completed": false
+    },
+    {
+      "text": "The `check-context` command logic will first attempt to access and verify this key from its internal memory.",
+      "completed": false
+    },
+    {
+      "text": "**SMR-3: Implement the \"Context Refresh\" Procedure.**",
+      "completed": false
+    },
+    {
+      "text": "If the Cognitive Checkpoint fails, the system automatically triggers a context refresh.",
+      "completed": false
+    },
+    {
+      "text": "This procedure involves systematically reading a predefined list of critical project documents to rebuild the AI's understanding. The initial list will include:",
+      "completed": false
+    },
+    {
+      "text": "`docs/ARCHITECTURE.md`",
+      "completed": false
+    },
+    {
+      "text": "All files in `docs/protocols/`",
+      "completed": false
+    },
+    {
+      "text": "All `REQ-DW8-OS-*` files in `docs/reqs/`",
+      "completed": false
+    },
+    {
+      "text": "**SMR-4: Generate a Context Restoration Report.**",
+      "completed": false
+    },
+    {
+      "text": "After the refresh procedure is complete, the AI will generate a concise summary of its restored understanding.",
+      "completed": false
+    },
+    {
+      "text": "This report will be presented to the user for verification, confirming that context has been successfully rebuilt before proceeding with any other tasks.",
+      "completed": false
+    }
+  ],
+  "status": "P",
+  "priority": "C",
+  "type": "Execution"
+}

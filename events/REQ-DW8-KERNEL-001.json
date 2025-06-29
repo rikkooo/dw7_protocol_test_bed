@@ -1,0 +1,19 @@
+{
+  "id": "REQ-DW8-KERNEL-001",
+  "title": "Modernize Requirement Loading Kernel",
+  "status": "Pending",
+  "priority": "Critical",
+  "description": "The current workflow kernel is outdated and hardwired to a deprecated Markdown-based requirement system. It must be refactored to support the new JSON-based event protocol. This involves changing the core logic to scan the `events/` directory, load the active requirement from its JSON file based on the `RequirementPointer`, and remove the old validation logic that depends on `docs/PROJECT_REQUIREMENTS.md`.",
+  "sub_requirements": [
+    "SMR-KERNEL-001.1: Identify the kernel logic responsible for loading requirements (likely in `src/dw6/st/manager_status.py` or `src/dw6/workflow/kernel.py`).",
+    "SMR-KERNEL-001.2: Remove the code that reads `docs/PROJECT_REQUIREMENTS.md`.",
+    "SMR-KERNEL-001.3: Implement new logic to construct the path to the active requirement file using the `RequirementPointer` from the state (e.g., `events/{pointer}.json`).",
+    "SMR-KERNEL-001.4: Implement logic to read and parse the JSON content of the requirement file.",
+    "SMR-KERNEL-001.5: Remove the old, failing validation logic that produces the 'Requirement description not found' error."
+  ],
+  "affected_documents": [
+    "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kernel.py",
+    "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_status.py",
+    "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/REQUIREMENT_PROTOCOL.md"
+  ]
+}

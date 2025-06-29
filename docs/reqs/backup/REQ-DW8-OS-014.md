@@ -1,0 +1,16 @@
+# REQ-DW8-OS-014: [Execution] Refactor `WorkflowKernel` to Use Centralized State
+
+- **Priority:** [C]
+- **Status:** [P]
+- **Type:** Execution
+
+## 1. Description
+
+With the `WorkflowState` class enhanced to manage event queues, the `WorkflowKernel` must be refactored to delegate all state and queue operations to the `WorkflowState` object. This will eliminate the kernel's direct file access and resolve the "dual source of truth" problem.
+
+## 2. Acceptance Criteria
+
+- The `_complete_event_in_queue` method in `WorkflowKernel` is refactored. It no longer writes to `processed_events.json`. Instead, it calls the new `self.state.archive_completed_event()` method.
+- The `create_new_requirement` method in `WorkflowKernel` is refactored. It no longer writes to `pending_events.json`. Instead, it calls the new `self.state.add_pending_event()` method.
+- The `_create_red_flag_requirement` method in `WorkflowKernel` is refactored to use `self.state.add_pending_event()` to inject the critical failure event into the queue.
+- All direct `json.load()` and `json.dump()` calls related to event queues within the `WorkflowKernel` are removed.

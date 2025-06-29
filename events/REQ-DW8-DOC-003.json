@@ -1,0 +1,29 @@
+{
+  "id": "REQ-DW8-DOC-003",
+  "type": "Refactor",
+  "priority": "Critical",
+  "title": "[Prism Protocol] Consolidate Conceptual Documentation into Master Manifest",
+  "description": "Create a single, canonical `docs/README.md` that serves as the project's master manifest. This file will absorb and replace the conceptual information currently scattered across `DW8_OPERATING_SYSTEM.md`, `AI_PROTOCOL_TUTORIAL.md`, and the individual protocol files.",
+  "acceptance_criteria": [
+    {
+      "text": "A new `docs/README.md` file is created.",
+      "completed": false
+    },
+    {
+      "text": "The file contains a comprehensive 'Vision' and 'Architecture' section based on existing documents.",
+      "completed": false
+    },
+    {
+      "text": "The file contains the full, transcluded text of all core protocols.",
+      "completed": false
+    },
+    {
+      "text": "The old conceptual documents (`DW8_OPERATING_SYSTEM.md`, `AI_PROTOCOL_TUTORIAL.md`, etc.) are deleted to establish the new single source of truth.",
+      "completed": false
+    },
+    {
+      "text": "The `docs` directory is restructured according to the Prism Protocol plan.",
+      "completed": false
+    }
+  ]
+}

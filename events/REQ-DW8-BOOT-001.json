@@ -1,0 +1,18 @@
+{
+  "id": "REQ-DW8-BOOT-001",
+  "title": "Implement Core Boot Logic in boot.py",
+  "status": "Pending",
+  "priority": "Critical",
+  "details": "Create the `ensure_environment()` function in `src/dw6/boot.py`. This function must be idempotent and handle:\n1. Checking for the `.venv` directory and creating it with `uv venv` if it's missing.\n2. Checking if dependencies are installed and running `uv pip install -e .[test]` if they are not.\n3. Writing the absolute path to the venv's python executable to `data/workflow_state.json` under the key `PythonExecutablePath`, but only if the key does not already exist.",
+  "sub_requirements": [
+    "SMR-BOOT-001.1: Create file `src/dw6/boot.py` if it doesn't exist.",
+    "SMR-BOOT-001.2: Implement `ensure_environment` function signature.",
+    "SMR-BOOT-001.3: Add logic to check for `.venv` and run `uv venv`.",
+    "SMR-BOOT-001.4: Add logic to check for dependencies and run `uv pip install`.",
+    "SMR-BOOT-001.5: Add logic to read state, check for `PythonExecutablePath`, and write it if absent."
+  ],
+  "affected_documents": [
+    "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/BOOT_PROTOCOL.md",
+    "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "REQ-DW8-DOC-004",
+  "type": "Refactor",
+  "priority": "High",
+  "title": "[Prism Protocol] Enhance Codebase Docstrings for Code Atlas",
+  "description": "Perform a comprehensive pass over the entire `src/dw6` codebase to enhance all public class and method docstrings. The docstrings should be clear, detailed, and formatted to produce a high-quality `API_REFERENCE.md` via the generator script.",
+  "acceptance_criteria": [
+    {
+      "text": "Docstrings for `WorkflowManager`, `WorkflowKernel`, and `WorkflowState` are updated to explain purpose, parameters, and return values.",
+      "completed": false
+    },
+    {
+      "text": "Docstrings for all dynamically loaded kernel and manager methods are updated.",
+      "completed": false
+    },
+    {
+      "text": "Docstrings for all stage classes (`Engineer`, `Coder`, etc.) are updated.",
+      "completed": false
+    },
+    {
+      "text": "The generated `docs/API_REFERENCE.md` is complete, professional, and accurately reflects the codebase.",
+      "completed": false
+    }
+  ]
+}

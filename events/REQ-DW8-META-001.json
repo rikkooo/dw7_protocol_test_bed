@@ -1,0 +1,13 @@
+{
+  "id": "REQ-DW8-META-001",
+  "title": "Formalize and Enforce Workflow Operational Modes",
+  "status": "Pending",
+  "priority": "Low",
+  "details": "Formalize and enforce the 'Sherlock' (Investigation) and 'Execution' (Implementation) modes to create a clear separation between planning and coding.",
+  "sub_requirements": [
+    "SMR-META-001.1: Create the `docs/protocols/WORKFLOW_MODES_PROTOCOL.md` document.",
+    "SMR-META-001.2: Add a `CurrentMode` key to `data/workflow_state.json`, defaulting to 'Execution'.",
+    "SMR-META-001.3: Create a new CLI command (`dw6 mode <sherlock|execution>`) to allow the user to switch modes.",
+    "SMR-META-001.4: Enhance the `Governor` to read the `CurrentMode` from the state and restrict commands and stage transitions based on the rules defined in the protocol."
+  ]
+}

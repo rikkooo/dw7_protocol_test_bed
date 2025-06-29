@@ -48,6 +48,7 @@ Format: `[Status] [Priority] [ID] [Title] -> [Path]`
 [P] [H] [REQ-DW8-018] [Sherlock Mode] Investigate and Redesign Environment Management and Enforcement -> ./reqs/REQ-DW8-018.md
 [P] [M] [REQ-DW8-019] [Sherlock Mode] Investigate and Enhance Git/Deployment Workflow -> ./reqs/REQ-DW8-019.md
 
+[P] [C] [REQ-DW8-BUG-001] Fix Incorrect Command Invocation in Governor Rules -> ./reqs/REQ-DW8-BUG-001.md
 [P] [C] [REQ-DW8-EXEC-001] [Execution] Refactor Governor for Centralized Gatekeeping -> ./reqs/REQ-DW8-EXEC-001.md
 [P] [H] [REQ-DW8-EXEC-002] [Execution] Remove Decentralized Stage Validation Methods -> ./reqs/REQ-DW8-EXEC-002.md
 [P] [H] [REQ-DW8-EXEC-003] [Execution] Deprecate and Remove 'allow_failures' Bypass -> ./reqs/REQ-DW8-EXEC-003.md

@@ -1,0 +1,22 @@
+{
+  "id": "REQ-DW8-017-01",
+  "title": "Implement Strict Environment Variable Loading",
+  "description": "The kernel must load environment variables exclusively from a .env file at the root and fail immediately if the file is missing or incomplete.",
+  "acceptance_criteria": [
+    {
+      "text": "Kernel fails on startup if .env is not found.",
+      "completed": false
+    },
+    {
+      "text": "All required environment variables are documented and checked.",
+      "completed": false
+    },
+    {
+      "text": "No hardcoded secrets or paths are present in the code.",
+      "completed": false
+    }
+  ],
+  "status": "Pending",
+  "priority": "Medium",
+  "type": "Standard"
+}

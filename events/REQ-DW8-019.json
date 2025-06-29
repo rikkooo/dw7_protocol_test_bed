@@ -1,8 +1,25 @@
 {
   "id": "REQ-DW8-019",
-  "title": "[Sherlock Mode] Investigate and Enhance Git/Deployment Workflow",
-  "description": "Our Git and deployment workflow, while functional, has several areas that require enhancement to improve clarity, robustness, and automation. This \"Sherlock Mode\" requirement is to investigate these areas and design formal protocols to address them.",
-  "acceptance_criteria": [],
+  "title": "Implement Personalization and Workflow-Managed Memory",
+  "description": "The workflow should have its own persistent memory to store user-specific data (like name) and project context. It should use this data to provide personalized greetings and summaries, including acknowledging time since the last session.",
+  "acceptance_criteria": [
+    {
+      "id": "SMR-MEM-001.1",
+      "text": "Implement Profile Management: Create a new kernel method (`_manage_user_profile.py`) to handle the creation and updating of `data/user_profile.json`, which will store `user_name` and `last_session_timestamp`. The method must prompt for the user's name if it is not already set.",
+      "completed": false
+    },
+    {
+      "id": "SMR-MEM-001.2",
+      "text": "Implement Startup Greeting: Create a new kernel method (`_display_startup_summary.py`) that reads the user profile, calculates the time since the last session, and prints a personalized greeting and status summary.",
+      "completed": false
+    },
+    {
+      "id": "SMR-MEM-001.3",
+      "text": "Integrate into Kernel Initialization: Modify the `WorkflowKernel`'s `__init__` method to call the new profile management and startup summary methods in the correct sequence.",
+      "completed": false
+    }
+  ],
   "status": "Pending",
-  "priority": "Medium"
+  "priority": "Medium",
+  "type": "Standard"
 }

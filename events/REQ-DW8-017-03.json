@@ -1,0 +1,19 @@
+{
+  "id": "REQ-DW8-017-03",
+  "type": "Standard",
+  "title": "[Execution] Refactor cli.py to Use Code Granularity Protocol",
+  "description": "This is the third sub-task of the REQ-DW8-017 epic. It focuses on refactoring the cli.py module to follow the Code Granularity Protocol, separating command logic into individual, dynamically loaded modules.",
+  "acceptance_criteria": [
+    {
+      "text": "The cli.py module is refactored to follow the Code Granularity Protocol.",
+      "completed": false
+    },
+    {
+      "text": "All CLI commands function as expected after the refactor.",
+      "completed": false
+    }
+  ],
+  "status": "Pending",
+  "priority": "Medium",
+  "created_at": "2025-06-27T22:46:33.039146+00:00"
+}

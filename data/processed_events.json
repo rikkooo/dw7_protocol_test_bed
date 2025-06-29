@@ -149,5 +149,114 @@
     "priority": "High",
     "path": "./reqs/REQ-DW8-OS-006.md",
     "completed_at": "2025-06-27T22:26:25.192210+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-007",
+    "title": "[Execution] Refactor Requirement Files to JSON Events",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-007.md",
+    "completed_at": "2025-06-27T22:27:06.463701+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-008",
+    "title": "[Execution] Implement Decoupled Deployer Logic",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-OS-008.md",
+    "completed_at": "2025-06-27T22:35:28.815907+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-009",
+    "title": "[Execution] Implement Dynamic Event Prioritization",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-OS-009.md",
+    "completed_at": "2025-06-27T22:42:43.051800+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-010",
+    "title": "[Design] Design and Document a `BOOT_PROTOCOL.md`",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-010.md",
+    "completed_at": "2025-06-27T22:43:30.183718+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-011",
+    "title": "[Design] Design and Document a `CONTEXT_MANAGEMENT_PROTOCOL.md`",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-OS-011.md",
+    "completed_at": "2025-06-27T22:44:03.272756+00:00"
+  },
+  {
+    "id": "REQ-DW8-OS-012",
+    "title": "[Design] Re-design the `Rehearsal` Stage as an Interrupt Handler",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-OS-012.md",
+    "completed_at": "2025-06-27T22:44:43.098950+00:00"
+  },
+  {
+    "id": "REQ-DW8-016",
+    "title": "[Sherlock Mode] Investigate and Fortify Workflow Adherence Protocol",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-016.md",
+    "completed_at": "2025-06-27T22:45:45.012327+00:00"
+  },
+  {
+    "id": "REQ-DW8-017",
+    "title": "[Execution] Refactor All Major Classes to Use Code Granularity Protocol",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-017.md",
+    "completed_at": "2025-06-27T22:46:50.057710+00:00"
+  },
+  {
+    "id": "REQ-DW8-018",
+    "title": "[Sherlock Mode] Investigate and Redesign Environment Management and Enforcement",
+    "status": "Deployed",
+    "priority": "High",
+    "path": "./reqs/REQ-DW8-018.md",
+    "completed_at": "2025-06-27T22:47:50.691663+00:00"
+  },
+  {
+    "id": "REQ-DW8-019",
+    "title": "[Sherlock Mode] Investigate and Enhance Git/Deployment Workflow",
+    "status": "Deployed",
+    "priority": "Medium",
+    "path": "./reqs/REQ-DW8-019.md",
+    "completed_at": "2025-06-27T22:48:59.062515+00:00"
+  },
+  {
+    "id": "REQ-DW8-EXEC-001",
+    "title": "[Execution] Refactor Governor for Centralized Gatekeeping",
+    "status": "Deployed",
+    "priority": "Critical",
+    "path": "./reqs/REQ-DW8-EXEC-001.md",
+    "completed_at": "2025-06-27T23:02:44.983787+00:00"
+  },
+  {
+    "id": "REQ-DW8-017-01",
+    "priority": "Normal",
+    "type": "Standard",
+    "status": "Deployed",
+    "completed_at": "2025-06-27T23:05:41.943667+00:00"
+  },
+  {
+    "id": "REQ-DW8-021",
+    "priority": "High",
+    "type": "Standard",
+    "status": "Deployed",
+    "completed_at": "2025-06-28T10:14:31.294827+00:00"
+  },
+  {
+    "id": "REQ-DW8-020",
+    "priority": "Medium",
+    "type": "Standard",
+    "status": "Deployed",
+    "completed_at": "2025-06-28T10:15:34.760420+00:00"
   }
 ]

@@ -1,82 +1,5 @@
 [
   {
-    "id": "REQ-DW8-OS-007",
-    "title": "[Execution] Refactor Requirement Files to JSON Events",
-    "status": "Pending",
-    "priority": "High",
-    "path": "./reqs/REQ-DW8-OS-007.md"
-  },
-  {
-    "id": "REQ-DW8-OS-008",
-    "title": "[Execution] Implement Decoupled Deployer Logic",
-    "status": "Pending",
-    "priority": "Medium",
-    "path": "./reqs/REQ-DW8-OS-008.md"
-  },
-  {
-    "id": "REQ-DW8-OS-009",
-    "title": "[Execution] Implement Dynamic Event Prioritization",
-    "status": "Pending",
-    "priority": "Medium",
-    "path": "./reqs/REQ-DW8-OS-009.md"
-  },
-  {
-    "id": "REQ-DW8-OS-010",
-    "title": "[Design] Design and Document a `BOOT_PROTOCOL.md`",
-    "status": "Pending",
-    "priority": "High",
-    "path": "./reqs/REQ-DW8-OS-010.md"
-  },
-  {
-    "id": "REQ-DW8-OS-011",
-    "title": "[Design] Design and Document a `CONTEXT_MANAGEMENT_PROTOCOL.md`",
-    "status": "Pending",
-    "priority": "Medium",
-    "path": "./reqs/REQ-DW8-OS-011.md"
-  },
-  {
-    "id": "REQ-DW8-OS-012",
-    "title": "[Design] Re-design the `Rehearsal` Stage as an Interrupt Handler",
-    "status": "Pending",
-    "priority": "High",
-    "path": "./reqs/REQ-DW8-OS-012.md"
-  },
-  {
-    "id": "REQ-DW8-016",
-    "title": "[Sherlock Mode] Investigate and Fortify Workflow Adherence Protocol",
-    "status": "Pending",
-    "priority": "High",
-    "path": "./reqs/REQ-DW8-016.md"
-  },
-  {
-    "id": "REQ-DW8-017",
-    "title": "[Execution] Refactor All Major Classes to Use Code Granularity Protocol",
-    "status": "Pending",
-    "priority": "Medium",
-    "path": "./reqs/REQ-DW8-017.md"
-  },
-  {
-    "id": "REQ-DW8-018",
-    "title": "[Sherlock Mode] Investigate and Redesign Environment Management and Enforcement",
-    "status": "Pending",
-    "priority": "High",
-    "path": "./reqs/REQ-DW8-018.md"
-  },
-  {
-    "id": "REQ-DW8-019",
-    "title": "[Sherlock Mode] Investigate and Enhance Git/Deployment Workflow",
-    "status": "Pending",
-    "priority": "Medium",
-    "path": "./reqs/REQ-DW8-019.md"
-  },
-  {
-    "id": "REQ-DW8-EXEC-001",
-    "title": "[Execution] Refactor Governor for Centralized Gatekeeping",
-    "status": "Pending",
-    "priority": "Critical",
-    "path": "./reqs/REQ-DW8-EXEC-001.md"
-  },
-  {
     "id": "REQ-DW8-EXEC-002",
     "title": "[Execution] Remove Decentralized Stage Validation Methods",
     "status": "Pending",
@@ -111,5 +34,29 @@
     "priority": "Medium",
     "created_at": "2025-06-27T22:16:45.397415+00:00",
     "path": "docs/reqs/REQ-DW8-OS-005.md"
+  },
+  {
+    "id": "REQ-DW8-017-01",
+    "type": "Standard",
+    "title": "[Execution] Refactor WorkflowManager to Use Code Granularity Protocol",
+    "status": "Pending",
+    "priority": "Medium",
+    "created_at": "2025-06-27T22:46:18.336105+00:00"
+  },
+  {
+    "id": "REQ-DW8-017-02",
+    "type": "Standard",
+    "title": "[Execution] Refactor WorkflowKernel to Use Code Granularity Protocol",
+    "status": "Pending",
+    "priority": "Medium",
+    "created_at": "2025-06-27T22:46:25.865882+00:00"
+  },
+  {
+    "id": "REQ-DW8-017-03",
+    "type": "Standard",
+    "title": "[Execution] Refactor cli.py to Use Code Granularity Protocol",
+    "status": "Pending",
+    "priority": "Medium",
+    "created_at": "2025-06-27T22:46:33.039146+00:00"
   }
 ]

@@ -2,7 +2,18 @@
   "id": "REQ-DW8-018",
   "title": "[Sherlock Mode] Investigate and Redesign Environment Management and Enforcement",
   "description": "A persistent pain point in the development cycle is the inconsistent and fragile virtual environment (`venv`) management. The environment context is frequently lost between sessions or stage transitions, forcing repeated, manual re-installation of dependencies and causing unnecessary delays and errors.\n\nThis \"Sherlock Mode\" requirement is to investigate the root cause of this problem and design a robust, automated enforcement mechanism.",
-  "acceptance_criteria": [],
+  "acceptance_criteria": [
+    {
+      "id": "SMR-ENV-001.1",
+      "text": "Implement a 'Venv Guard' in `src/dw6/cli.py` that checks if the script is running inside a virtual environment. If not, it should exit with a clear error message instructing the user to use `uv run`.",
+      "completed": false
+    },
+    {
+      "id": "SMR-ENV-001.2",
+      "text": "Refactor the `ValidatorStage` in `src/dw6/workflow/validator.py` to use `uv run pytest` instead of `subprocess.run` with the Python executable. This ensures the validation step is always run within the correct environment.",
+      "completed": false
+    }
+  ],
   "status": "Pending",
   "priority": "Medium"
 }

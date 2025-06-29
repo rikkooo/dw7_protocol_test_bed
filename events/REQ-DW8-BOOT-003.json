@@ -1,0 +1,16 @@
+{
+  "id": "REQ-DW8-BOOT-003",
+  "title": "Refactor initialize_state.py to Remove Environment Logic",
+  "status": "Pending",
+  "priority": "Critical",
+  "details": "Edit `src/dw6/st/initialize_state.py`. Remove all code related to creating the virtual environment, installing dependencies, and setting the `PythonExecutablePath`. The sole responsibility of this module should be initializing the *workflow* state data structure, not managing the system environment.",
+  "sub_requirements": [
+    "SMR-BOOT-003.1: Identify and remove venv creation logic.",
+    "SMR-BOOT-003.2: Identify and remove dependency installation logic.",
+    "SMR-BOOT-003.3: Identify and remove `PythonExecutablePath` writing logic."
+  ],
+  "affected_documents": [
+    "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/BOOT_PROTOCOL.md",
+    "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "REQ-DW8-DOC-002",
+  "type": "Refactor",
+  "priority": "Critical",
+  "title": "[Prism Protocol] Create API and Event Documentation Generators",
+  "description": "Create two Python scripts in a new `/scripts` directory. `generate_api_reference.py` will inspect the `src/dw6` codebase and generate a single `docs/API_REFERENCE.md` file from docstrings. `compile_events.py` will read all JSON files in `/events` and compile them into a single `docs/EVENTS.json` file.",
+  "acceptance_criteria": [
+    {
+      "text": "A script `scripts/generate_api_reference.py` exists and is executable.",
+      "completed": true
+    },
+    {
+      "text": "Running the API script generates `docs/API_REFERENCE.md` with content from at least `state_manager.py` and `kernel.py`.",
+      "completed": true
+    },
+    {
+      "text": "A script `scripts/compile_events.py` exists and is executable.",
+      "completed": true
+    },
+    {
+      "text": "Running the events script generates `docs/EVENTS.json` that is a valid JSON array containing objects from the individual event files.",
+      "completed": true
+    }
+  ]
+}

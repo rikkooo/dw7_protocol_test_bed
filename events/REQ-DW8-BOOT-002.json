@@ -1,0 +1,15 @@
+{
+  "id": "REQ-DW8-BOOT-002",
+  "title": "Integrate ensure_environment into CLI Entry Point",
+  "status": "Pending",
+  "priority": "Critical",
+  "details": "Modify `src/dw6/cli.py`. At the very beginning of the `main()` function, import `ensure_environment` from `src/dw6/boot.py` and call it. This ensures the environment is validated on every single CLI invocation.",
+  "sub_requirements": [
+    "SMR-BOOT-002.1: Add `from dw6.boot import ensure_environment` to `src/dw6/cli.py`.",
+    "SMR-BOOT-002.2: Add a call to `ensure_environment()` at the start of the `main` function in `src/dw6/cli.py`."
+  ],
+  "affected_documents": [
+    "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/BOOT_PROTOCOL.md",
+    "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "REQ-DW8-CONTEXT-001",
+  "title": "Implement Context Awareness Protocol Reminder",
+  "status": "Pending",
+  "priority": "Critical",
+  "details": "Implement the CONTEXT_AWARENESS_PROTOCOL to prevent catastrophic context decay. This involves two steps: 1) Creating the formal protocol document. 2) Modifying the WorkflowManager to issue a hardcoded reminder to the AI at the start of each work cycle.",
+  "sub_requirements": [
+    "SMR-CONTEXT-001.1: Create the file `docs/protocols/CONTEXT_AWARENESS_PROTOCOL.md` with the mandated hazard warning.",
+    "SMR-CONTEXT-001.2: Locate the primary logic for the `status` command within the `WorkflowManager`'s dynamically loaded methods (likely `src/dw6/st/manager_status.py`).",
+    "SMR-CONTEXT-001.3: Add a `print()` statement at the beginning of the function to display the concise, non-negotiable reminder, directing the AI to consult `context/README_FIRST.md`."
+  ],
+  "affected_documents": [
+    "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/CONTEXT_AWARENESS_PROTOCOL.md"
+  ]
+}

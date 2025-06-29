@@ -1,0 +1,12 @@
+{
+  "id": "REQ-DW8-DOC-001",
+  "title": "Implement Documentation Integrity Protocol",
+  "status": "Pending",
+  "priority": "High",
+  "details": "Implement the Documentation Integrity Protocol by making the 'affected_documents' list a mandatory part of the requirement structure. This ensures that documentation is never left behind when code is changed.",
+  "sub_requirements": [
+    "SMR-DOC-001.1: Create the `docs/protocols/DOCUMENTATION_INTEGRITY_PROTOCOL.md` file.",
+    "SMR-DOC-001.2: Update the logic that validates requirement files to ensure the `affected_documents` key (a list of strings) is present.",
+    "SMR-DOC-001.3: As part of this implementation, update all existing 'Pending' requirements (`REQ-DW8-BOOT-*`, `REQ-DW8-CONTEXT-*`) to include the `affected_documents` key with an initial assessment of which documents they will impact."
+  ]
+}

@@ -7,20 +7,16 @@ class ValidatorStage:
 
     def validate(self, allow_failures=False):
         """
-        Runs tests using pytest, saves the Python executable path to the state,
-        and returns True on success or if failures are allowed.
+        Runs tests using `uv run pytest` to ensure execution within the
+        correct virtual environment.
         """
-        # Discover the Python executable from the current environment
-        python_executable = sys.executable
-        self.state.set("PythonExecutablePath", python_executable)
-        print(f"--- Governor: Python executable path set to {python_executable} ---")
-
         try:
             print("--- Governor: Running pytest validation... ---")
+            # REQ-DW8-018: Use `uv run` to ensure correct environment
             result = subprocess.run(
-                [python_executable, "-m", "pytest"], 
-                check=True, 
-                capture_output=True, 
+                ["uv", "run", "pytest"],
+                check=True,
+                capture_output=True,
                 text=True
             )
             print("--- Governor: Pytest validation successful. ---")

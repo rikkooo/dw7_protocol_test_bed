@@ -25,4 +25,4 @@ test = [
 where = ["src"]
 
 [project.scripts]
-dw6 = "dw6.main:main"
+dw6 = "dw6.cli:main"

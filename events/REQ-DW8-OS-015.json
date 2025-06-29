@@ -1,0 +1,26 @@
+{
+  "id": "REQ-DW8-OS-015",
+  "title": "Finalize State Unification and Cleanup",
+  "description": "This is the final step to complete the state management refactoring. Once the `WorkflowKernel` has been fully updated to use the enhanced `WorkflowState` for all queue operations, we can safely remove the redundant queue files.",
+  "acceptance_criteria": [
+    {
+      "text": "The `data/pending_events.json` file is deleted.",
+      "completed": false
+    },
+    {
+      "text": "The `data/processed_events.json` file is deleted.",
+      "completed": false
+    },
+    {
+      "text": "The constants `PENDING_EVENTS_FILE` and `PROCESSED_EVENTS_FILE` at the top of `src/dw6/workflow/kernel.py` are removed.",
+      "completed": false
+    },
+    {
+      "text": "The system is tested to ensure it functions correctly using only the `data/workflow_state.json` file as the single source of truth.",
+      "completed": false
+    }
+  ],
+  "status": "P",
+  "priority": "C",
+  "type": "Execution"
+}

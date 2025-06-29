@@ -1,0 +1,15 @@
+{
+  "id": "REQ-DW8-BUG-001",
+  "title": "Fix Incorrect Command Invocation in Governor Rules",
+  "status": "Pending",
+  "priority": "Critical",
+  "description": "The Governor's RULES in `src/dw6/state_manager.py` are hardcoded to use the incorrect command invocation `uv run python -m dw6.main ...`. This must be replaced with the correct script entry point `dw6 ...` as defined in `pyproject.toml`. This is a foundational bug that prevents the entire workflow from executing correctly.",
+  "acceptance_criteria": [
+    { "text": "Read `src/dw6/state_manager.py`.", "completed": false },
+    { "text": "In the `Governor.RULES` dictionary, replace all instances of `uv run python -m dw6.main` with `dw6`.", "completed": false }
+  ],
+  "affected_documents": [
+    "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py",
+    "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/TERMINAL_PROTOCOL.md"
+  ]
+}
