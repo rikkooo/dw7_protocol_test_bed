@@ -129,7 +129,7 @@ class WorkflowManager:
     def __init__(self, state):
         self.state = state
         self.governor = Governor(self.state)
-        self.kernel = WorkflowKernel(state, self.state.get("PendingEvents", []))
+        self.kernel = WorkflowKernel(state)
         self.current_stage_name = self.state.get("CurrentStage")
         self._load_methods()
         # This must be called after its own method is loaded

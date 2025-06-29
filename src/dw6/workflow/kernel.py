@@ -22,15 +22,13 @@ class WorkflowKernel:
 
     Attributes:
         state (WorkflowState): An instance of the workflow state manager.
-        pending_events (list): A list of events waiting to be processed.
         current_event (dict): The event currently being processed.
         current_stage (str): The name of the current workflow stage.
         python_executable_path (str): The path to the Python executable in the
                                       active virtual environment.
     """
-    def __init__(self, state, pending_events):
+    def __init__(self, state):
         self.state = state
-        self.pending_events = pending_events
         self.current_event = None  # Initialize to None
 
         # Dynamically load all methods from the 'kr' subdirectory
