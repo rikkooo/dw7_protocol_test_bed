@@ -1,7 +1,7 @@
 import re
 import sys
 
-REQUIREMENTS_FILE = "docs/PROJECT_REQUIREMENTS.md"
+REQUIREMENTS_FILE = "docs/README.md"
 
 class EngineerStage:
     def __init__(self, state):
@@ -24,30 +24,24 @@ class EngineerStage:
             req_id = req_pointer
             print(f"Current requirement ID: {req_id}")
 
-            # Temporarily disabled for REQ-DW8-DOC-003.
-            # This validation check, which ensures requirements are broken down into
-            # sub-tasks (SMRs), is being bypassed to allow for a documentation
-            # refactoring that removes the file it depends on.
-            # This check will be reinstated and updated in a subsequent requirement.
-            #
-            # with open(REQUIREMENTS_FILE, "r") as f:
-            #     content = f.read()
-            #
-            # match = re.search(rf"(?s)### ID: {re.escape(req_id)}\n(.*?)(?=\n---\n|\Z)", content)
-            #
-            # if match:
-            #     requirement_text = match.group(1).strip()
-            #     smr_section_match = re.search(r"- \*\*SMRs:\*\*\n((?:  - .+\n?)+)", requirement_text, re.MULTILINE)
-            #
-            #     if smr_section_match:
-            #         smr_block = smr_section_match.group(1)
-            #         smr_count = len(re.findall(r"^  - \[", smr_block, re.MULTILINE))
-            #         print(f"Found {smr_count} SMRs.")
-            #
-            #         if smr_count < 2:
-            #             print("\n[GOVERNOR] HALT: Requirement is not sufficiently granular.", file=sys.stderr)
-            #             print("Please break it down into at least two sub-tasks using 'dw6 breakdown <REQ_ID>'.", file=sys.stderr)
-            #             return False
+            with open(REQUIREMENTS_FILE, "r") as f:
+                content = f.read()
+
+            match = re.search(rf"(?s)### ID: {re.escape(req_id)}\n(.*?)(?=\n---\n|\Z)", content)
+
+            if match:
+                requirement_text = match.group(1).strip()
+                smr_section_match = re.search(r"- \*\*SMRs:\*\*\n((?:  - .+\n?)+)", requirement_text, re.MULTILINE)
+
+                if smr_section_match:
+                    smr_block = smr_section_match.group(1)
+                    smr_count = len(re.findall(r"^  - \[", smr_block, re.MULTILINE))
+                    print(f"Found {smr_count} SMRs.")
+
+                    if smr_count < 2:
+                        print("\n[GOVERNOR] HALT: Requirement is not sufficiently granular.", file=sys.stderr)
+                        print("Please break it down into at least two sub-tasks using 'dw6 breakdown <REQ_ID>'.", file=sys.stderr)
+                        return False
             
             print("--- Governor: Atomic requirement check passed. ---")
             return True
