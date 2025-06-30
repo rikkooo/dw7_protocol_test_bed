@@ -16,7 +16,7 @@ def advance_stage(self, needs_research=False):
         elif self.current_stage == "Validator":
             # A successful validation of a protocol update completes the cycle.
             print("--- Governor: Requirement cycle complete. ---")
-            current_event = self.state.get_current_event_details()
+            current_event = self.current_event
             if current_event:
                 self.state.archive_completed_event(current_event)
             self.state.advance_requirement_pointer()
@@ -37,7 +37,11 @@ def advance_stage(self, needs_research=False):
         elif self.current_stage == "Coder":
             next_stage = "Validator"
         elif self.current_stage == "Validator":
-            next_stage = "Deployer" if self.current_event and self.current_event.get("type") == "Deployment" else "Engineer"
+            event_type = self.current_event.get("type") if self.current_event else None
+            if event_type in ["Deployment", "Formalization"]:
+                next_stage = "Deployer"
+            else:
+                next_stage = "Engineer"
         elif self.current_stage == "Deployer":
             next_stage = "Engineer"
         else:
@@ -72,7 +76,7 @@ def advance_stage(self, needs_research=False):
         print("--- Governor: Requirement cycle complete. ---")
         self.state.increment("CycleCounter")
         # Get current event and archive it before advancing pointer
-        current_event = self.state.get_current_event_details()
+        current_event = self.current_event
         if current_event:
             self.state.archive_completed_event(current_event)
         self.state.advance_requirement_pointer()

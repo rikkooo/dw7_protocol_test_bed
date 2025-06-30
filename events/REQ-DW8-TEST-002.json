@@ -1,0 +1,13 @@
+{
+  "id": "REQ-DW8-TEST-002",
+  "title": "Create a Python function to subtract two numbers",
+  "description": "Implement a Python function named 'subtract' that takes two integer arguments and returns their difference. The function should be added to the existing file 'src/dummy_math.py'.",
+  "acceptance_criteria": [
+    { "description": "The file 'src/dummy_math.py' is updated.", "completed": false },
+    { "description": "The file contains a function 'subtract(a, b)'.", "completed": false },
+    { "description": "The function returns the correct difference for 'subtract(5, 2)'.", "completed": false }
+  ],
+  "type": "Standard",
+  "priority": "High",
+  "status": "Pending"
+}

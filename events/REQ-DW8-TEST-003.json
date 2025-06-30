@@ -1,0 +1,14 @@
+{
+  "id": "REQ-DW8-TEST-003",
+  "title": "Create a test file for the dummy math functions",
+  "description": "Create a new file named 'tests/test_dummy_math.py'. This file should contain pytest functions to validate the 'add' and 'subtract' functions in 'src/dummy_math.py'.",
+  "acceptance_criteria": [
+    { "description": "A file named 'tests/test_dummy_math.py' is created.", "completed": false },
+    { "description": "The file contains a test function for 'add'.", "completed": false },
+    { "description": "The file contains a test function for 'subtract'.", "completed": false },
+    { "description": "The tests pass successfully when run with pytest.", "completed": false }
+  ],
+  "type": "Standard",
+  "priority": "High",
+  "status": "Pending"
+}

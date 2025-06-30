@@ -6,7 +6,7 @@ def get_current_event_details(self):
     """
     Loads the full details of the current requirement from its JSON file.
     """
-    current_id = self.get("RequirementPointer")
+    current_id = self.state.get("RequirementPointer")
     if not current_id:
         print("--- Governor: CRITICAL: No RequirementPointer set. Cannot load event details. ---", file=sys.stderr)
         return None

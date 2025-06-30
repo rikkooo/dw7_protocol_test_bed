@@ -29,7 +29,7 @@ class WorkflowKernel:
     """
     def __init__(self, state):
         self.state = state
-        self.current_event = None  # Initialize to None
+        self.current_event = None
 
         # Dynamically load all methods from the 'kr' subdirectory
         self._load_methods()

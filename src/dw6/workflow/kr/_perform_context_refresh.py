@@ -29,7 +29,7 @@ def _perform_context_refresh(self):
     if acceptance_criteria:
         for i, smr in enumerate(acceptance_criteria):
             status = "[x]" if smr.get('completed') else "[ ]"
-            print(f"  {i+1}. {status} {smr.get('text')}")
+            print(f"  {i+1}. {status} {smr.get('description')}")
     else:
         print("  (No acceptance criteria specified)")
 

@@ -1,8 +1,22 @@
 {
   "id": "REQ-DW8-OS-009",
-  "title": "[Execution] Implement Dynamic Event Prioritization",
-  "description": "This requirement implements the \"interrupt\" mechanism for our OS. It provides a method to inject a new, high-priority event at the front of the `pending_events.json` queue, ensuring it is processed next, regardless of other pending tasks. This is critical for handling urgent bugs or incorporating new ideas from brainstorming sessions.",
-  "acceptance_criteria": [],
+  "title": "Red Flag: Unhandled Critical Failure in Researcher Stage",
+  "description": "The workflow encountered a critical, unrecoverable error.\n\n**Exception Type:** AttributeError\n**Message:** 'WorkflowManager' object has no attribute 'get'\n\n**Traceback:**\n```\n  File \"/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_approve.py\", line 30, in approve\n    self.archive_completed_event(event_details)\n  File \"/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_archive_completed_event.py\", line 3, in archive_completed_event\n    pending_events = self.get(\"PendingEvents\", [])\n                     ^^^^^^^^\n```",
+  "acceptance_criteria": [
+    {
+      "text": "Analyze the traceback and identify the root cause.",
+      "completed": false
+    },
+    {
+      "text": "Implement a fix for the underlying issue.",
+      "completed": false
+    },
+    {
+      "text": "Add a new test case that reproduces the failure to prevent regressions.",
+      "completed": false
+    }
+  ],
   "status": "Pending",
-  "priority": "Medium"
+  "priority": "Critical",
+  "type": "Execution"
 }

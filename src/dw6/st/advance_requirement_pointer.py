@@ -1,46 +1,19 @@
-import sys
-from pathlib import Path
-
 def advance_requirement_pointer(self):
     """
-    Advances the RequirementPointer to the next available requirement file
-    in the `events/` directory.
-
-    This method scans the `events/` directory for all `REQ-*.json` files,
-    sorts them alphanumerically, finds the current requirement, and then
-    updates the pointer to the next one in the sequence.
+    Advances the RequirementPointer to the next event in the PendingEvents queue.
+    If the queue is empty, the pointer is set to None.
     """
-    events_dir = Path("events")
-    if not events_dir.exists():
-        print("--- Governor: CRITICAL: `events` directory not found. Cannot advance pointer. ---", file=sys.stderr)
-        return False
+    pending_events = self.data.get('PendingEvents', [])
 
-    req_files = sorted([f for f in events_dir.glob("REQ-*.json")])
-    if not req_files:
-        print("--- Governor: No requirement files found in `events/`. Pointer remains unchanged. ---")
-        return False
+    if pending_events:
+        # Get the next event from the top of the queue
+        next_event = pending_events.pop(0)
+        next_event_id = next_event.get('id')
+        self.data['RequirementPointer'] = next_event_id
+        self.data['PendingEvents'] = pending_events
+        print(f"--- Governor: Requirement pointer advanced to '{next_event_id}'. ---")
+    else:
+        self.data['RequirementPointer'] = None
+        print("--- Governor: Pending events queue is empty. Requirement pointer set to None. ---")
 
-    current_id = self.get("RequirementPointer")
-    if not current_id:
-        next_id = req_files[0].stem
-        self.set("RequirementPointer", next_id)
-        print(f"--- Governor: Requirement pointer initialized to {next_id}. ---")
-        return True
-
-    current_path = events_dir / f"{current_id}.json"
-
-    try:
-        current_index = req_files.index(current_path)
-        if current_index + 1 < len(req_files):
-            next_id = req_files[current_index + 1].stem
-            self.set("RequirementPointer", next_id)
-            print(f"--- Governor: Requirement pointer advanced to {next_id}. ---")
-            return True
-        else:
-            print("--- Governor: End of requirement queue reached. Pointer remains at the last requirement. ---")
-            return False
-    except ValueError:
-        next_id = req_files[0].stem
-        self.set("RequirementPointer", next_id)
-        print(f"--- Governor: Could not find current requirement '{current_id}'. Resetting pointer to {next_id}. ---")
-        return True
+    self.save()

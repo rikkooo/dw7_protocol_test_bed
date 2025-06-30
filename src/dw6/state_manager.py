@@ -131,6 +131,9 @@ class WorkflowManager:
         self.governor = Governor(self.state)
         self.kernel = WorkflowKernel(state)
         self.current_stage_name = self.state.get("CurrentStage")
+        self.current_event = None
+
+
 
         # --- Automated Recovery Protocol Briefing ---
         recovery_file = Path(__file__).parent.parent.parent / "docs" / "RECOVERY_PROTOCOL.md"
@@ -141,6 +144,11 @@ class WorkflowManager:
             print("-------------------------------------------")
 
         self._load_methods()
+
+        # Ensure the kernel and manager have the latest event details upon initialization
+        self.current_event = self.get_current_event_details()
+        self.kernel.current_event = self.current_event
+
         # This must be called after its own method is loaded
         self.stage_module = self._load_stage_module()
 

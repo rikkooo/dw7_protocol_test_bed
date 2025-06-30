@@ -1,0 +1,11 @@
+{
+  "id": "REQ-DW8-DUMMY-003",
+  "title": "Dummy Req 3",
+  "description": "Third dummy requirement for priority test.",
+  "acceptance_criteria": [
+    "Completed."
+  ],
+  "type": "Standard",
+  "priority": "High",
+  "status": "Pending"
+}

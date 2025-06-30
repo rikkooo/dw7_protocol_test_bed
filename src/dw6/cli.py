@@ -27,7 +27,7 @@ def main():
     new_parser.add_argument("-d", "--description", required=True, help="Detailed description of the requirement.")
     new_parser.add_argument("-a", "--acceptance-criteria", required=True, nargs='+', help="List of acceptance criteria.")
     new_parser.add_argument("--type", default="Standard", help="The type of event (e.g., Standard, Deployment).")
-    new_parser.add_argument("--priority", default="Low", choices=["High", "Medium", "Low"], help="Set the priority for the new requirement (High, Medium, Low). Default: Low")
+    new_parser.add_argument("--priority", default="Low", choices=["Critical", "High", "Medium", "Low"], help="Set the priority for the new requirement (Critical, High, Medium, Low). Default: Low")
 
     # 'approve' command
     approve_parser = subparsers.add_parser('approve', help='Approves the current stage and moves to the next.')

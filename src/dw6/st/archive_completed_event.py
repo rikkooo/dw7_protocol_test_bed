@@ -1,13 +1,18 @@
-def archive_completed_event(self, event):
-    """Moves a completed event from the pending queue to the processed queue."""
-    pending_events = self.get("PendingEvents", [])
-    processed_events = self.get("ProcessedEvents", [])
+def archive_completed_event(self, event_to_archive):
+    """
+    Moves a completed event to the ProcessedEvents list.
+    This method assumes the event is the currently active one, not one from the pending queue.
+    """
+    if not event_to_archive or 'id' not in event_to_archive:
+        return
 
-    # Remove from pending
-    pending_events = [e for e in pending_events if e.get('id') != event.get('id')]
-    self.set("PendingEvents", pending_events)
+    event_id_to_archive = event_to_archive['id']
+    processed_events = self.data.get('ProcessedEvents', [])
 
-    # Add to processed
-    processed_events.append(event)
-    self.set("ProcessedEvents", processed_events)
+    # Simply add the completed event to the processed list.
+    # The advancement of the requirement pointer is handled by a separate method.
+    processed_events.insert(0, event_to_archive)
+    self.data['ProcessedEvents'] = processed_events
+    print(f"--- Governor: Event '{event_id_to_archive}' archived. ---")
+
     self.save()

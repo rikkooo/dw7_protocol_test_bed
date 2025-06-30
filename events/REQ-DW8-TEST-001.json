@@ -1,0 +1,13 @@
+{
+  "id": "REQ-DW8-TEST-001",
+  "title": "Create a Python function to sum two numbers",
+  "description": "Implement a Python function named 'add' that takes two integer arguments and returns their sum. The function should be created in a new file named 'src/dummy_math.py'.",
+  "acceptance_criteria": [
+    { "description": "A file named 'src/dummy_math.py' is created.", "completed": false },
+    { "description": "The file contains a function 'add(a, b)'.", "completed": false },
+    { "description": "The function returns the correct sum for 'add(2, 3)'.", "completed": false }
+  ],
+  "type": "Standard",
+  "priority": "High",
+  "status": "Pending"
+}
