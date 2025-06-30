@@ -58,7 +58,7 @@ def main():
             args.requirement_id,
             args.title,
             args.description,
-            args.acceptance_criteria,
+            [{'description': ac, 'completed': False} for ac in args.acceptance_criteria],
             args.type,
             args.priority
         )

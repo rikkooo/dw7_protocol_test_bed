@@ -3,7 +3,10 @@
   "title": "Dummy Req 1",
   "description": "First dummy requirement for priority test.",
   "acceptance_criteria": [
-    "Completed."
+    {
+      "description": "Completed.",
+      "completed": false
+    }
   ],
   "type": "Standard",
   "priority": "High",

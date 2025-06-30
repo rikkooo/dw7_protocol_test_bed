@@ -1,8 +1,8 @@
 {
-  "CoderStartCommitSHA": "fed34fbe7769581f352952387bc5101450a5feb0",
+  "CoderStartCommitSHA": "0e7a4e272f9124ba4dae3f0412313aa663ab17d6",
   "CognitiveCheckpoint": "Riko",
   "CurrentStage": "Engineer",
-  "CycleCounter": 26,
+  "CycleCounter": 28,
   "FailureCounters.Coder.default": 0,
   "FailureCounters.Engineer.default": 0,
   "FailureCounters.Researcher.default": 0,
@@ -10,14 +10,9 @@
   "FailureCounters.Validator.pytest": 0,
   "PendingEvents": [
     {
-      "id": "REQ-DW8-DUMMY-002",
-      "priority": "High",
-      "title": "Dummy Req 2"
-    },
-    {
-      "id": "REQ-DW8-DUMMY-001",
-      "priority": "High",
-      "title": "Dummy Req 1"
+      "id": "REQ-DW8-DUMMY-CRITICAL-001",
+      "priority": "Critical",
+      "title": "Critical Dummy Req"
     },
     {
       "id": "REQ-DW8-DOC-002",
@@ -56,6 +51,31 @@
     }
   ],
   "ProcessedEvents": [
+    {
+      "acceptance_criteria": [
+        {
+          "completed": false,
+          "description": "Completed."
+        }
+      ],
+      "description": "Second dummy requirement for priority test.",
+      "id": "REQ-DW8-DUMMY-002",
+      "priority": "High",
+      "status": "Pending",
+      "title": "Dummy Req 2",
+      "type": "Standard"
+    },
+    {
+      "acceptance_criteria": [
+        "Completed."
+      ],
+      "description": "Third dummy requirement for priority test.",
+      "id": "REQ-DW8-DUMMY-003",
+      "priority": "High",
+      "status": "Pending",
+      "title": "Dummy Req 3",
+      "type": "Standard"
+    },
     {
       "acceptance_criteria": [
         {
@@ -192,7 +212,11 @@
     }
   ],
   "PythonExecutablePath": "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/bin/python3",
-  "RequirementPointer": "REQ-DW8-DUMMY-003",
+  "RequirementPointer": "REQ-DW8-DUMMY-001",
+  "failure_count_REQ-DW8-DUMMY-002_Validator": 0,
+  "failure_count_REQ-DW8-DUMMY-003_Coder": 0,
+  "failure_count_REQ-DW8-DUMMY-003_Engineer": 0,
+  "failure_count_REQ-DW8-DUMMY-003_Validator": 1,
   "failure_count_REQ-DW8-EXEC-001_Coder": 0,
   "failure_count_REQ-DW8-EXEC-001_Engineer": 0,
   "failure_count_REQ-DW8-EXEC-001_Validator": 0,
@@ -242,6 +266,30 @@
       }
     },
     "timings": {
+      "REQ-DW8-DUMMY-002": {
+        "Engineer": {
+          "start_time": "2025-06-30T17:47:53.884611+00:00"
+        },
+        "Validator": {
+          "end_time": "2025-06-30T17:47:53.884611+00:00"
+        }
+      },
+      "REQ-DW8-DUMMY-003": {
+        "Coder": {
+          "duration_seconds": 18.19,
+          "end_time": "2025-06-30T17:43:53.408997+00:00",
+          "start_time": "2025-06-30T17:43:35.221124+00:00"
+        },
+        "Engineer": {
+          "end_time": "2025-06-30T17:43:35.221124+00:00",
+          "start_time": "2025-06-30T17:43:59.276273+00:00"
+        },
+        "Validator": {
+          "duration_seconds": 5.87,
+          "end_time": "2025-06-30T17:43:59.276273+00:00",
+          "start_time": "2025-06-30T17:43:53.408997+00:00"
+        }
+      },
       "REQ-DW8-EXEC-001": {
         "Coder": {
           "duration_seconds": 40772.29,

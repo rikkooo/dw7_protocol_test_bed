@@ -1,0 +1,14 @@
+{
+  "id": "REQ-DW8-DUMMY-CRITICAL-001",
+  "title": "Critical Dummy Req",
+  "description": "A critical requirement to test interruption.",
+  "acceptance_criteria": [
+    {
+      "description": "Completed.",
+      "completed": false
+    }
+  ],
+  "type": "Standard",
+  "priority": "Critical",
+  "status": "Pending"
+}
