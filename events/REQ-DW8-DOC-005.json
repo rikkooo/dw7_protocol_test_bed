@@ -1,0 +1,14 @@
+{
+  "id": "REQ-DW8-DOC-005",
+  "title": "[Sherlock] Review and Consolidate Total Recall Documentation",
+  "description": "Review the three 'Total Recall' documents (A_MESSAGE_FOR_FUTURE_ME.md, AI_OPERATIONS_MANUAL.md, DW8_OPERATING_SYSTEM.md) for clarity, consistency, and completeness. Consolidate where necessary and ensure they provide a comprehensive strategic overview for a context-wiped AI. This is a Sherlock-mode task.",
+  "acceptance_criteria": [
+    {
+      "description": "A clear, consistent, and comprehensive set of 'Total Recall' documents is produced.",
+      "completed": false
+    }
+  ],
+  "type": "Standard",
+  "priority": "High",
+  "status": "Pending"
+}

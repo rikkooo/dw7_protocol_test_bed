@@ -1,0 +1,14 @@
+{
+  "id": "REQ-DW8-BUG-002",
+  "title": "Fix CLI Acceptance Criteria Parsing",
+  "description": "The 'dw6 new' command incorrectly parses the -a flag, creating malformed acceptance criteria. This fix corrects the parsing logic in cli.py.",
+  "acceptance_criteria": [
+    {
+      "description": "The cli.py fix is committed.",
+      "completed": false
+    }
+  ],
+  "type": "Standard",
+  "priority": "Critical",
+  "status": "Pending"
+}

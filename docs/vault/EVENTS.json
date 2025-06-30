@@ -1,0 +1,773 @@
+[
+  {
+    "id": "REQ-DW8-",
+    "title": "013",
+    "acceptance_criteria": [
+      {
+        "completed": false,
+        "text": "**SMR-DW8-013.1:** The AI must be able to locate and read the `DW8_DYNAMIC_REQUIREMENT_PROTOCOL.md` file to understand the procedure."
+      },
+      {
+        "completed": false,
+        "text": "**SMR-DW8-013.2:** When a new requirement is triggered, the AI must explicitly state it is following the protocol."
+      },
+      {
+        "completed": false,
+        "text": "**SMR-DW8-013.3:** The AI must correctly create a new, well-formed MR file in `docs/reqs/`."
+      },
+      {
+        "completed": false,
+        "text": "**SMR-DW8-013.4:** The AI must correctly update the master index at `docs/PROJECT_REQUIREMENTS.md`."
+      },
+      {
+        "completed": false,
+        "text": "**SMR-DW8-013.5:** The AI must correctly re-sort the pending requirements in the master index according to priority after adding a new one."
+      }
+    ],
+    "source_file": "docs/reqs/REQ-DW8-013.md"
+  },
+  {
+    "id": "REQ-DW8-001",
+    "title": "Implement a persistent failure counter",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-002",
+    "title": "Implement the Rehearsal State",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-008",
+    "title": "Automate Standard Project Deployment",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-009",
+    "title": "Generate Final Project Documentation",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-010",
+    "title": "Implement Dual-Push for Protocol Evolution",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-011",
+    "title": "Implement Deployer Configuration and Credential Management",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-012",
+    "title": "Document Requirement List Abbreviations",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-013",
+    "title": "Implement and Adhere to Dynamic Requirement Protocol",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-014",
+    "title": "Implement Code Granularity Protocol to Improve Edit Reliability",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-015",
+    "title": "[Sherlock Mode] Investigate and Redesign State Machine Gatekeeping Rules",
+    "description": "The project's state machine, managed by the \"Governor,\" has shown signs of weakness. The transition criteria between stages (Engineer, Coder, Validator, Deployer) are not being strictly enforced, allowing for an unstructured and sometimes anarchical workflow. This undermines the stability and predictability of the development protocol.\n\nThis requirement initiates a \"Sherlock Mode\" investigation to address this critical issue. No code will be implemented under this requirement.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-016",
+    "title": "[Sherlock Mode] Investigate and Fortify Workflow Adherence Protocol",
+    "description": "It has been observed that the agent (Gem) sometimes operates outside the bounds of the prescribed development workflow. This \"free as a bird\" behavior indicates that the protocol has exploitable holes that compromise the structured, step-by-step process we aim to enforce.\n\nThis requirement initiates a \"Sherlock Mode\" investigation to understand why this happens and to design fortifications to keep the agent \"on the tracks.\"",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-017-01",
+    "title": "Implement Strict Environment Variable Loading",
+    "description": "The kernel must load environment variables exclusively from a .env file at the root and fail immediately if the file is missing or incomplete.",
+    "acceptance_criteria": [
+      {
+        "text": "Kernel fails on startup if .env is not found.",
+        "completed": false
+      },
+      {
+        "text": "All required environment variables are documented and checked.",
+        "completed": false
+      },
+      {
+        "text": "No hardcoded secrets or paths are present in the code.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium",
+    "type": "Standard"
+  },
+  {
+    "id": "REQ-DW8-017-02",
+    "type": "Standard",
+    "title": "[Execution] Refactor WorkflowKernel to Use Code Granularity Protocol",
+    "description": "This is the second sub-task of the REQ-DW8-017 epic. It focuses on refactoring the WorkflowKernel class in workflow/kernel.py to follow the Code Granularity Protocol.",
+    "acceptance_criteria": [
+      {
+        "text": "The WorkflowKernel class is refactored to follow the Code Granularity Protocol.",
+        "completed": false
+      },
+      {
+        "text": "All existing tests continue to pass after the refactor.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium",
+    "created_at": "2025-06-27T22:46:25.865882+00:00"
+  },
+  {
+    "id": "REQ-DW8-017-03",
+    "type": "Standard",
+    "title": "[Execution] Refactor cli.py to Use Code Granularity Protocol",
+    "description": "This is the third sub-task of the REQ-DW8-017 epic. It focuses on refactoring the cli.py module to follow the Code Granularity Protocol, separating command logic into individual, dynamically loaded modules.",
+    "acceptance_criteria": [
+      {
+        "text": "The cli.py module is refactored to follow the Code Granularity Protocol.",
+        "completed": false
+      },
+      {
+        "text": "All CLI commands function as expected after the refactor.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium",
+    "created_at": "2025-06-27T22:46:33.039146+00:00"
+  },
+  {
+    "id": "REQ-DW8-017",
+    "title": "[Execution] Refactor All Major Classes to Use Code Granularity Protocol",
+    "description": "The Code Granularity Protocol, successfully implemented for `deployer.py`, has proven to be a powerful pattern for reducing context size, improving maintainability, and enhancing edit reliability. This pattern involves transforming large classes into lean interfaces that dynamically load their methods from individual files in a dedicated subdirectory.\n\nThis requirement serves as an epic or theme to apply this same refactoring pattern to all other major, monolithic classes within the project codebase.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-018",
+    "title": "[Sherlock Mode] Investigate and Redesign Environment Management and Enforcement",
+    "description": "A persistent pain point in the development cycle is the inconsistent and fragile virtual environment (`venv`) management. The environment context is frequently lost between sessions or stage transitions, forcing repeated, manual re-installation of dependencies and causing unnecessary delays and errors.\n\nThis \"Sherlock Mode\" requirement is to investigate the root cause of this problem and design a robust, automated enforcement mechanism.",
+    "acceptance_criteria": [
+      {
+        "id": "SMR-ENV-001.1",
+        "text": "Implement a 'Venv Guard' in `src/dw6/cli.py` that checks if the script is running inside a virtual environment. If not, it should exit with a clear error message instructing the user to use `uv run`.",
+        "completed": false
+      },
+      {
+        "id": "SMR-ENV-001.2",
+        "text": "Refactor the `ValidatorStage` in `src/dw6/workflow/validator.py` to use `uv run pytest` instead of `subprocess.run` with the Python executable. This ensures the validation step is always run within the correct environment.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-019",
+    "title": "Implement Personalization and Workflow-Managed Memory",
+    "description": "The workflow should have its own persistent memory to store user-specific data (like name) and project context. It should use this data to provide personalized greetings and summaries, including acknowledging time since the last session.",
+    "acceptance_criteria": [
+      {
+        "id": "SMR-MEM-001.1",
+        "text": "Implement Profile Management: Create a new kernel method (`_manage_user_profile.py`) to handle the creation and updating of `data/user_profile.json`, which will store `user_name` and `last_session_timestamp`. The method must prompt for the user's name if it is not already set.",
+        "completed": false
+      },
+      {
+        "id": "SMR-MEM-001.2",
+        "text": "Implement Startup Greeting: Create a new kernel method (`_display_startup_summary.py`) that reads the user profile, calculates the time since the last session, and prints a personalized greeting and status summary.",
+        "completed": false
+      },
+      {
+        "id": "SMR-MEM-001.3",
+        "text": "Integrate into Kernel Initialization: Modify the `WorkflowKernel`'s `__init__` method to call the new profile management and startup summary methods in the correct sequence.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium",
+    "type": "Standard"
+  },
+  {
+    "id": "REQ-DW8-020",
+    "title": "Implement Context Window Canary & System Health Check",
+    "description": "To combat context loss, the workflow will use a 'canary' value (like a password) stored in its state. At key points, the Governor will check if the agent remembers the canary. A failure triggers a 'Small Boot' procedure to perform a full context refresh and system health check.",
+    "acceptance_criteria": [
+      {
+        "text": "A canary value is stored in workflow_state.json.",
+        "completed": false
+      },
+      {
+        "text": "The kernel has a mechanism to validate the agent's memory of the canary.",
+        "completed": false
+      },
+      {
+        "text": "A failure triggers a 'Small Boot' state that reloads detailed project context, architecture, and recent conversation history.",
+        "completed": false
+      },
+      {
+        "text": "During 'Small Boot', a comprehensive system health check (git, env, dependencies) is performed.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium",
+    "type": "Standard"
+  },
+  {
+    "id": "REQ-DW8-021",
+    "title": "",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium",
+    "type": "Standard"
+  },
+  {
+    "id": "REQ-DW8-072",
+    "title": "Simplify and Refine AI Context Refresh Protocol",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-073",
+    "title": "Architect and Implement a Pointer-Based Memory System",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-074",
+    "title": "End-to-End Test of New Architecture",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-075",
+    "title": "Implement Robust Command Output Handling",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-BOOT-001",
+    "title": "Implement Core Boot Logic in boot.py",
+    "status": "Pending",
+    "priority": "Critical",
+    "details": "Create the `ensure_environment()` function in `src/dw6/boot.py`. This function must be idempotent and handle:\n1. Checking for the `.venv` directory and creating it with `uv venv` if it's missing.\n2. Checking if dependencies are installed and running `uv pip install -e .[test]` if they are not.\n3. Writing the absolute path to the venv's python executable to `data/workflow_state.json` under the key `PythonExecutablePath`, but only if the key does not already exist.",
+    "sub_requirements": [
+      "SMR-BOOT-001.1: Create file `src/dw6/boot.py` if it doesn't exist.",
+      "SMR-BOOT-001.2: Implement `ensure_environment` function signature.",
+      "SMR-BOOT-001.3: Add logic to check for `.venv` and run `uv venv`.",
+      "SMR-BOOT-001.4: Add logic to check for dependencies and run `uv pip install`.",
+      "SMR-BOOT-001.5: Add logic to read state, check for `PythonExecutablePath`, and write it if absent."
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/BOOT_PROTOCOL.md",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-BOOT-002",
+    "title": "Integrate ensure_environment into CLI Entry Point",
+    "status": "Pending",
+    "priority": "Critical",
+    "details": "Modify `src/dw6/cli.py`. At the very beginning of the `main()` function, import `ensure_environment` from `src/dw6/boot.py` and call it. This ensures the environment is validated on every single CLI invocation.",
+    "sub_requirements": [
+      "SMR-BOOT-002.1: Add `from dw6.boot import ensure_environment` to `src/dw6/cli.py`.",
+      "SMR-BOOT-002.2: Add a call to `ensure_environment()` at the start of the `main` function in `src/dw6/cli.py`."
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/BOOT_PROTOCOL.md",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-BOOT-003",
+    "title": "Refactor initialize_state.py to Remove Environment Logic",
+    "status": "Pending",
+    "priority": "Critical",
+    "details": "Edit `src/dw6/st/initialize_state.py`. Remove all code related to creating the virtual environment, installing dependencies, and setting the `PythonExecutablePath`. The sole responsibility of this module should be initializing the *workflow* state data structure, not managing the system environment.",
+    "sub_requirements": [
+      "SMR-BOOT-003.1: Identify and remove venv creation logic.",
+      "SMR-BOOT-003.2: Identify and remove dependency installation logic.",
+      "SMR-BOOT-003.3: Identify and remove `PythonExecutablePath` writing logic."
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/BOOT_PROTOCOL.md",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-BOOT-004",
+    "title": "Fix State Corruption in ValidatorStage",
+    "status": "Pending",
+    "priority": "Critical",
+    "details": "Modify the `validate` method in `src/dw6/workflow/validator.py`. Remove the line that overwrites `PythonExecutablePath` in the workflow state (`self.state.set(\"PythonExecutablePath\", sys.executable)`). Instead, the method should *read* the correct executable path from the state, which is now guaranteed to be present by the new boot protocol.",
+    "sub_requirements": [
+      "SMR-BOOT-004.1: Locate the `self.state.set(\"PythonExecutablePath\", ...)` line in `validator.py`.",
+      "SMR-BOOT-004.2: Remove the offending line.",
+      "SMR-BOOT-004.3: Ensure the `python_executable` variable is populated by reading from `self.state.get(\"PythonExecutablePath\")`."
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/VALIDATOR_PROTOCOL.md",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/context/README_FIRST.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-BUG-001",
+    "title": "Fix Incorrect Command Invocation in Governor Rules",
+    "status": "Pending",
+    "priority": "Critical",
+    "description": "The Governor's RULES in `src/dw6/state_manager.py` are hardcoded to use the incorrect command invocation `uv run python -m dw6.main ...`. This must be replaced with the correct script entry point `dw6 ...` as defined in `pyproject.toml`. This is a foundational bug that prevents the entire workflow from executing correctly.",
+    "acceptance_criteria": [
+      {
+        "text": "Read `src/dw6/state_manager.py`.",
+        "completed": false
+      },
+      {
+        "text": "In the `Governor.RULES` dictionary, replace all instances of `uv run python -m dw6.main` with `dw6`.",
+        "completed": false
+      }
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/state_manager.py",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/TERMINAL_PROTOCOL.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-CONTEXT-001",
+    "title": "Implement Context Awareness Protocol Reminder",
+    "status": "Pending",
+    "priority": "Critical",
+    "details": "Implement the CONTEXT_AWARENESS_PROTOCOL to prevent catastrophic context decay. This involves two steps: 1) Creating the formal protocol document. 2) Modifying the WorkflowManager to issue a hardcoded reminder to the AI at the start of each work cycle.",
+    "sub_requirements": [
+      "SMR-CONTEXT-001.1: Create the file `docs/protocols/CONTEXT_AWARENESS_PROTOCOL.md` with the mandated hazard warning.",
+      "SMR-CONTEXT-001.2: Locate the primary logic for the `status` command within the `WorkflowManager`'s dynamically loaded methods (likely `src/dw6/st/manager_status.py`).",
+      "SMR-CONTEXT-001.3: Add a `print()` statement at the beginning of the function to display the concise, non-negotiable reminder, directing the AI to consult `context/README_FIRST.md`."
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/CONTEXT_AWARENESS_PROTOCOL.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-DOC-001",
+    "title": "Implement Documentation Integrity Protocol",
+    "status": "Pending",
+    "priority": "High",
+    "details": "Implement the Documentation Integrity Protocol by making the 'affected_documents' list a mandatory part of the requirement structure. This ensures that documentation is never left behind when code is changed.",
+    "sub_requirements": [
+      "SMR-DOC-001.1: Create the `docs/protocols/DOCUMENTATION_INTEGRITY_PROTOCOL.md` file.",
+      "SMR-DOC-001.2: Update the logic that validates requirement files to ensure the `affected_documents` key (a list of strings) is present.",
+      "SMR-DOC-001.3: As part of this implementation, update all existing 'Pending' requirements (`REQ-DW8-BOOT-*`, `REQ-DW8-CONTEXT-*`) to include the `affected_documents` key with an initial assessment of which documents they will impact."
+    ]
+  },
+  {
+    "id": "REQ-DW8-DOC-002",
+    "type": "Refactor",
+    "priority": "Critical",
+    "title": "[Prism Protocol] Create API and Event Documentation Generators",
+    "description": "Create two Python scripts in a new `/scripts` directory. `generate_api_reference.py` will inspect the `src/dw6` codebase and generate a single `docs/API_REFERENCE.md` file from docstrings. `compile_events.py` will read all JSON files in `/events` and compile them into a single `docs/EVENTS.json` file.",
+    "acceptance_criteria": [
+      "A script `scripts/generate_api_reference.py` exists and is executable.",
+      "Running the API script generates `docs/API_REFERENCE.md` with content from at least `state_manager.py` and `kernel.py`.",
+      "A script `scripts/compile_events.py` exists and is executable.",
+      "Running the events script generates `docs/EVENTS.json` that is a valid JSON array containing objects from the individual event files."
+    ]
+  },
+  {
+    "id": "REQ-DW8-DOC-003",
+    "type": "Refactor",
+    "priority": "Critical",
+    "title": "[Prism Protocol] Consolidate Conceptual Documentation into Master Manifest",
+    "description": "Create a single, canonical `docs/README.md` that serves as the project's master manifest. This file will absorb and replace the conceptual information currently scattered across `DW8_OPERATING_SYSTEM.md`, `AI_PROTOCOL_TUTORIAL.md`, and the individual protocol files.",
+    "acceptance_criteria": [
+      "A new `docs/README.md` file is created.",
+      "The file contains a comprehensive 'Vision' and 'Architecture' section based on existing documents.",
+      "The file contains the full, transcluded text of all core protocols.",
+      "The old conceptual documents (`DW8_OPERATING_SYSTEM.md`, `AI_PROTOCOL_TUTORIAL.md`, etc.) are deleted to establish the new single source of truth.",
+      "The `docs` directory is restructured according to the Prism Protocol plan."
+    ]
+  },
+  {
+    "id": "REQ-DW8-DOC-004",
+    "type": "Refactor",
+    "priority": "High",
+    "title": "[Prism Protocol] Enhance Codebase Docstrings for Code Atlas",
+    "description": "Perform a comprehensive pass over the entire `src/dw6` codebase to enhance all public class and method docstrings. The docstrings should be clear, detailed, and formatted to produce a high-quality `API_REFERENCE.md` via the generator script.",
+    "acceptance_criteria": [
+      "Docstrings for `WorkflowManager`, `WorkflowKernel`, and `WorkflowState` are updated to explain purpose, parameters, and return values.",
+      "Docstrings for all dynamically loaded kernel and manager methods are updated.",
+      "Docstrings for all stage classes (`Engineer`, `Coder`, etc.) are updated.",
+      "The generated `docs/API_REFERENCE.md` is complete, professional, and accurately reflects the codebase."
+    ]
+  },
+  {
+    "id": "REQ-DW8-KERNEL-001",
+    "title": "Modernize Requirement Loading Kernel",
+    "status": "Pending",
+    "priority": "Critical",
+    "description": "The current workflow kernel is outdated and hardwired to a deprecated Markdown-based requirement system. It must be refactored to support the new JSON-based event protocol. This involves changing the core logic to scan the `events/` directory, load the active requirement from its JSON file based on the `RequirementPointer`, and remove the old validation logic that depends on `docs/PROJECT_REQUIREMENTS.md`.",
+    "sub_requirements": [
+      "SMR-KERNEL-001.1: Identify the kernel logic responsible for loading requirements (likely in `src/dw6/st/manager_status.py` or `src/dw6/workflow/kernel.py`).",
+      "SMR-KERNEL-001.2: Remove the code that reads `docs/PROJECT_REQUIREMENTS.md`.",
+      "SMR-KERNEL-001.3: Implement new logic to construct the path to the active requirement file using the `RequirementPointer` from the state (e.g., `events/{pointer}.json`).",
+      "SMR-KERNEL-001.4: Implement logic to read and parse the JSON content of the requirement file.",
+      "SMR-KERNEL-001.5: Remove the old, failing validation logic that produces the 'Requirement description not found' error."
+    ],
+    "affected_documents": [
+      "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/workflow/kernel.py",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/src/dw6/st/manager_status.py",
+      "/home/ubuntu/devs/dw7_protocol_test_bed/docs/protocols/REQUIREMENT_PROTOCOL.md"
+    ]
+  },
+  {
+    "id": "REQ-DW8-META-001",
+    "title": "Formalize and Enforce Workflow Operational Modes",
+    "status": "Pending",
+    "priority": "Low",
+    "details": "Formalize and enforce the 'Sherlock' (Investigation) and 'Execution' (Implementation) modes to create a clear separation between planning and coding.",
+    "sub_requirements": [
+      "SMR-META-001.1: Create the `docs/protocols/WORKFLOW_MODES_PROTOCOL.md` document.",
+      "SMR-META-001.2: Add a `CurrentMode` key to `data/workflow_state.json`, defaulting to 'Execution'.",
+      "SMR-META-001.3: Create a new CLI command (`dw6 mode <sherlock|execution>`) to allow the user to switch modes.",
+      "SMR-META-001.4: Enhance the `Governor` to read the `CurrentMode` from the state and restrict commands and stage transitions based on the rules defined in the protocol."
+    ]
+  },
+  {
+    "id": "REQ-DW8-OS-001",
+    "title": "[Design] Formalize the \"DW8 Operating System\" architecture",
+    "description": "This requirement formalizes the new \"Operating System\" paradigm for the DW8 protocol. It involves creating a comprehensive architecture document that details the Kernel, Event Queues, Registers, Interrupt Handling, and other core OS concepts. This document will serve as the blueprint for the entire OS-level refactoring.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-002",
+    "title": "[Execution] Replace `PROJECT_REQUIREMENTS.md` with Event Queues",
+    "description": "This requirement is to replace the single, monolithic `PROJECT_REQUIREMENTS.md` file with a more robust and efficient dual-queue system implemented in JSON. This is a foundational step in the OS refactoring.\n\n- **`pending_events.json`**: Will hold the list of tasks to be processed.\n- **`processed_events.json`**: Will hold a log of completed tasks.\n\n## 3. Sherlock Mode Findings (2025-06-28)\n\n- **Contradiction Identified:** The investigation revealed a critical architectural flaw. The system has two competing sources of truth for the event queue.\n- **State Manager (`WorkflowManager`):** Correctly initializes the `WorkflowKernel` with a `PendingEvents` list stored within the primary `data/workflow_state.json` file.\n- **Kernel (`WorkflowKernel`):** While the main workflow uses the state-provided list, several key methods (`_complete_event_in_queue`, `_create_red_flag_requirement`) incorrectly read from and write to the separate `data/pending_events.json` and `data/processed_events.json` files.\n- **Conclusion:** This violation of the \"single source of truth\" principle is the root cause of recent instability and context loss. The system's state management must be unified before proceeding.",
+    "acceptance_criteria": [
+      {
+        "text": "The `docs/PROJECT_REQUIREMENTS.md` file is removed from the system's logic (it can be archived).",
+        "completed": false
+      },
+      {
+        "text": "Two new files, `data/pending_events.json` and `data/processed_events.json`, are created.",
+        "completed": false
+      },
+      {
+        "text": "The system is able to initialize with these new empty files.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Critical",
+    "type": "Execution"
+  },
+  {
+    "id": "REQ-DW8-OS-003",
+    "title": "[Execution] Create Migration Script for Existing Requirements",
+    "description": "To transition to the new OS model without losing our project history and pending tasks, we need a one-time migration script. This script will parse the existing `docs/PROJECT_REQUIREMENTS.md` and the individual `/reqs/*.md` files, converting them into the new JSON event format.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-004",
+    "title": "[Execution] Refactor Kernel to Read from `pending_events.json`",
+    "description": "This requirement modifies the core logic of the `WorkflowKernel`. Instead of parsing `PROJECT_REQUIREMENTS.md` to find the next task, it will now read the first entry from the `data/pending_events.json` queue. This changes the fundamental process scheduling mechanism of the system.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-005",
+    "title": "[Execution] Migrate Requirement Details from Markdown to JSON Files",
+    "description": "This requirement completes the transition to a fully JSON-based event system. It involves creating a migration script to convert all existing requirement .md files in docs/reqs/ into structured .json files in a new events/ directory. The WorkflowKernel will then be updated to read directly from these JSON files, eliminating the need for markdown parsing.",
+    "acceptance_criteria": [
+      {
+        "text": "A migration script scripts/migrate_reqs_to_json.py is created.",
+        "completed": false
+      },
+      {
+        "text": "The script successfully parses all .md files in docs/reqs/ and creates corresponding .json files in events/.",
+        "completed": false
+      },
+      {
+        "text": "The WorkflowKernel._load_event_details method is refactored to read directly from the new .json files.",
+        "completed": false
+      },
+      {
+        "text": "The old markdown parsing logic in the kernel is removed.",
+        "completed": false
+      },
+      {
+        "text": "All tests pass after the refactoring.",
+        "completed": false
+      }
+    ],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-006",
+    "title": "[Execution] Transition `workflow_state` to JSON",
+    "description": "This requirement transitions our core state management file from its current custom format (`.workflow_state`) to a standard, robust `workflow_state.json`. This will allow for more reliable state parsing and manipulation using standard libraries.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-007",
+    "title": "[Execution] Refactor Requirement Files to JSON Events",
+    "description": "This requirement completes the transition of our task definitions to a fully machine-readable format. All individual requirement documents in `/reqs/*.md` will be converted to structured JSON files in the new `/events/` directory. This makes them parsable and queryable by the system.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-008",
+    "title": "[Execution] Implement Decoupled Deployer Logic",
+    "description": "To increase workflow efficiency, this requirement decouples the `Deployer` stage from the standard event cycle. Most events will no longer require a deployment step. Deployment will become a special, dedicated event type that can be scheduled independently, making normal cycles faster and more lightweight.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-009",
+    "title": "[Execution] Implement Dynamic Event Prioritization",
+    "description": "This requirement implements the \"interrupt\" mechanism for our OS. It provides a method to inject a new, high-priority event at the front of the `pending_events.json` queue, ensuring it is processed next, regardless of other pending tasks. This is critical for handling urgent bugs or incorporating new ideas from brainstorming sessions.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-010",
+    "title": "[Design] Design and Document a `BOOT_PROTOCOL.md`",
+    "description": "This requirement is to formally design and document the system's startup sequence. A `BOOT_PROTOCOL.md` will be created to define all the steps necessary to initialize the DW8-OS, including environment setup, Kernel loading, and event queue preparation. This ensures a consistent and reliable startup process.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-011",
+    "title": "[Design] Design and Document a `CONTEXT_MANAGEMENT_PROTOCOL.md`",
+    "description": "To combat context decay, this requirement is to design a formal protocol for managing the AI's context window. Initially, this will be a simple, periodic refresh strategy. The protocol will define when and what context should be provided to the AI to keep it aligned with the project's high-level goals.",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-012",
+    "title": "[Design] Re-design the `Rehearsal` Stage as an Interrupt Handler",
+    "description": "This requirement is to formally re-design the `Rehearsal` stage to fit the new OS paradigm. It will be documented as a formal \"Interrupt Handler\" that is triggered by the Kernel on repeated instruction failures. The design will specify the exact inputs it receives from the Kernel (e.g., the failing event) and the outputs it must produce (e.g., a revised plan).",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  },
+  {
+    "id": "REQ-DW8-OS-013",
+    "title": "Enhance `WorkflowState` with Event Queue Management",
+    "description": "To resolve the \"dual source of truth\" problem identified in `REQ-DW8-OS-002`, the `WorkflowState` class must be enhanced to become the sole manager of the event queues. It will no longer be just a simple key-value store but a comprehensive state and queue management object.",
+    "acceptance_criteria": [
+      {
+        "text": "A new method `add_pending_event(self, event, priority)` is added to `WorkflowState`. This method will encapsulate the logic for adding a new event to the `PendingEvents` list according to its priority.",
+        "completed": false
+      },
+      {
+        "text": "A new method `archive_completed_event(self)` is added to `WorkflowState`. This method will move the currently active event from the `PendingEvents` list to a new `ProcessedEvents` list within the state data.",
+        "completed": false
+      },
+      {
+        "text": "The `WorkflowState` class will now manage both `PendingEvents` and `ProcessedEvents` lists within its internal `self.data` dictionary.",
+        "completed": false
+      }
+    ],
+    "status": "P",
+    "priority": "C",
+    "type": "Execution"
+  },
+  {
+    "id": "REQ-DW8-OS-014",
+    "title": "Refactor `WorkflowKernel` to Use Centralized State",
+    "description": "With the `WorkflowState` class enhanced to manage event queues, the `WorkflowKernel` must be refactored to delegate all state and queue operations to the `WorkflowState` object. This will eliminate the kernel's direct file access and resolve the \"dual source of truth\" problem.",
+    "acceptance_criteria": [
+      {
+        "text": "The `_complete_event_in_queue` method in `WorkflowKernel` is refactored. It no longer writes to `processed_events.json`. Instead, it calls the new `self.state.archive_completed_event()` method.",
+        "completed": false
+      },
+      {
+        "text": "The `create_new_requirement` method in `WorkflowKernel` is refactored. It no longer writes to `pending_events.json`. Instead, it calls the new `self.state.add_pending_event()` method.",
+        "completed": false
+      },
+      {
+        "text": "The `_create_red_flag_requirement` method in `WorkflowKernel` is refactored to use `self.state.add_pending_event()` to inject the critical failure event into the queue.",
+        "completed": false
+      },
+      {
+        "text": "All direct `json.load()` and `json.dump()` calls related to event queues within the `WorkflowKernel` are removed.",
+        "completed": false
+      }
+    ],
+    "status": "P",
+    "priority": "C",
+    "type": "Execution"
+  },
+  {
+    "id": "REQ-DW8-OS-015",
+    "title": "Finalize State Unification and Cleanup",
+    "description": "This is the final step to complete the state management refactoring. Once the `WorkflowKernel` has been fully updated to use the enhanced `WorkflowState` for all queue operations, we can safely remove the redundant queue files.",
+    "acceptance_criteria": [
+      {
+        "text": "The `data/pending_events.json` file is deleted.",
+        "completed": false
+      },
+      {
+        "text": "The `data/processed_events.json` file is deleted.",
+        "completed": false
+      },
+      {
+        "text": "The constants `PENDING_EVENTS_FILE` and `PROCESSED_EVENTS_FILE` at the top of `src/dw6/workflow/kernel.py` are removed.",
+        "completed": false
+      },
+      {
+        "text": "The system is tested to ensure it functions correctly using only the `data/workflow_state.json` file as the single source of truth.",
+        "completed": false
+      }
+    ],
+    "status": "P",
+    "priority": "C",
+    "type": "Execution"
+  },
+  {
+    "id": "REQ-DW8-OS-016",
+    "title": "Implement the Context Integrity Protocol",
+    "description": "To combat context window resets (\"memory loss\"), which pose a critical threat to project stability, we will implement a proactive Context Integrity Protocol. This protocol will provide a reliable, automated mechanism for detecting and recovering from context loss, ensuring the AI engineer remains synchronized with the project's state and goals.",
+    "acceptance_criteria": [
+      {
+        "text": "**SMR-1: Create a `check-context` CLI Command.**",
+        "completed": false
+      },
+      {
+        "text": "A new command, `uv run python -m dw6.main check-context`, is added to `cli.py`.",
+        "completed": false
+      },
+      {
+        "text": "This command will trigger the Context Integrity Protocol.",
+        "completed": false
+      },
+      {
+        "text": "**SMR-2: Implement the \"Cognitive Checkpoint\".**",
+        "completed": false
+      },
+      {
+        "text": "A new key, `CognitiveCheckpoint`, is added to the `data/workflow_state.json` file. Its value will be a secret phrase or key (e.g., \"Riko\").",
+        "completed": false
+      },
+      {
+        "text": "The `check-context` command logic will first attempt to access and verify this key from its internal memory.",
+        "completed": false
+      },
+      {
+        "text": "**SMR-3: Implement the \"Context Refresh\" Procedure.**",
+        "completed": false
+      },
+      {
+        "text": "If the Cognitive Checkpoint fails, the system automatically triggers a context refresh.",
+        "completed": false
+      },
+      {
+        "text": "This procedure involves systematically reading a predefined list of critical project documents to rebuild the AI's understanding. The initial list will include:",
+        "completed": false
+      },
+      {
+        "text": "`docs/ARCHITECTURE.md`",
+        "completed": false
+      },
+      {
+        "text": "All files in `docs/protocols/`",
+        "completed": false
+      },
+      {
+        "text": "All `REQ-DW8-OS-*` files in `docs/reqs/`",
+        "completed": false
+      },
+      {
+        "text": "**SMR-4: Generate a Context Restoration Report.**",
+        "completed": false
+      },
+      {
+        "text": "After the refresh procedure is complete, the AI will generate a concise summary of its restored understanding.",
+        "completed": false
+      },
+      {
+        "text": "This report will be presented to the user for verification, confirming that context has been successfully rebuilt before proceeding with any other tasks.",
+        "completed": false
+      }
+    ],
+    "status": "P",
+    "priority": "C",
+    "type": "Execution"
+  },
+  {
+    "id": "REQ-DW8-VAL-001-WORKFLOW_VALIDATION",
+    "title": "",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium",
+    "type": "Standard"
+  },
+  {
+    "id": "REQ-DW8-VAL-001",
+    "title": "End-to-End Workflow Engine Validation",
+    "description": "",
+    "acceptance_criteria": [],
+    "status": "Pending",
+    "priority": "Medium"
+  }
+]
