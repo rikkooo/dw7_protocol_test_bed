@@ -1,19 +1,14 @@
 {
-  "CoderStartCommitSHA": "6c5cb21adfe316f72d116c7d9e114b923cbc2f8e",
+  "CoderStartCommitSHA": "fed34fbe7769581f352952387bc5101450a5feb0",
   "CognitiveCheckpoint": "Riko",
   "CurrentStage": "Engineer",
-  "CycleCounter": 25,
+  "CycleCounter": 26,
   "FailureCounters.Coder.default": 0,
   "FailureCounters.Engineer.default": 0,
   "FailureCounters.Researcher.default": 0,
   "FailureCounters.Validator.default": 0,
   "FailureCounters.Validator.pytest": 0,
   "PendingEvents": [
-    {
-      "id": "REQ-DW8-DUMMY-003",
-      "priority": "High",
-      "title": "Dummy Req 3"
-    },
     {
       "id": "REQ-DW8-DUMMY-002",
       "priority": "High",
@@ -61,6 +56,32 @@
     }
   ],
   "ProcessedEvents": [
+    {
+      "acceptance_criteria": [
+        {
+          "completed": false,
+          "description": "Create the 'docs/manual_chapters/' directory."
+        },
+        {
+          "completed": false,
+          "description": "Create individual, granular chapter files (e.g., '01_vision.md') by migrating and refactoring content from old docs."
+        },
+        {
+          "completed": false,
+          "description": "Create the 'docs/AI_OPERATIONS_MANUAL.md' file to act as an ordered index of the chapter files."
+        },
+        {
+          "completed": false,
+          "description": "Deprecate or remove the old, now-redundant documentation files."
+        }
+      ],
+      "description": "Deconstruct existing documentation into granular chapter files within 'docs/manual_chapters/'. Create the master index file 'docs/AI_OPERATIONS_MANUAL.md' that lists these chapters in order.",
+      "id": "REQ-DW8-EXEC-001",
+      "priority": "High",
+      "status": "Pending",
+      "title": "[Sherlock] Create the Composable AI Operations Manual Chapters",
+      "type": "Standard"
+    },
     {
       "acceptance_criteria": [
         {
@@ -171,8 +192,10 @@
     }
   ],
   "PythonExecutablePath": "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/bin/python3",
-  "RequirementPointer": "REQ-DW8-EXEC-001",
+  "RequirementPointer": "REQ-DW8-DUMMY-003",
+  "failure_count_REQ-DW8-EXEC-001_Coder": 0,
   "failure_count_REQ-DW8-EXEC-001_Engineer": 0,
+  "failure_count_REQ-DW8-EXEC-001_Validator": 0,
   "failure_count_REQ-DW8-OS-001_Researcher": 1,
   "failure_count_REQ-DW8-OS-002_Coder": 0,
   "failure_count_REQ-DW8-OS-002_Engineer": 0,
@@ -221,10 +244,18 @@
     "timings": {
       "REQ-DW8-EXEC-001": {
         "Coder": {
-          "start_time": "2025-06-29T21:18:32.582343+00:00"
+          "duration_seconds": 40772.29,
+          "end_time": "2025-06-30T17:43:00.976974+00:00",
+          "start_time": "2025-06-30T06:23:28.690017+00:00"
         },
         "Engineer": {
-          "end_time": "2025-06-29T21:18:32.582343+00:00"
+          "end_time": "2025-06-30T06:23:28.690017+00:00",
+          "start_time": "2025-06-30T17:43:08.062135+00:00"
+        },
+        "Validator": {
+          "duration_seconds": 7.09,
+          "end_time": "2025-06-30T17:43:08.062135+00:00",
+          "start_time": "2025-06-30T17:43:00.976974+00:00"
         }
       },
       "REQ-DW8-OS-001": {
