@@ -1,19 +1,14 @@
 {
-  "CoderStartCommitSHA": "0e7a4e272f9124ba4dae3f0412313aa663ab17d6",
+  "CoderStartCommitSHA": "8b0e99546cc7c9d2f98321cb455857dff6881ad3",
   "CognitiveCheckpoint": "Riko",
   "CurrentStage": "Engineer",
-  "CycleCounter": 28,
+  "CycleCounter": 29,
   "FailureCounters.Coder.default": 0,
   "FailureCounters.Engineer.default": 0,
   "FailureCounters.Researcher.default": 0,
   "FailureCounters.Validator.default": 0,
   "FailureCounters.Validator.pytest": 0,
   "PendingEvents": [
-    {
-      "id": "REQ-DW8-DUMMY-CRITICAL-001",
-      "priority": "Critical",
-      "title": "Critical Dummy Req"
-    },
     {
       "id": "REQ-DW8-DOC-002",
       "priority": "Critical",
@@ -51,6 +46,20 @@
     }
   ],
   "ProcessedEvents": [
+    {
+      "acceptance_criteria": [
+        {
+          "completed": false,
+          "description": "Completed."
+        }
+      ],
+      "description": "First dummy requirement for priority test.",
+      "id": "REQ-DW8-DUMMY-001",
+      "priority": "High",
+      "status": "Pending",
+      "title": "Dummy Req 1",
+      "type": "Standard"
+    },
     {
       "acceptance_criteria": [
         {
@@ -212,7 +221,10 @@
     }
   ],
   "PythonExecutablePath": "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/bin/python3",
-  "RequirementPointer": "REQ-DW8-DUMMY-001",
+  "RequirementPointer": "REQ-DW8-DUMMY-CRITICAL-001",
+  "failure_count_REQ-DW8-DUMMY-001_Coder": 0,
+  "failure_count_REQ-DW8-DUMMY-001_Engineer": 0,
+  "failure_count_REQ-DW8-DUMMY-001_Validator": 0,
   "failure_count_REQ-DW8-DUMMY-002_Validator": 0,
   "failure_count_REQ-DW8-DUMMY-003_Coder": 0,
   "failure_count_REQ-DW8-DUMMY-003_Engineer": 0,
@@ -266,6 +278,22 @@
       }
     },
     "timings": {
+      "REQ-DW8-DUMMY-001": {
+        "Coder": {
+          "duration_seconds": 7.36,
+          "end_time": "2025-06-30T17:48:28.418549+00:00",
+          "start_time": "2025-06-30T17:48:21.054576+00:00"
+        },
+        "Engineer": {
+          "end_time": "2025-06-30T17:48:21.054576+00:00",
+          "start_time": "2025-06-30T17:48:36.695129+00:00"
+        },
+        "Validator": {
+          "duration_seconds": 8.28,
+          "end_time": "2025-06-30T17:48:36.695129+00:00",
+          "start_time": "2025-06-30T17:48:28.418549+00:00"
+        }
+      },
       "REQ-DW8-DUMMY-002": {
         "Engineer": {
           "start_time": "2025-06-30T17:47:53.884611+00:00"
