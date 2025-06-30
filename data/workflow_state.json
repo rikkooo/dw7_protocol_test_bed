@@ -1,19 +1,14 @@
 {
-  "CoderStartCommitSHA": "01561540efde12e6507635e239fe968caed0be93",
+  "CoderStartCommitSHA": "b7c945ba13c03ab787711bc9c6f1fe67d66ef68b",
   "CognitiveCheckpoint": "Riko",
   "CurrentStage": "Engineer",
-  "CycleCounter": 30,
+  "CycleCounter": 31,
   "FailureCounters.Coder.default": 0,
   "FailureCounters.Engineer.default": 0,
   "FailureCounters.Researcher.default": 0,
   "FailureCounters.Validator.default": 0,
   "FailureCounters.Validator.pytest": 0,
   "PendingEvents": [
-    {
-      "id": "REQ-DW8-DOC-002",
-      "priority": "Critical",
-      "type": "Refactor"
-    },
     {
       "id": "REQ-DW8-DOC-003",
       "priority": "Critical",
@@ -46,6 +41,20 @@
     }
   ],
   "ProcessedEvents": [
+    {
+      "acceptance_criteria": [
+        {
+          "completed": false,
+          "description": "The workflow correctly passes if a requirement has two or more SMRs."
+        }
+      ],
+      "description": "The Engineer stage validation, which ensures requirements are broken down into at least two Sub-task Measurable Requirements (SMRs), was temporarily disabled to facilitate a documentation refactor (REQ-DW8-DOC-003). This requirement is to restore that validation logic, adapting it to the new documentation structure where the docs/PROJECT_REQUIREMENTS.md file no longer exists. The new logic should parse the SMRs from the active requirement's entry in the master docs/README.md file.",
+      "id": "REQ-DW8-VAL-002",
+      "priority": "Critical",
+      "status": "Pending",
+      "title": "Restore and Adapt Engineer Stage SMR Validation",
+      "type": "Standard"
+    },
     {
       "acceptance_criteria": [
         {
@@ -235,7 +244,7 @@
     }
   ],
   "PythonExecutablePath": "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/bin/python3",
-  "RequirementPointer": "REQ-DW8-VAL-002",
+  "RequirementPointer": "REQ-DW8-SYS-001",
   "failure_count_REQ-DW8-DUMMY-001_Coder": 0,
   "failure_count_REQ-DW8-DUMMY-001_Engineer": 0,
   "failure_count_REQ-DW8-DUMMY-001_Validator": 0,
@@ -262,6 +271,9 @@
   "failure_count_REQ-DW8-TEST-003_Coder": 0,
   "failure_count_REQ-DW8-TEST-003_Engineer": 0,
   "failure_count_REQ-DW8-TEST-003_Validator": 0,
+  "failure_count_REQ-DW8-VAL-002_Coder": 0,
+  "failure_count_REQ-DW8-VAL-002_Engineer": 0,
+  "failure_count_REQ-DW8-VAL-002_Validator": 0,
   "is_protocol_update": false,
   "last_session_start": "2025-06-29T20:49:08.918254+00:00",
   "session_count": 13,
@@ -438,6 +450,22 @@
           "duration_seconds": 4.74,
           "end_time": "2025-06-29T21:15:10.096461+00:00",
           "start_time": "2025-06-29T21:15:05.358313+00:00"
+        }
+      },
+      "REQ-DW8-VAL-002": {
+        "Coder": {
+          "duration_seconds": 16.9,
+          "end_time": "2025-06-30T19:41:43.802447+00:00",
+          "start_time": "2025-06-30T19:41:26.900576+00:00"
+        },
+        "Engineer": {
+          "end_time": "2025-06-30T19:41:26.900576+00:00",
+          "start_time": "2025-06-30T19:41:53.670734+00:00"
+        },
+        "Validator": {
+          "duration_seconds": 9.87,
+          "end_time": "2025-06-30T19:41:53.670734+00:00",
+          "start_time": "2025-06-30T19:41:43.802447+00:00"
         }
       }
     },

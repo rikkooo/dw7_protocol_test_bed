@@ -1,0 +1,21 @@
+{
+  "id": "REQ-DW8-SYS-001",
+  "type": "Refactor",
+  "priority": "Critical",
+  "title": "Implement Context Integrity Protocol",
+  "description": "A critical vulnerability was identified where the AI can make incorrect assumptions about the purpose of core system files, leading to erroneous modifications. This requirement implements a new protocol to protect the system's core by establishing rules for file interaction and context management.",
+  "acceptance_criteria": [
+    {
+      "text": "The 'docs/README.md' file is updated with a new 'AI Operational Constraints' section.",
+      "completed": false
+    },
+    {
+      "text": "The new section explicitly forbids the AI from modifying core context files unless directed by a specific requirement.",
+      "completed": false
+    },
+    {
+      "text": "A permanent memory is created codifying the 'Principle of Evident Purpose' and the rule against modifying context files.",
+      "completed": false
+    }
+  ]
+}
