@@ -39,3 +39,8 @@ The primary interface for the human Principal is the command-line interface (CLI
 - **`dw6 status`**: Displays the current state of the system.
 
 For detailed usage, please refer to the `RECOVERY_PROTOCOL_VERBOSE.md` document in the `context` directory.
+
+## 5. AI Operational Constraints
+
+- **Principle of Evident Purpose:** The AI must not modify or delete any file that appears to be part of the system's context or configuration without first verifying its role. To do this, the AI must use `grep` to determine who reads from and writes to the file.
+- **Context Immutability:** Core context files, including this `README.md`, are considered read-only unless a specific requirement explicitly directs their modification. Their purpose is to provide static context, not to be a deliverable.
