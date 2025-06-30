@@ -1,13 +1,14 @@
 # Master Requirements List
 
-### ID: REQ-DW8-VAL-002
+### ID: REQ-DW8-SYS-001
 
-- **Title:** Restore and Adapt Engineer Stage SMR Validation
+- **Title:** Implement Context Integrity Protocol
 
-- **Description:** The Engineer stage validation, which ensures requirements are broken down into at least two Sub-task Measurable Requirements (SMRs), was temporarily disabled to facilitate a documentation refactor (REQ-DW8-DOC-003). This requirement restores that validation logic to its original, correct state.
+- **Description:** A critical vulnerability was identified where the AI can make incorrect assumptions about the purpose of core system files. This requirement implements a new protocol to protect the system's core by establishing rules for file interaction and context management.
 
 - **SMRs:**
-  - [x] SMR-1: Restore `engineer.py` validation to read from `docs/PROJECT_REQUIREMENTS.md`.
-  - [x] SMR-2: Re-create the `docs/PROJECT_REQUIREMENTS.md` file.
-  - [ ] SMR-3: Verify the restored validation logic by approving the Engineer stage.
+  - [ ] SMR-1: Update `docs/README.md` to include a new 'AI Operational Constraints' section, explicitly forbidding modification of core context files.
+  - [ ] SMR-2: Create a permanent memory codifying the 'Principle of Evident Purpose' and the rule against modifying context files.
+  - [ ] SMR-3: Verify the `README.md` file has been updated correctly.
+  - [ ] SMR-4: Verify the permanent memory has been created successfully.
 ---
