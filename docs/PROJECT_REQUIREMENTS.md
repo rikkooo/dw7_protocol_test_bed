@@ -1,15 +1,16 @@
 # Master Requirements List
 
-### ID: REQ-DW8-DOC-003
+### ID: REQ-DW8-DOC-004
 
-- **Title:** [Prism Protocol] Consolidate Conceptual Documentation into Master Manifest
+- **Title:** [Prism Protocol] Enhance Codebase Docstrings for Code Atlas
 
-- **Description:** Create a single, canonical `docs/README.md` that serves as the project's master manifest. This file will absorb and replace the conceptual information currently scattered across `DW8_OPERATING_SYSTEM.md`, `AI_PROTOCOL_TUTORIAL.md`, and the individual protocol files.
+- **Description:** Perform a comprehensive pass over the entire `src/dw6` codebase to enhance all public class and method docstrings. The docstrings should be clear, detailed, and formatted to produce a high-quality `API_REFERENCE.md` via the generator script.
 
 - **SMRs:**
-  - [ ] SMR-1: Read the content of all core protocol files from `docs/protocols/`.
-  - [ ] SMR-2: Append the full, transcluded text of each protocol to the `docs/README.md` under a new 'Core Protocols' section.
-  - [ ] SMR-3: Identify all old conceptual documents (`DW8_OPERATING_SYSTEM.md`, `AI_PROTOCOL_TUTORIAL.md`, etc.) for deletion.
-  - [ ] SMR-4: Delete the identified old conceptual documents.
-  - [ ] SMR-5: Verify that `docs/README.md` is correctly updated with the transcluded protocols and that the old documentation files have been removed.
+  - [ ] SMR-1: Systematically identify all Python files within `src/dw6` that require docstring updates, including core classes, stage classes, and dynamically loaded methods.
+  - [ ] SMR-2: Update the docstrings for the core workflow classes: `WorkflowManager`, `WorkflowKernel`, and `WorkflowState`.
+  - [ ] SMR-3: Update the docstrings for all stage-specific classes (`Engineer`, `Coder`, `Validator`, `Deployer`).
+  - [ ] SMR-4: Update the docstrings for all dynamically loaded methods within the kernel and manager modules.
+  - [ ] SMR-5: Execute the `scripts/generate_api_reference.py` script to generate the `docs/API_REFERENCE.md` file.
+  - [ ] SMR-6: Verify that the generated `docs/API_REFERENCE.md` is complete, well-formatted, and accurately reflects the enhanced docstrings.
 ---
