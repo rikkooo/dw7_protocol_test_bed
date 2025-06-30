@@ -1,7 +1,7 @@
 import re
 import sys
 
-REQUIREMENTS_FILE = "docs/README.md"
+REQUIREMENTS_FILE = "docs/PROJECT_REQUIREMENTS.md"
 
 class EngineerStage:
     def __init__(self, state):

@@ -1,0 +1,14 @@
+{
+  "id": "REQ-DW8-VAL-002",
+  "title": "Restore and Adapt Engineer Stage SMR Validation",
+  "description": "The Engineer stage validation, which ensures requirements are broken down into at least two Sub-task Measurable Requirements (SMRs), was temporarily disabled to facilitate a documentation refactor (REQ-DW8-DOC-003). This requirement is to restore that validation logic, adapting it to the new documentation structure where the docs/PROJECT_REQUIREMENTS.md file no longer exists. The new logic should parse the SMRs from the active requirement's entry in the master docs/README.md file.",
+  "acceptance_criteria": [
+    {
+      "description": "The workflow correctly passes if a requirement has two or more SMRs.",
+      "completed": false
+    }
+  ],
+  "type": "Standard",
+  "priority": "Critical",
+  "status": "Pending"
+}

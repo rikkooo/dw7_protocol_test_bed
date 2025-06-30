@@ -1,8 +1,8 @@
 {
-  "CoderStartCommitSHA": "8b0e99546cc7c9d2f98321cb455857dff6881ad3",
+  "CoderStartCommitSHA": "01561540efde12e6507635e239fe968caed0be93",
   "CognitiveCheckpoint": "Riko",
   "CurrentStage": "Engineer",
-  "CycleCounter": 29,
+  "CycleCounter": 30,
   "FailureCounters.Coder.default": 0,
   "FailureCounters.Engineer.default": 0,
   "FailureCounters.Researcher.default": 0,
@@ -46,6 +46,20 @@
     }
   ],
   "ProcessedEvents": [
+    {
+      "acceptance_criteria": [
+        {
+          "completed": false,
+          "description": "Completed."
+        }
+      ],
+      "description": "A critical requirement to test interruption.",
+      "id": "REQ-DW8-DUMMY-CRITICAL-001",
+      "priority": "Critical",
+      "status": "Pending",
+      "title": "Critical Dummy Req",
+      "type": "Standard"
+    },
     {
       "acceptance_criteria": [
         {
@@ -221,7 +235,7 @@
     }
   ],
   "PythonExecutablePath": "/home/ubuntu/devs/dw7_protocol_test_bed/.venv/bin/python3",
-  "RequirementPointer": "REQ-DW8-DUMMY-CRITICAL-001",
+  "RequirementPointer": "REQ-DW8-VAL-002",
   "failure_count_REQ-DW8-DUMMY-001_Coder": 0,
   "failure_count_REQ-DW8-DUMMY-001_Engineer": 0,
   "failure_count_REQ-DW8-DUMMY-001_Validator": 0,
@@ -229,6 +243,9 @@
   "failure_count_REQ-DW8-DUMMY-003_Coder": 0,
   "failure_count_REQ-DW8-DUMMY-003_Engineer": 0,
   "failure_count_REQ-DW8-DUMMY-003_Validator": 1,
+  "failure_count_REQ-DW8-DUMMY-CRITICAL-001_Coder": 0,
+  "failure_count_REQ-DW8-DUMMY-CRITICAL-001_Engineer": 0,
+  "failure_count_REQ-DW8-DUMMY-CRITICAL-001_Validator": 0,
   "failure_count_REQ-DW8-EXEC-001_Coder": 0,
   "failure_count_REQ-DW8-EXEC-001_Engineer": 0,
   "failure_count_REQ-DW8-EXEC-001_Validator": 0,
@@ -316,6 +333,22 @@
           "duration_seconds": 5.87,
           "end_time": "2025-06-30T17:43:59.276273+00:00",
           "start_time": "2025-06-30T17:43:53.408997+00:00"
+        }
+      },
+      "REQ-DW8-DUMMY-CRITICAL-001": {
+        "Coder": {
+          "duration_seconds": 1126.55,
+          "end_time": "2025-06-30T19:16:31.657447+00:00",
+          "start_time": "2025-06-30T18:57:45.109259+00:00"
+        },
+        "Engineer": {
+          "end_time": "2025-06-30T18:57:45.109259+00:00",
+          "start_time": "2025-06-30T19:16:37.157895+00:00"
+        },
+        "Validator": {
+          "duration_seconds": 5.5,
+          "end_time": "2025-06-30T19:16:37.157895+00:00",
+          "start_time": "2025-06-30T19:16:31.657447+00:00"
         }
       },
       "REQ-DW8-EXEC-001": {
